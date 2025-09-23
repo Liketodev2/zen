@@ -121,7 +121,9 @@ class StripePaymentController extends Controller
 
             // Dispatch event to send email
             TaxPaymentSucceeded::dispatch($tax);
-            return redirect()->route('home')->with('success', 'Payment successful!');
+            return redirect()->route('home')
+                ->with('success',
+                    'Thank you for your payment. Receipt has been sent to your inbox. Thanks for choosing TaxEasy to complete your tax return. Our team will be in contact shortly if we have any questions. Your should expect your return around 14 days from confirmed submission to the Australian Taxation Office.');
         } catch (\Stripe\Exception\CardException $e) {
             DB::rollBack();
             $tax->update(['form_status' => 'incomplete']);
