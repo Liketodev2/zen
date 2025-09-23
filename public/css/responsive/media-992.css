@@ -1,0 +1,250 @@
+@media (max-width: 992px) {
+    .section_mb {
+        margin-bottom: 120px;
+    }
+
+    #home_banner {
+        padding-top: 100px;
+        padding-bottom: 120px;
+    }
+
+    #home_banner .col-md-6 > h1 {
+        font-size: 48px;
+        line-height: 60px;
+    }
+
+    #home_banner .col-md-6 > p {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    #home_info .home_info_box > .title {
+        font-size: 28px;
+        line-height: 40px;
+    }
+
+    #home_info .home_info_box > h2 {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    #home_info .home_info_box > p {
+        font-size: 15px;
+        line-height: 22px;
+    }
+
+    #how_it_works > .title {
+        font-size: 40px;
+        line-height: 54px;
+    }
+
+    #happens .title {
+        font-size: 28px;
+        line-height: 40px;
+    }
+
+    #testimonials > .title {
+        font-size: 40px;
+        line-height: 54px;
+        max-width: 90%;
+    }
+
+    #testimonials .testimonials_box {
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    #testimonials .testimonials_box .testimonials_author,
+    #testimonials .testimonials_box > .testimonials_text,
+    #testimonials .testimonials_box > .testimonials_loc {
+        font-size: 15px;
+        line-height: 22px;
+    }
+
+    #faq .title {
+        font-size: 40px;
+        line-height: 54px;
+        max-width: 90%;
+        margin-bottom: 32px;
+    }
+
+    #faq .accordion-button {
+        font-size: 15px;
+        line-height: 22px;
+        padding: 14px 20px;
+    }
+
+    #faq .accordion-item {
+        margin-bottom: 20px;
+    }
+
+    #services_banner,
+    .page_banner {
+        padding-top: 160px;
+        padding-bottom: 160px;
+    }
+
+    #services_banner h2,
+    .page_banner h2 {
+        font-size: 48px;
+        line-height: 60px;
+        max-width: 90%;
+    }
+
+    #accurate h2 {
+        font-size: 40px;
+        line-height: 54px;
+    }
+
+    #accurate p {
+        font-size: 15px;
+        line-height: 22px;
+    }
+
+    #accurate .accurate_item {
+        padding: 20px;
+    }
+
+    #accurate .accurate_item > h3 {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    #services_info .item {
+        padding: 20px;
+    }
+
+    #services_info .item > h2 {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    #services_info .item > p {
+        font-size: 15px;
+        line-height: 22px;
+    }
+
+    #support p {
+        font-size: 28px;
+        line-height: 42px;
+        margin-bottom: 32px;
+    }
+
+    #support .support_box {
+        padding: 32px;
+    }
+
+    #plans > .title {
+        font-size: 40px;
+        line-height: 54px;
+    }
+
+    #plans > .plans {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #plans .plan {
+        max-width: 100%;
+        flex: 1 1 45%;
+    }
+
+    #what_included > .what_included {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+    }
+
+    #what_included h2 {
+        font-size: 40px;
+        line-height: 54px;
+    }
+
+    #ready {
+        padding: 60px 0;
+    }
+
+    #ready .title {
+        font-size: 40px;
+        line-height: 54px;
+        text-align: center;
+    }
+
+    .sign_bg {
+        padding: 8px;
+        max-width: 600px;
+    }
+
+    .sign_bg > h1 {
+        font-size: 48px;
+        line-height: 60px;
+    }
+
+    .sign_bg > h2 {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    #contact_info .contact_info_box {
+        flex-direction: column;
+        gap: 24px;
+        padding: 32px;
+    }
+
+    #contact_info .contact_info_box h3 {
+        font-size: 40px;
+        line-height: 56px;
+        text-align: center;
+    }
+
+    #contact_info .contact_info_box a {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    #contact_form .contact_form_box {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    #contact_help h2 {
+        font-size: 28px;
+        line-height: 40px;
+    }
+
+    #contact_help p {
+        font-size: 15px;
+        line-height: 22px;
+    }
+
+    .paymant_title {
+        font-size: 40px;
+        line-height: 56px;
+    }
+
+    .paymant_method {
+        font-size: 20px;
+        line-height: 28px;
+        padding: 20px;
+        padding-bottom: 48px;
+    }
+
+    .payment_details > .info > p > span {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    .payment_details > .form > h3 {
+        font-size: 22px;
+        line-height: 30px;
+    }
+
+    #success_message {
+        padding: 32px;
+    }
+
+    #success_message > h3 {
+        font-size: 22px;
+        line-height: 30px;
+    }
+}

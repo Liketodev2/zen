@@ -1,0 +1,10 @@
+{
+    "private": true,
+    "type": "module",
+    "devDependencies": {
+        "@popperjs/core": "^2.11.6",
+        "axios": "^1.6.4",
+        "bootstrap": "^5.2.3",
+        "sass": "^1.56.1"
+    }
+}

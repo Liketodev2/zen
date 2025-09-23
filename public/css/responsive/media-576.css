@@ -1,0 +1,313 @@
+@media (max-width: 576px) {
+    .section_mb {
+        margin-bottom: 60px;
+    }
+
+    #home_banner {
+        padding-top: 60px;
+        padding-bottom: 80px;
+    }
+
+    #home_banner .col-md-6 > h1 {
+        font-size: 28px;
+        line-height: 36px;
+    }
+
+    #home_banner .col-md-6 > p {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    #home_info .home_info_box {
+        padding: 16px;
+    }
+
+    #home_info .home_info_box > .title {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    #home_info .home_info_box > h2 {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    #home_info .home_info_box > p {
+        font-size: 13px;
+        line-height: 18px;
+    }
+
+    #how_it_works > .title {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    #how_it_works > .container h2 {
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    #how_it_works > .container p {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    #happens .title {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    #happens .happens_box {
+        padding: 16px;
+    }
+
+    #happens .happens_box > span {
+        font-size: 28px;
+        line-height: 30px;
+    }
+
+    #testimonials > .title {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    #testimonials .testimonials_box {
+        padding: 16px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    #testimonials .testimonials_box .testimonials_author,
+    #testimonials .testimonials_box > .testimonials_text,
+    #testimonials .testimonials_box > .testimonials_loc {
+        font-size: 13px;
+        line-height: 18px;
+    }
+
+    #testimonials .owl-carousel .owl-stage-outer {
+        padding: 10px 0;
+    }
+
+    #faq .title {
+        font-size: 24px;
+        line-height: 32px;
+        margin-bottom: 24px;
+    }
+
+    #faq .accordion-button {
+        font-size: 13px;
+        line-height: 18px;
+        padding: 10px 15px;
+    }
+
+    #faq .accordion-item {
+        margin-bottom: 16px;
+    }
+
+    #services_banner,
+    .page_banner {
+        padding-top: 100px;
+        padding-bottom: 100px;
+    }
+
+    #services_banner h2,
+    .page_banner h2 {
+        font-size: 28px;
+        line-height: 38px;
+    }
+
+    #accurate h2 {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    #accurate p {
+        font-size: 13px;
+        line-height: 18px;
+    }
+
+    #accurate .accurate_item {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    #accurate .accurate_item > h3 {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    #services_info .item {
+        padding: 16px;
+    }
+
+    #services_info .item > h2 {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    #services_info .item > p {
+        font-size: 13px;
+        line-height: 18px;
+    }
+
+    #support p {
+        font-size: 20px;
+        line-height: 30px;
+        margin-bottom: 24px;
+    }
+
+    #support .support_box {
+        padding: 20px;
+    }
+
+    #plans > .title {
+        font-size: 24px;
+        line-height: 32px;
+        margin-bottom: 24px;
+    }
+
+    #plans .plan {
+        padding: 16px;
+    }
+
+    #plans .plan > h2,
+    #plans .plan > p {
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    #plans .plan > .price {
+        font-size: 32px;
+        line-height: 42px;
+        margin-bottom: 24px;
+    }
+
+    #plans .plan > ul > li > p {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    #what_included h2 {
+        font-size: 24px;
+        line-height: 32px;
+        margin-bottom: 24px;
+    }
+
+    #what_included ul > li {
+        font-size: 14px;
+        line-height: 20px;
+        gap: 6px;
+    }
+
+    #what_included > .what_included {
+        gap: 24px;
+    }
+
+    #ready {
+        padding: 40px 0;
+    }
+
+    #ready .title {
+        font-size: 24px;
+        line-height: 32px;
+        margin-bottom: 24px;
+        padding: 0 16px;
+    }
+
+    .sign_bg {
+        padding: 4px;
+        max-width: 100%;
+    }
+
+    .sign_bg > h1 {
+        font-size: 28px;
+        line-height: 36px;
+    }
+
+    .sign_bg > h2 {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    #contact_info .contact_info_box {
+        padding: 16px;
+    }
+
+    #contact_info .contact_info_box h3 {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    #contact_info .contact_info_box a {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    #contact_form input,
+    #contact_form textarea {
+        font-size: 14px;
+        line-height: 20px;
+        padding: 12px;
+    }
+
+    #contact_help h2 {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    #contact_help p {
+        font-size: 13px;
+        line-height: 18px;
+    }
+
+    .paymant_title {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    .paymant_description {
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 24px;
+    }
+
+    .paymant_method {
+        font-size: 16px;
+        line-height: 22px;
+        padding: 12px;
+        padding-bottom: 32px;
+    }
+
+    .payment_details > .info {
+        padding: 12px 16px;
+    }
+
+    .payment_details > .info > p > span {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .payment_details > .form {
+        padding: 12px 16px;
+    }
+
+    .payment_details > .form > h3 {
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    .paymant_agree > label {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    #success_message > h3 {
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    #success_message > p {
+        font-size: 14px;
+        line-height: 20px;
+    }
+}

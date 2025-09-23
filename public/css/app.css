@@ -1,0 +1,1542 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+}
+
+p {
+    margin-bottom: 0;
+}
+
+ul > li {
+    list-style: none;
+}
+
+.section_mb {
+    margin-bottom: 160px;
+}
+
+.navbar_link {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+.navbar_link:hover {
+    color: #148192;
+}
+
+.navbar_link:active {
+    color: #148192 !important;
+}
+
+.navbar_link:focus {
+    color: #148192 !important;
+}
+
+.navbar_btn {
+    background-color: #15a1b7;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #ffffff;
+    display: inline-block;
+}
+
+.navbar_btn.white {
+    background-color: #ffffff;
+    color: #15a1b7;
+    outline: 1px solid #15a1b7;
+}
+
+.navbar_btn.white:hover {
+    background-color: #15a1b7;
+    color: #ffffff;
+    outline: 1px solid #ffffff;
+}
+
+.navbar_btn:hover {
+    background-color: #ffffff;
+    color: #15a1b7;
+    outline: 1px solid #15a1b7;
+}
+
+.soc_links {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    display: flex;
+    gap: 24px;
+}
+
+footer a {
+    font-family: DM Sans;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+footer a:hover {
+    color: #1b3046;
+}
+
+#home_banner {
+    background-image: url("../img/banners/home.png");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 140px;
+    padding-bottom: 170px;
+}
+
+#home_banner .col-md-6 {
+    max-width: 600px;
+}
+
+#home_banner .col-md-6 > h1 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 80px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+#home_banner .col-md-6 > p {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #ffffff;
+    margin-bottom: 40px;
+}
+
+#home_info .home_info_box {
+    margin-bottom: 32px;
+    border: 1px solid #15a1b7;
+    border-radius: 12px;
+    padding: 24px;
+}
+#home_info .home_info_box > .title {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 48px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+#home_info .home_info_box > h2 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+#home_info .home_info_box > p {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+.hr {
+    margin: 24px 0;
+    display: block;
+    border-radius: 2px;
+}
+
+#how_it_works {
+    text-align: center;
+}
+
+#how_it_works > .title {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+#how_it_works > .container h2 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+#how_it_works > .container p {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+#happens .title {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 48px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+    margin-bottom: 40px;
+}
+
+#happens .happens_box {
+    border: 1px solid #15a1b7;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#happens .happens_box > span {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+#happens .happens_box h3 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+#happens .happens_box p {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+#testimonials > .title {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #15a1b7;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#testimonials .testimonials_box {
+    max-width: 316px;
+    box-shadow: 0px 1px 2px 0px #0000004d;
+    border-radius: 16px;
+    padding: 24px;
+    margin: auto;
+}
+
+#testimonials .testimonials_box .testimonials_author {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+#testimonials .testimonials_box > .testimonials_text {
+    font-family: DM Sans;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+    margin-bottom: 24px;
+}
+
+#testimonials .testimonials_box > .testimonials_loc {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+#testimonials .owl-carousel .owl-stage-outer {
+    padding: 40px 0;
+}
+
+#faq .title {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    text-transform: capitalize;
+    color: #15a1b7;
+    max-width: 600px;
+    margin: 0 auto 40px;
+    text-align: center;
+}
+
+#faq .accordion-item {
+    margin-bottom: 24px;
+}
+
+#faq .accordion-button {
+    border: 1px solid #d4f3f8;
+    border-radius: 8px;
+    box-shadow: 0px 1px 2px 0px #0000004d;
+    font-family: DM Sans;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    color: #49454f;
+}
+
+/* Start services page */
+#services_banner {
+    position: relative;
+    background-image: url("../img/banners/services.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding-top: 210px;
+    padding-bottom: 210px;
+}
+
+#services_banner::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #00000066;
+    z-index: 2;
+}
+
+#services_banner h2 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 80px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #ffffff;
+    max-width: 850px;
+    margin: auto;
+    position: relative;
+    z-index: 3;
+}
+
+#accurate h2 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: 0.1px;
+    color: #15a1b7;
+    margin-bottom: 16px;
+}
+
+#accurate p {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    color: #1e3751;
+}
+
+#accurate .accurate_item {
+    border: 1px solid #15a1b7;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+}
+
+#accurate .accurate_item > h3 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+    margin-bottom: 0;
+}
+
+#services_info .item {
+    border: 1px solid #15a1b7;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+}
+
+#services_info .item > h2 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+#services_info .item > p {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+    margin-bottom: 24px;
+}
+
+#services_info .item > p:last-child {
+    margin-bottom: 0;
+}
+
+#support p {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 48px;
+    letter-spacing: 0.1px;
+    color: #1e3751;
+    margin-bottom: 40px;
+    max-width: 738px;
+}
+
+#support .support_box {
+    border: 1px solid #15a1b7;
+    border-radius: 12px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+}
+
+#plans > .title {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    margin: 0 auto 40px;
+    color: #15a1b7;
+    max-width: 640px;
+}
+
+#plans > .plans {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+#plans .plan {
+    border: 1px solid #15a1b7;
+    border-radius: 12px;
+    padding: 24px;
+    background: #eaf9fc;
+    max-width: 432px;
+}
+
+#plans .plan.white {
+    background: #15a1b7;
+    border: 1px solid #eaf9fc;
+    color: #ffffff;
+}
+
+#plans .plan > h2 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+#plans .plan > p {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+#plans .plan > .price {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+    margin-bottom: 40px;
+}
+
+#plans .plan > ul {
+    padding-left: 0;
+    margin-bottom: 72px;
+}
+
+#plans .plan > ul > li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+#plans .plan > ul > li > p {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+#plans .plan.white > h2,
+#plans .plan.white > p,
+#plans .plan.white > ul > li > p {
+    color: #ffffff;
+}
+
+#what_included > .what_included {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#what_included h2 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: 0.1px;
+    color: #15a1b7;
+    margin-bottom: 40px;
+}
+
+#what_included ul {
+    padding-left: 0;
+}
+
+#what_included ul > li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+    text-align: left;
+}
+
+#ready {
+    background-image: url("../img/ready_bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    padding: 80px 0;
+}
+
+#ready .title {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: 0.1px;
+    color: #ffffff;
+    margin: 0 auto 40px;
+    max-width: 664px;
+}
+
+/* End services page */
+
+/* Start sign pahge */
+.sign_form, .reset_password_form  {
+    border: 1px solid #15a1b7;
+    border-radius: 12px;
+    margin: auto;
+    max-width: 550px;
+    padding: 40px 24px;
+}
+
+.sign_form > h2, .reset_password_form > h2 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+    margin-bottom: 16px;
+}
+.sign_form > h3, .reset_password_form > h3 {
+    font-family: DM Sans;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+    margin-bottom: 40px;
+}
+
+.sign_form input, .reset_password_form input {
+    border: 1px solid #1e3751;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.sign_form button, .reset_password_form button {
+    margin-top: 26px;
+}
+
+.sign_form small, .reset_password_form small  {
+    font-family: DM Sans;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.1px;
+    color: #1e3751;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.forgot_password_link {
+    width: 100%;
+}
+
+
+.sign_account {
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+}
+.sign_account p {
+    font-family: DM Sans;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+.form-check p > a,
+.sign_account p > a,
+.forgot_password_link p > a {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #15a1b7;
+    text-decoration: none;
+}
+
+.form-check p {
+    font-family: DM Sans;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+.form-check .form-check-input {
+    margin-top: 10px;
+}
+
+.sign_bg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 10px;
+    font-size: 14px;
+    color: #ffffff;
+    max-width: 700px;
+}
+
+.sign_bg > h1 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 80px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+}
+
+.sign_bg > h2 {
+    font-family: DM Sans;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+}
+/* End sign pahge */
+
+/* Start Admin panel */
+.admin_controler {
+    min-height: calc(100vh - 535px);
+    margin: 40px auto;
+}
+
+.pagination {
+    margin-bottom: 0;
+}
+
+._pagination > nav > .d-none {
+    gap: 15px;
+}
+/* End Admin panel */
+
+/* Start Choosing business type page */
+.choosing-business-type {
+    margin: 80px auto;
+}
+
+.choosing-business-type_section {
+    margin-bottom: 120px;
+}
+
+.choosing-business-type .back-home {
+    margin-bottom: 40px;
+}
+
+.back-home {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.custom-tabs {
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 2px solid #cac9ca;
+    position: relative;
+    padding: 0;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 60px;
+}
+
+.tab-item {
+    cursor: pointer;
+    font-family: "DM Sans", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    text-transform: uppercase;
+    color: #cac9ca;
+    border-bottom: 2px solid transparent;
+    position: relative;
+    z-index: 1;
+    padding: 10px 15px;
+    flex-grow: 1;
+    min-width: 100px;
+    transition: color 0.3s;
+}
+
+.tab-item.active {
+    border-bottom-color: #00a6c9;
+    color: #00a6c9;
+    bottom: -2px;
+}
+
+.tab-item:hover:not(.active) {
+    color: #00a6c9;
+}
+
+.back_btn {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #15a1b7;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.back_btn:hover {
+    color: #15a1b7;
+    border-color: #15a1b7;
+}
+
+.choosing-business-type-title {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    color: #15a1b7;
+}
+
+.choosing-business-type-text {
+    font-family: DM Sans;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+    margin-bottom: 5px;
+}
+
+.choosing-business-type-form-box {
+    margin-top: 40px;
+    text-align: left;
+}
+
+.custom-radio {
+    width: 18px;
+    height: 18px;
+    margin-top: 5px !important;
+}
+
+.custom-radio:checked {
+    border-color: #15a1b7;
+    background-color: #15a1b7;
+}
+
+.custom-label {
+    font-family: "DM Sans", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #697b8c;
+    margin-left: 4px;
+    cursor: pointer;
+}
+
+.grin_box_border {
+    border: 1px solid #15a1b780;
+    border-radius: 16px;
+    padding: 16px 24px;
+}
+
+select.form-control {
+    background: url("../img/icons/select.png") no-repeat right 1rem center;
+    background-size: 1em;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 2.5rem;
+}
+
+.select_income_container,
+.select_deduction_container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(246px, 1fr));
+    gap: 16px;
+    margin: 40px auto;
+}
+
+.other-details-item,
+.deduction-item,
+.income-item {
+    background-color: #fafafa;
+    border: 2px solid #c3cad0;
+    border-radius: 12px;
+    padding: 24px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.other-details-item.hover,
+.other-details-item.active,
+.deduction-item:hover,
+.deduction-item.active,
+.income-item.active,
+.income-item:hover {
+    border: 2px solid #15a1b7;
+    background-color: #eaf9fc;
+}
+
+.other-details-icon,
+.deduction-icon,
+.income-icon {
+    text-align: center;
+    margin-top: auto;
+}
+
+.other-details-label,
+.deduction-label,
+.income-label {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 24px;
+    leading-trim: NONE;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+.hidden {
+    display: none;
+}
+
+.toggle-btn {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-style: SemiBold;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #15a1b7;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+.toggle-btn:hover {
+    border: 1px solid #15a1b7;
+    color: #15a1b7;
+}
+
+.form_title {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 24px;
+    leading-trim: NONE;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+.form-check-input[type="checkbox"] {
+    width: 2.5em;
+    height: 1.4em;
+    background-color: #ccc;
+    border-radius: 1em;
+    position: relative;
+}
+
+.form-check-input[type="checkbox"]:checked {
+    background-color: #15a1b7;
+}
+
+.form-check-input[type="checkbox"]::before {
+    content: "";
+    position: absolute;
+    top: 0.15em;
+    left: 0.15em;
+    width: 1em;
+    height: 1em;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.form-check-input[type="checkbox"]:checked::before {
+    transform: translateX(1.1em);
+}
+
+.btn_add {
+    padding: 10px 24px;
+    border: 1px solid #79747e;
+    border-radius: 8px;
+    font-family: DM Sans;
+    font-weight: 600;
+    font-style: SemiBold;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+.btn_add:hover {
+    background: #15a1b7;
+    color: #fff;
+}
+
+.btn_delete {
+    padding: 10px 24px;
+    font-family: DM Sans;
+    font-weight: 600;
+    font-style: SemiBold;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+.btn_delete:hover {
+    background: #15a1b7;
+    color: #fff;
+}
+
+/* End Choosing business type page */
+
+/* Start Contact page */
+.page_banner {
+    position: relative;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding-top: 210px;
+    padding-bottom: 210px;
+}
+.page_banner#contact_banner {
+    position: relative;
+    background-image: url("../img/banners/contact.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding-top: 210px;
+    padding-bottom: 210px;
+}
+
+.page_banner::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #00000066;
+    z-index: 2;
+}
+
+.page_banner h2 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 80px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #ffffff;
+    max-width: 850px;
+    margin: auto;
+    position: relative;
+    z-index: 3;
+}
+
+.page_banner p {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-style: SemiBold;
+    font-size: 24px;
+    leading-trim: NONE;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #ffffff;
+    max-width: 850px;
+    margin: auto;
+    position: relative;
+    z-index: 3;
+}
+
+#contact_info .contact_info_box {
+    border: 1px solid #15a1b7;
+    border-radius: 12px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#contact_info .contact_info_box h3 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: 0.1px;
+    color: #15a1b7;
+}
+
+#contact_info .contact_info_box p,
+#contact_info .contact_info_box a {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-style: SemiBold;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+#contact_form .contact_form_box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+}
+
+#contact_form input,
+#contact_form textarea {
+    padding: 16px;
+    font-family: DM Sans;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+}
+
+#contact_form input::placeholder,
+#contact_form textarea::placeholder {
+    padding: 0;
+    color: #49454f;
+}
+
+#contact_help h2 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 32px;
+    line-height: 48px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    color: #15a1b7;
+    margin-bottom: 24px;
+}
+
+#contact_help p {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-style: SemiBold;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #1e3751;
+    max-width: 665px;
+    margin: auto;
+}
+/* End Contact page */
+
+/* Start Privacy Policy page */
+#header {
+    padding-top: 160px;
+    text-align: center;
+    max-width: 896px;
+    margin: auto;
+}
+
+#header > h2 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 64px;
+    line-height: 80px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+    margin-bottom: 12px;
+}
+
+#header > p {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-style: SemiBold;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+    margin-bottom: 40px;
+}
+
+#header > span {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-style: SemiBold;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+#content .item {
+    margin-top: 80px;
+}
+
+#content .item > h3 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 32px;
+    line-height: 48px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+#content .item p {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-style: SemiBold;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+#content .item a {
+    font-family: DM Sans;
+    font-weight: 600;
+    font-style: SemiBold;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+#content .item > ul > li {
+    list-style: disc;
+}
+/* End Privacy Policy page */
+
+/* Start Paymant page */
+.paymant_title {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    color: #15a1b7;
+    margin-bottom: 16px;
+}
+
+.paymant_description {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #1e3751;
+    margin-bottom: 40px;
+}
+
+.paymant_method {
+    outline: 1px solid #c3cad0;
+    border-radius: 12px;
+    background-color: #fafafa;
+    font-family: DM Sans;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+    padding: 24px;
+    padding-bottom: 64px;
+    cursor: pointer;
+}
+
+.paymant_method:hover {
+    outline: 2px solid #15a1b7;
+    background-color: #eaf9fc;
+}
+
+#paymant_method {
+    max-width: 1036px;
+    margin: auto;
+}
+
+.payment_details {
+    margin: 60px auto 24px;
+}
+
+.payment_details > .info {
+    border: 1px solid #15a1b780;
+    border-radius: 16px;
+    padding: 16px 24px;
+    font-family: DM Sans;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+}
+
+.payment_details > .info > p {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.payment_details > .info > p > span {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #15a1b7;
+}
+
+.payment_details > .form {
+    border: 1px solid #15a1b780;
+    border-radius: 16px;
+    padding: 16px 24px;
+    margin-top: 24px;
+}
+
+.payment_details > .form > h3 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+    margin-bottom: 24px;
+}
+
+.paymant_agree {
+    display: flex;
+    gap: 15px;
+    padding-left: 15px;
+}
+
+.paymant_agree > label {
+    cursor: pointer;
+    font-family: DM Sans;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #697b8c;
+}
+
+#success_message {
+    border: 2px solid #15a1b7;
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 1036px;
+    margin: auto;
+}
+
+#success_message > h3 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    color: #15a1b7;
+    margin-bottom: 24px;
+}
+
+#success_message > p {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    vertical-align: middle;
+    color: #1e3751;
+    margin-bottom: 8px;
+}
+/* End Paymant page */
+
+/* Start Tax Returns page */
+.tax-returns-title {
+    margin-top: 110px;
+    margin-bottom: 40px;
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: 0.1px;
+    color: #15a1b7;
+}
+
+.tax_returns_box {
+    margin-bottom: 80px;
+}
+
+.tax_returns_box > h3 {
+    font-family: DM Sans;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+    margin-bottom: 24px;
+}
+
+.tax_returns_box > p {
+    font-family: DM Sans;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+    margin-bottom: 8px;
+}
+
+.tax_returns_table {
+    width: 100%;
+    font-family: DM Sans;
+    font-weight: 500;
+    font-style: SemiBold;
+    font-size: 18px;
+    line-height: 26px;
+    letter-spacing: 0.1px;
+    vertical-align: middle;
+    color: #1e3751;
+    padding: 10px;
+}
+
+.tax_returns_table > thead {
+    background-color: #15a1b71f;
+}
+
+.tax_returns_table tr {
+    background-color: transparent;
+}
+
+.tax_returns_table tr:nth-child(even) {
+    background-color: #15a1b70f;
+}
+
+.tax_returns_table th,
+.tax_returns_table td {
+    padding: 10px;
+}
+/* End Tax Returns page */
