@@ -123,7 +123,11 @@ class StripePaymentController extends Controller
             TaxPaymentSucceeded::dispatch($tax);
             return redirect()->route('home')
                 ->with('success',
-                    'Thank you for your payment. Receipt has been sent to your inbox. Thanks for choosing TaxEasy to complete your tax return. Our team will be in contact shortly if we have any questions. Your should expect your return around 14 days from confirmed submission to the Australian Taxation Office.');
+                    'Thank you for your payment.<br>
+Thanks for choosing TaxEasy to complete your tax return.<br>
+Our team will reach you out shortly if we have any questions.<br>
+You should expect your return around 14 days from confirmed submission to the Australian Taxation Office.');
+
         } catch (\Stripe\Exception\CardException $e) {
             DB::rollBack();
             $tax->update(['form_status' => 'incomplete']);
