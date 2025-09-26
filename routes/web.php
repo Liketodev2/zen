@@ -7,6 +7,7 @@ use App\Http\Controllers\Forms\OtherController;
 use App\Http\Controllers\StripePaymentController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\AdminController;
@@ -29,33 +30,6 @@ use App\Http\Controllers\Forms\DeductionController;
 */
 
 
-Route::get('/migrate', function (){
-    Artisan::call('migrate');
-    dd('migrate');
-});
-
-
-Route::get('/migrate-fresh', function (){
-    Artisan::call('migrate:fresh');
-    dd('migrate fresh');
-});
-
-Route::get('/clear', function (){
-    Artisan::call('optimize:clear');
-    dd('optimize:clear');
-});
-
-Route::get('/storage-link', function (){
-    Artisan::call('storage:link');
-    dd('storage:link');
-});
-
-
-//Route::get('/example', function (){
-//    $tax = \App\Models\TaxReturn::query()->findOrFail(1);
-//    TaxPaymentSucceeded::dispatch($tax);
-//    dd('done');
-//});
 
 Auth::routes();
 
