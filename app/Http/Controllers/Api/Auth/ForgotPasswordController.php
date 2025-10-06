@@ -79,17 +79,18 @@ class ForgotPasswordController extends Controller
             return response()->json(['error' => 'Invalid code!', 'validation' => false], 404);
         }
 
-        $tokenExpiration = Carbon::parse($passwordReset->created_at)->addMinutes(1.5);
+        $tokenExpiration = Carbon::parse($passwordReset->created_at)->addMinutes(5);
 
         if (Carbon::now()->greaterThan($tokenExpiration)) {
             return response()->json(['error' => 'Code has expired!', 'validation' => false], 410);
         }
-
+        $token = rand(1000, 9999);
         $passwordReset->update([
             'created_at' => Carbon::parse($passwordReset->created_at)->addMinutes(5),
+            'token' => $token
         ]);
 
-        return response()->json(['success' => 'Code verified successfully.']);
+        return response()->json(['success' => 'Code verified successfully.', 'data' => ['token' => $token]], 200);
     }
 
 
