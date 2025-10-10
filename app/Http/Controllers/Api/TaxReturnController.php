@@ -27,12 +27,19 @@ class TaxReturnController extends Controller
      * @param $id
      * @return TaxReturnResource
      */
-    public function show(Request $request, $id)
+    public function show(Request $request)
     {
+        $userId = $request->user()->id;
         $taxReturn = TaxReturn::with(['basicInfo', 'income', 'deduction', 'other'])
-            ->where('user_id', $request->user()->id)
-            ->findOrFail($id);
-
+        ->firstOrCreate(
+            [
+                'user_id' => $userId,
+                'form_status' => 'incomplete',
+            ],
+            [
+                'payment_status' => 'unpaid',
+            ]
+        );
         return new TaxReturnResource($taxReturn);
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\FormController;
 use App\Http\Controllers\Api\TaxReturnController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,10 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::group(['prefix' => 'tax-returns'], function () {
         Route::get('/', [TaxReturnController::class, 'index']);
-        Route::get('/{id}', [TaxReturnController::class, 'show']);
+        Route::get('/show', [TaxReturnController::class, 'show']);
+    });
+
+    Route::group(['prefix' => 'forms'], function () {
+        Route::post('/basic-info', [FormController::class, 'basicInfo']);
     });
 });

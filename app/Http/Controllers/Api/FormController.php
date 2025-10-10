@@ -1,39 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Forms;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BasicInfoResource;
 use App\Models\Forms\BasicInfoForm;
 use App\Models\TaxReturn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class  BasicInfoFormController extends Controller
+class FormController extends Controller
 {
-
 
     /**
      * @param Request $request
-     * @param $taxId
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return BasicInfoResource|\Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    private function saveBasicInfo(Request $request, $taxId, $id = null)
+    public function basicInfo(Request $request)
     {
-        $taxReturn = TaxReturn::where('user_id', auth()->id())
-            ->where('id', $taxId)
-            ->first();
-
-        if (!$taxReturn) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Tax Return not found'
-            ], 404);
-        }
-
-
         $rules = [
+            'tax_id' => 'required|exists:tax_returns,id',
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'day' => 'nullable|integer|min:1|max:31',
@@ -63,83 +50,65 @@ class  BasicInfoFormController extends Controller
             'other_occupation' => 'nullable|string',
         ];
 
+
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation errors',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
         $validated = $validator->validated();
 
-        foreach (
-            [
-                'has_spouse',
-                'future_tax_return',
-                'australian_citizenship',
-                'long_stay_183',
-                'full_tax_year',
-                'same_as_home_address',
-                'has_education_debt',
-                'has_sfss_debt'
-            ] as $field
-        ) {
+
+        $taxReturn = TaxReturn::where('id', $validated['tax_id'])
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if (!$taxReturn) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tax Return not found or unauthorized',
+            ], 404);
+        }
+
+        $booleanFields = [
+            'has_spouse',
+            'future_tax_return',
+            'australian_citizenship',
+            'long_stay_183',
+            'full_tax_year',
+            'same_as_home_address',
+            'has_education_debt',
+            'has_sfss_debt',
+        ];
+
+        foreach ($booleanFields as $field) {
             if (isset($validated[$field])) {
                 $validated[$field] = $validated[$field] === 'yes' ? 1 : 0;
             }
         }
 
-
         $validated['tax_return_id'] = $taxReturn->id;
 
-        if ($id) {
-            $basicInfo = BasicInfoForm::findOrFail($id);
-
-            if ($basicInfo->taxReturn->user_id !== auth()->id()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Unauthorized'
-                ], 403);
-            }
-
-            $basicInfo->update($validated);
-            $message = 'Form updated successfully!';
-        } else {
-            $basicInfo = BasicInfoForm::create($validated);
-            $message = 'Form saved successfully!';
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'basicInfoId' => $basicInfo->id
+        $basicInfo = BasicInfoForm::firstOrNew([
+            'tax_return_id' => $taxReturn->id,
         ]);
+
+        $basicInfo->fill($validated);
+        $basicInfo->save();
+
+        $message = $basicInfo->wasRecentlyCreated
+            ? 'Form saved successfully!'
+            : 'Form updated successfully!';
+
+        return (new BasicInfoResource($basicInfo))
+            ->additional([
+                'success' => true,
+                'message' => $message,
+            ]);
     }
-
-
-    /**
-     * @param Request $request
-     * @param string $taxId
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Request $request, string $taxId)
-    {
-        return $this->saveBasicInfo($request, $taxId);
-    }
-
-
-    /**
-     * @param Request $request
-     * @param string $
-     * @param string $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Request $request, string $taxId, string $id)
-    {
-        return $this->saveBasicInfo($request, $taxId, $id);
-    }
-
 }

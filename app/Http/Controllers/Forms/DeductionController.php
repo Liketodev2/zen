@@ -154,7 +154,6 @@ class DeductionController extends Controller
         [$field, $key] = explode('.', $input);
 
         if ($request->hasFile($input)) {
-            // Delete old if exists
             if (!empty($attach[$field][$key])) {
                 Storage::disk('s3')->delete($attach[$field][$key]);
             }
