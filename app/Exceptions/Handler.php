@@ -41,18 +41,39 @@ class Handler extends ExceptionHandler
      */
     public function render($request, \Throwable $exception)
     {
+        // Handle unauthenticated exception (JWT or otherwise)
         if ($exception instanceof AuthenticationException) {
-
             try {
                 $token = JWTAuth::getToken();
                 JWTAuth::checkOrFail($token);
             } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-                return response()->json(['error' => 'Token expired!', 'validation' => false], 419);
+                // API request → return JSON
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'error' => 'Token expired!',
+                        'validation' => false
+                    ], 419);
+                }
+
+                // Web request → redirect to login
+                return redirect()->guest(route('login'))
+                    ->withErrors(['token' => 'Your session has expired. Please log in again.']);
             } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-                return response()->json(['error' => 'Unauthenticated, you must be logged in to access this resource.', 'validation' => false], 403);
+                // API request → return JSON
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'error' => 'Unauthenticated, you must be logged in to access this resource.',
+                        'validation' => false
+                    ], 403);
+                }
+
+                // Web request → redirect to login
+                return redirect()->guest(route('login'))
+                    ->withErrors(['auth' => 'You must be logged in to access this page.']);
             }
         }
 
         return parent::render($request, $exception);
     }
+
 }
