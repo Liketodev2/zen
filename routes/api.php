@@ -39,5 +39,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::group(['prefix' => 'forms'], function () {
         Route::post('/basic-info', [FormController::class, 'basicInfo']);
+        Route::post('/income', [FormController::class, 'income']);
     });
 });
