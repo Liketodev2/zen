@@ -6,7 +6,7 @@
 @section('content')
     <div class="choosing-business-type">
         <div class="container">
-            <a href="{{ route('choosing-business-type') }}" class="back-home">
+            <a href="{{ route('tax-returns.edit', $tax->id) }}" class="back-home">
                 <img src="{{ asset('img/icons/back.png') }}" alt="back">
                 <p>Back</p>
             </a>

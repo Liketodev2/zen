@@ -51,7 +51,7 @@
                 <div class="col-md-4 mb-3">
                     <select name="year" class="form-control border-dark">
                         <option value="">Year</option>
-                        @for ($i = date('Y'); $i >= 1990; $i--)
+                        @for ($i = date('Y'); $i >= date('Y') - 100; $i--)
                             <option value="{{ $i }}" {{ old('year', $basicInfo->year ?? '') == $i ? 'selected' : '' }}>
                                 {{ $i }}
                             </option>
@@ -202,7 +202,7 @@
                     <div class="col-md-6 mb-3">
                         <select name="arrival_year" class="form-control border-dark">
                             <option value="">Year</option>
-                            @for ($i = date('Y'); $i >= 1990; $i--)
+                            @for ($i = date('Y'); $i >= date('Y') - 100; $i--)
                                 <option value="{{ $i }}" {{ old('arrival_year', $basicInfo->arrival_year ?? '') == $i ? 'selected' : '' }}>
                                     {{ $i }}
                                 </option>
@@ -228,9 +228,11 @@
                         <select name="departure_year" class="form-control border-dark">
                             <option value="">Year</option>
                             @for ($i = date('Y'); $i >= 1990; $i--)
-                                <option value="{{ $i }}" {{ old('departure_year', $basicInfo->departure_year ?? '') == $i ? 'selected' : '' }}>
-                                    {{ $i }}
-                                </option>
+                                @for ($i = date('Y'); $i >= date('Y') - 100; $i--)
+                                    <option value="{{ $i }}" {{ old('departure_year', $basicInfo->departure_yearr ?? '') == $i ? 'selected' : '' }}>
+                                        {{ $i }}
+                                    </option>
+                                @endfor
                             @endfor
                         </select>
                     </div>
@@ -355,15 +357,34 @@
                         </p>
                         <select class="form-control" name="occupation" id="occupationSelect">
                             <option value="">Choose</option>
-                            <option value="Accountant" {{ old('occupation', $basicInfo->occupation ?? '') == 'Accountant' ? 'selected' : '' }}>Accountant</option>
-                            <option value="Manager" {{ old('occupation', $basicInfo->occupation ?? '') == 'Manager' ? 'selected' : '' }}>Manager</option>
-                            <option value="Nurse" {{ old('nurse', $basicInfo->occupation ?? '') == 'Nurse' ? 'selected' : '' }}>Nurse</option>
-                            <option value="Electrician" {{ old('electrician', $basicInfo->occupation ?? '') == 'Electrician' ? 'selected' : '' }}>Electrician</option>
-                            <option value="Retail clerk" {{ old('retail_clerk', $basicInfo->occupation ?? '') == 'Retail clerk' ? 'selected' : '' }}>Retail clerk</option>
-                            <option value="Student" {{ old('occupation', $basicInfo->occupation ?? '') == 'Student' ? 'selected' : '' }}>Student</option>
-                            <option value="Other" {{ old('occupation', $basicInfo->occupation ?? '') == 'Other' ? 'selected' : '' }}>Other</option>
+                            @php
+                                $occupations = [
+                                    'Accountant', 'Administrative Assistant', 'Architect', 'Artist', 'Attorney', 'Baker', 'Barber',
+                                    'Bartender', 'Biologist', 'Bookkeeper', 'Bus Driver', 'Business Analyst', 'Butcher', 'Carpenter',
+                                    'Cashier', 'Chef', 'Civil Engineer', 'Cleaner', 'Clergy Member', 'Construction Worker',
+                                    'Consultant', 'Customer Service Representative', 'Data Analyst', 'Data Scientist', 'Delivery Driver',
+                                    'Dentist', 'Designer', 'Doctor', 'Driver', 'Editor', 'Electrician', 'Engineer', 'Entrepreneur',
+                                    'Event Planner', 'Farmer', 'Fashion Designer', 'Firefighter', 'Flight Attendant', 'Graphic Designer',
+                                    'Hairdresser', 'Healthcare Assistant', 'HR Manager', 'Insurance Agent', 'Interpreter', 'IT Support Specialist',
+                                    'Journalist', 'Judge', 'Laborer', 'Lawyer', 'Librarian', 'Logistics Coordinator', 'Machine Operator',
+                                    'Maintenance Worker', 'Manager', 'Marketing Specialist', 'Massage Therapist', 'Mechanic', 'Medical Assistant',
+                                    'Musician', 'Nanny', 'Nurse', 'Nutritionist', 'Office Manager', 'Painter', 'Paramedic', 'Personal Trainer',
+                                    'Pharmacist', 'Photographer', 'Physical Therapist', 'Pilot', 'Plumber', 'Police Officer', 'Professor',
+                                    'Programmer', 'Project Manager', 'Psychologist', 'Real Estate Agent', 'Receptionist', 'Retail Clerk',
+                                    'Sales Associate', 'Sales Manager', 'Scientist', 'Secretary', 'Security Guard', 'Server', 'Social Worker',
+                                    'Software Developer', 'Software Engineer', 'Soldier', 'Speech Therapist', 'Student', 'Surgeon',
+                                    'Tailor', 'Teacher', 'Technician', 'Therapist', 'Translator', 'Truck Driver', 'Veterinarian',
+                                    'Video Editor', 'Waiter', 'Warehouse Worker', 'Web Developer', 'Welder', 'Writer', 'Other'
+                                ];
+                            @endphp
+                            @foreach ($occupations as $job)
+                                <option value="{{ $job }}" {{ old('occupation', $basicInfo->occupation ?? '') == $job ? 'selected' : '' }}>
+                                    {{ $job }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
+
                 </div>
                 <div class="row" id="otherOccupationField" style="display: {{ old('occupation', $basicInfo->occupation ?? '') == 'other' ? 'block' : 'none' }};">
                     <div class="col-md-6">

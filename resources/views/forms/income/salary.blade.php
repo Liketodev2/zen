@@ -5,8 +5,9 @@
     </div>
     <div class="row mb-3">
         <p class="choosing-business-type-text">
-            Enter all your income you received from your employer/s below
+            Enter all your income you received from your employer/s below.
         </p>
+        <p class="choosing-business-type-text">*if you don’t have these details, don’t worry. We can access these from our pre-fill application. Should we have any issues we will contact you.</p>
         <div class="grin_box_border">
             <div id="employerContainer">
                 @php
@@ -366,7 +367,7 @@ document.addEventListener("DOMContentLoaded", () => {
             onlyIncomeDetails.style.display = "block";
         } else {
             onlyIncomeDetails.style.display = "none";
-            onlyIncomeDetails.value = ''; 
+            onlyIncomeDetails.value = '';
         }
     }
 

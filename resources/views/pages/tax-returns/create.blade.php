@@ -58,7 +58,7 @@
             </button>
             <button class="btn navbar_btn" id="nextBtn" type="button">Next</button>
             <a href="{{ route('payment', ['id' => $taxReturn->id]) }}"  class="btn navbar_btn d-none" id="confirmBtn">
-                Payment
+                Finalise your Tax Return
             </a>
         </div>
     </div>
