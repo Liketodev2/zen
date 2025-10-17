@@ -23,8 +23,8 @@
               type="radio"
               name="foreign_income[assets_interest]"
               id="assetsInterestYes"
-              value="yes"
-              {{ old('assets_interest', $incomes->foreign_income['assets_interest'] ?? '') == 'yes' ? 'checked' : '' }}
+              value="1"
+              {{ old('assets_interest', $incomes->foreign_income['assets_interest'] ?? '') == '1' ? 'checked' : '' }}
             />
             <label class="form-check-label custom-label" for="assetsInterestYes">Yes</label>
           </div>
@@ -34,8 +34,8 @@
               type="radio"
               name="foreign_income[assets_interest]"
               id="assetsInterestNo"
-              value="no"
-              {{ old('assets_interest', $incomes->foreign_income['assets_interest'] ?? '') == 'no' ? 'checked' : '' }}
+              value="0"
+              {{ old('assets_interest', $incomes->foreign_income['assets_interest'] ?? '') == '0' ? 'checked' : '' }}
             />
             <label class="form-check-label custom-label" for="assetsInterestNo">No</label>
           </div>
@@ -55,8 +55,8 @@
               type="radio"
               name="foreign_income[income_foreign_sources]"
               id="incomeForeignYes"
-              value="yes"
-              {{ old('income_foreign_sources', $incomes->foreign_income['income_foreign_sources'] ?? '') == 'yes' ? 'checked' : '' }}
+              value="1"
+              {{ old('income_foreign_sources', $incomes->foreign_income['income_foreign_sources'] ?? '') == '1' ? 'checked' : '' }}
             />
             <label class="form-check-label custom-label" for="incomeForeignYes">Yes</label>
           </div>
@@ -66,8 +66,8 @@
               type="radio"
               name="foreign_income[income_foreign_sources]"
               id="incomeForeignNo"
-              value="no"
-              {{ old('income_foreign_sources', $incomes->foreign_income['income_foreign_sources'] ?? '') == 'no' ? 'checked' : '' }}
+              value="0"
+              {{ old('income_foreign_sources', $incomes->foreign_income['income_foreign_sources'] ?? '') == '0' ? 'checked' : '' }}
             />
             <label class="form-check-label custom-label" for="incomeForeignNo">No</label>
           </div>
@@ -184,8 +184,8 @@
                 type="radio"
                 name="foreign_income[foreign_pensions]"
                 id="incomePensionsYes"
-                value="yes"
-                {{ $pensionValue === 'yes' ? 'checked' : '' }}
+                value="1"
+                {{ $pensionValue === '1' ? 'checked' : '' }}
               />
               <label
                 class="form-check-label custom-label"
@@ -199,8 +199,8 @@
                 type="radio"
                 name="foreign_income[foreign_pensions]"
                 id="incomePensionsNo"
-                value="no"
-                {{ $pensionValue === 'no' ? 'checked' : '' }}
+                value="0"
+                {{ $pensionValue === '0' ? 'checked' : '' }}
               />
               <label
                 class="form-check-label custom-label"
@@ -314,8 +314,8 @@
                 type="radio"
                 name="foreign_income[entries_employment][received]"
                 id="incomeEmployment1Yes"
-                value="yes"
-                {{ old('foreign_income.entries_employment.0.received', $incomes->foreign_income['entries_employment']['received'] ?? '') == 'yes' ? 'checked' : '' }}
+                value="1"
+                {{ old('foreign_income.entries_employment.0.received', $incomes->foreign_income['entries_employment']['received'] ?? '') == '1' ? 'checked' : '' }}
               />
               <label
                 class="form-check-label custom-label"
@@ -329,8 +329,8 @@
                 type="radio"
                 name="foreign_income[entries_employment][received]"
                 id="incomeEmployment1No"
-                value="no"
-                {{ old('foreign_income.entries_employment.0.received', $incomes->foreign_income['entries_employment']['received'] ?? '') == 'no' ? 'checked' : '' }}
+                value="0"
+                {{ old('foreign_income.entries_employment.0.received', $incomes->foreign_income['entries_employment']['received'] ?? '') == '0' ? 'checked' : '' }}
               />
               <label
                 class="form-check-label custom-label"
@@ -397,8 +397,8 @@
               type="radio"
               name="foreign_income[entries_non_resident][0][received]"
               id="incomeEmployment2Yes"
-              value="yes"
-              {{ old('foreign_income.entries_non_resident.0.received', $incomes->foreign_income['entries_non_resident'][0]['received'] ?? '') == 'yes' ? 'checked' : '' }}
+              value="1"
+              {{ old('foreign_income.entries_non_resident.0.received', $incomes->foreign_income['entries_non_resident'][0]['received'] ?? '') == '1' ? 'checked' : '' }}
             />
             <label
               class="form-check-label custom-label"
@@ -412,8 +412,8 @@
               type="radio"
               name="foreign_income[entries_non_resident][0][received]"
               id="incomeEmployment2No"
-              value="no"
-              {{ old('foreign_income.entries_non_resident.0.received', $incomes->foreign_income['entries_non_resident'][0]['received'] ?? '') == 'no' ? 'checked' : '' }}
+              value="0"
+              {{ old('foreign_income.entries_non_resident.0.received', $incomes->foreign_income['entries_non_resident'][0]['received'] ?? '') == '0' ? 'checked' : '' }}
             />
             <label
               class="form-check-label custom-label"
@@ -438,8 +438,8 @@
                     type="radio"
                     name="foreign_income[entries_non_resident][0][non_resident_status]"
                     id="nonResidentYes"
-                    value="yes"
-                    {{ old('foreign_income.entries_non_resident.0.non_resident_status', $incomes->foreign_income['entries_non_resident'][0]['non_resident_status'] ?? '') == 'yes' ? 'checked' : '' }}
+                    value="1"
+                    {{ old('foreign_income.entries_non_resident.0.non_resident_status', $incomes->foreign_income['entries_non_resident'][0]['non_resident_status'] ?? '') == '1' ? 'checked' : '' }}
                   />
                   <label
                     class="form-check-label custom-label"
@@ -453,8 +453,8 @@
                     type="radio"
                     name="foreign_income[entries_non_resident][0][non_resident_status]"
                     id="nonResidentNo"
-                    value="no"
-                    {{ old('foreign_income.entries_non_resident.0.non_resident_status', $incomes->foreign_income['entries_non_resident'][0]['non_resident_status'] ?? '') == 'no' ? 'checked' : '' }}
+                    value="0"
+                    {{ old('foreign_income.entries_non_resident.0.non_resident_status', $incomes->foreign_income['entries_non_resident'][0]['non_resident_status'] ?? '') == '0' ? 'checked' : '' }}
                   />
                   <label
                     class="form-check-label custom-label"
@@ -466,7 +466,7 @@
 
               <div class="col-12 mb-3 help-debt-block" style="display:none;">
                 <label class="choosing-business-type-text">
-                Did you have a HELP or AASL (previously known as TSL) debt on 1 June <?= date('Y') ?>?  
+                Did you have a HELP or AASL (previously known as TSL) debt on 1 June <?= date('Y') ?>?
                 </label
                 ><br />
                 <div class="form-check form-check-inline">
@@ -475,8 +475,8 @@
                     type="radio"
                     name="foreign_income[entries_non_resident][0][help_debt]"
                     id="helpDebtYes"
-                    value="yes"
-                    {{ old('foreign_income.entries_non_resident.0.help_debt', $incomes->foreign_income['entries_non_resident'][0]['help_debt'] ?? '') == 'yes' ? 'checked' : '' }}
+                    value="1"
+                    {{ old('foreign_income.entries_non_resident.0.help_debt', $incomes->foreign_income['entries_non_resident'][0]['help_debt'] ?? '') == '1' ? 'checked' : '' }}
                   />
                   <label
                     class="form-check-label custom-label"
@@ -490,8 +490,8 @@
                     type="radio"
                     name="foreign_income[entries_non_resident][0][help_debt]"
                     id="helpDebtNo"
-                    value="no"
-                    {{ old('foreign_income.entries_non_resident.0.help_debt', $incomes->foreign_income['entries_non_resident'][0]['help_debt'] ?? '') == 'no' ? 'checked' : '' }}
+                    value="0"
+                    {{ old('foreign_income.entries_non_resident.0.help_debt', $incomes->foreign_income['entries_non_resident'][0]['help_debt'] ?? '') == '0' ? 'checked' : '' }}
                   />
                   <label
                     class="form-check-label custom-label"

@@ -17,11 +17,11 @@
       <label class="choosing-business-type-text">Does your employer provide an office or work area for you?</label>
       <div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input custom-radio" type="radio" name="office_occupancy[employer_office]" id="employerOfficeYes" value="yes" {{ ($office['employer_office'] ?? '') === 'yes' ? 'checked' : '' }}>
+          <input class="form-check-input custom-radio" type="radio" name="office_occupancy[employer_office]" id="employerOfficeYes" value="1" {{ ($office['employer_office'] ?? '') === '1' ? 'checked' : '' }}>
           <label class="form-check-label custom-label" for="employerOfficeYes">Yes</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input custom-radio" type="radio" name="office_occupancy[employer_office]" id="employerOfficeNo" value="no" {{ ($office['employer_office'] ?? '') === 'no' ? 'checked' : '' }}>
+          <input class="form-check-input custom-radio" type="radio" name="office_occupancy[employer_office]" id="employerOfficeNo" value="0" {{ ($office['employer_office'] ?? '') === '0' ? 'checked' : '' }}>
           <label class="form-check-label custom-label" for="employerOfficeNo">No</label>
         </div>
       </div>
@@ -31,17 +31,17 @@
       <label class="choosing-business-type-text">Do you have a dedicated home office space that is considered to be your “place of business”?</label>
       <div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input custom-radio" type="radio" name="office_occupancy[dedicated_office]" id="dedicatedOfficeYes" value="yes" {{ ($office['dedicated_office'] ?? '') === 'yes' ? 'checked' : '' }}>
+          <input class="form-check-input custom-radio" type="radio" name="office_occupancy[dedicated_office]" id="dedicatedOfficeYes" value="1" {{ ($office['dedicated_office'] ?? '') === '1' ? 'checked' : '' }}>
           <label class="form-check-label custom-label" for="dedicatedOfficeYes">Yes</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input custom-radio" type="radio" name="office_occupancy[dedicated_office]" id="dedicatedOfficeNo" value="no" {{ ($office['dedicated_office'] ?? '') === 'no' ? 'checked' : '' }}>
+          <input class="form-check-input custom-radio" type="radio" name="office_occupancy[dedicated_office]" id="dedicatedOfficeNo" value="0" {{ ($office['dedicated_office'] ?? '') === '0' ? 'checked' : '' }}>
           <label class="form-check-label custom-label" for="dedicatedOfficeNo">No</label>
         </div>
       </div>
     </div>
 
-    <div id="dedicatedDetails" class="{{ ($office['dedicated_office'] ?? '') === 'yes' ? '' : 'd-none' }}">
+    <div id="dedicatedDetails" class="{{ ($office['dedicated_office'] ?? '') === '1' ? '' : 'd-none' }}">
       <div class="mb-3">
         <label class="choosing-business-type-text">
           Please list the details and amounts of any of these expenses for the tax year: <br>
@@ -66,11 +66,11 @@
         <label class="choosing-business-type-text">Did your employer already pay or reimburse you for any of the items above?</label>
         <div>
           <div class="form-check form-check-inline">
-            <input class="form-check-input custom-radio" type="radio" name="office_occupancy[employer_reimbursed]" id="employerReimbursedYes" value="yes" {{ ($office['employer_reimbursed'] ?? '') === 'yes' ? 'checked' : '' }}>
+            <input class="form-check-input custom-radio" type="radio" name="office_occupancy[employer_reimbursed]" id="employerReimbursedYes" value="1" {{ ($office['employer_reimbursed'] ?? '') === '1' ? 'checked' : '' }}>
             <label class="form-check-label custom-label" for="employerReimbursedYes">Yes</label>
           </div>
           <div class="form-check form-check-inline">
-            <input class="form-check-input custom-radio" type="radio" name="office_occupancy[employer_reimbursed]" id="employerReimbursedNo" value="no" {{ ($office['employer_reimbursed'] ?? '') === 'no' ? 'checked' : '' }}>
+            <input class="form-check-input custom-radio" type="radio" name="office_occupancy[employer_reimbursed]" id="employerReimbursedNo" value="0" {{ ($office['employer_reimbursed'] ?? '') === '0' ? 'checked' : '' }}>
             <label class="form-check-label custom-label" for="employerReimbursedNo">No</label>
           </div>
         </div>

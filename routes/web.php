@@ -1,13 +1,10 @@
 <?php
 
-use App\Events\TaxPaymentSucceeded;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Forms\OtherController;
 use App\Http\Controllers\StripePaymentController;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\AdminController;

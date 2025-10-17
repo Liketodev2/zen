@@ -67,8 +67,8 @@
                                     type="radio"
                                     name="salary[{{ $i }}][income_items]"
                                     id="incomeYes_{{ $i }}"
-                                    value="yes"
-                                    {{ $incomeItemValue === 'yes' ? 'checked' : '' }}
+                                    value="1"
+                                    {{ $incomeItemValue === '1' ? 'checked' : '' }}
                                 >
                                 <label class="form-check-label custom-label" for="incomeYes_{{ $i }}">Yes</label>
                             </div>
@@ -78,13 +78,13 @@
                                     type="radio"
                                     name="salary[{{ $i }}][income_items]"
                                     id="incomeNo_{{ $i }}"
-                                    value="no"
-                                    {{ $incomeItemValue === 'no' ? 'checked' : '' }}
+                                    value="0"
+                                    {{ $incomeItemValue === '0' ? 'checked' : '' }}
                                 >
                                 <label class="form-check-label custom-label" for="incomeNo_{{ $i }}">No</label>
                             </div>
                         </div>
-                        <div class="row mb-3 income-details" style="display: {{ $incomeItemValue === 'yes' ? 'block' : 'none' }};">
+                        <div class="row mb-3 income-details" style="display: {{ $incomeItemValue === '1' ? 'block' : 'none' }};">
                             <div class="col-md-6 mb-3">
                                 @php
                                     $allowanceChecked = old("salary.$i.allowances", $incomes->salary[$i]['allowances'] ?? 'off') === 'on';
@@ -161,8 +161,8 @@
                             type="radio"
                             name="salary[only_income]"
                             id="onlyIncomeYes"
-                            value="yes"
-                            {{ $onlyIncomeValue === 'yes' ? 'checked' : '' }}
+                            value="1"
+                            {{ $onlyIncomeValue === '1' ? 'checked' : '' }}
                         >
                         <label class="form-check-label custom-label" for="onlyIncomeYes">Yes</label>
                     </div>
@@ -172,8 +172,8 @@
                             type="radio"
                             name="salary[only_income]"
                             id="onlyIncomeNo"
-                            value="no"
-                            {{ $onlyIncomeValue === 'no' ? 'checked' : '' }}
+                            value="0"
+                            {{ $onlyIncomeValue === '0' ? 'checked' : '' }}
                         >
                         <label class="form-check-label custom-label" for="onlyIncomeNo">No</label>
                     </div>
@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         type="radio"
                         name="salary[__INDEX__][income_items]"
                         id="incomeYes___INDEX__"
-                        value="yes"
+                        value="1"
                     >
                     <label class="form-check-label custom-label" for="incomeYes___INDEX__">Yes</label>
                 </div>
@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         type="radio"
                         name="salary[__INDEX__][income_items]"
                         id="incomeNo___INDEX__"
-                        value="no"
+                        value="0"
                         checked
                     >
                     <label class="form-check-label custom-label" for="incomeNo___INDEX__">No</label>

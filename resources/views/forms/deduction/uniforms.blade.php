@@ -25,8 +25,8 @@
             type="radio"
             name="uniforms[items][{{ $i }}][has_receipt]"
             id="has_receipt_{{ $i }}_yes"
-            value="yes"
-            {{ old("uniforms.items.$i.has_receipt", $uniformItems[$i]['has_receipt'] ?? '') === 'yes' ? 'checked' : '' }}
+            value="1"
+            {{ old("uniforms.items.$i.has_receipt", $uniformItems[$i]['has_receipt'] ?? '') === '1' ? 'checked' : '' }}
           >
           <label class="form-check-label custom-label" for="has_receipt_{{ $i }}_yes">Yes</label>
         </div>
@@ -36,8 +36,8 @@
             type="radio"
             name="uniforms[items][{{ $i }}][has_receipt]"
             id="has_receipt_{{ $i }}_no"
-            value="no"
-            {{ old("uniforms.items.$i.has_receipt", $uniformItems[$i]['has_receipt'] ?? '') === 'no' ? 'checked' : '' }}
+            value="0"
+            {{ old("uniforms.items.$i.has_receipt", $uniformItems[$i]['has_receipt'] ?? '') === '0' ? 'checked' : '' }}
           >
           <label class="form-check-label custom-label" for="has_receipt_{{ $i }}_no">No</label>
         </div>

@@ -12,13 +12,13 @@
 
     <p class="choosing-business-type-text">Did you regularly work from home this year?</p>
     <div class="form-check form-check-inline">
-      <input class="form-check-input custom-radio" type="radio" name="home_office[worked_from_home]" id="workedFromHomeYes" value="yes"
-        {{ isset($deductions->home_office['worked_from_home']) && $deductions->home_office['worked_from_home'] == 'yes' ? 'checked' : '' }}>
+      <input class="form-check-input custom-radio" type="radio" name="home_office[worked_from_home]" id="workedFromHomeYes" value="1"
+        {{ isset($deductions->home_office['worked_from_home']) && $deductions->home_office['worked_from_home'] == '1' ? 'checked' : '' }}>
       <label class="form-check-label custom-label" for="workedFromHomeYes">Yes</label>
     </div>
     <div class="form-check form-check-inline">
-      <input class="form-check-input custom-radio" type="radio" name="home_office[worked_from_home]" id="workedFromHomeNo" value="no"
-        {{ isset($deductions->home_office['worked_from_home']) && $deductions->home_office['worked_from_home'] == 'no' ? 'checked' : '' }}>
+      <input class="form-check-input custom-radio" type="radio" name="home_office[worked_from_home]" id="workedFromHomeNo" value="0"
+        {{ isset($deductions->home_office['worked_from_home']) && $deductions->home_office['worked_from_home'] == '0' ? 'checked' : '' }}>
       <label class="form-check-label custom-label" for="workedFromHomeNo">No</label>
     </div>
 
@@ -28,13 +28,13 @@
         Do you have a record of the number of hours that you worked at home each day? (E.g. diary, timesheets, logbook.)
       </p>
       <div class="form-check form-check-inline">
-        <input class="form-check-input custom-radio" type="radio" name="home_office[have_hours_record]" id="hoursRecordYes" value="yes"
-          {{ isset($deductions->home_office['have_hours_record']) && $deductions->home_office['have_hours_record'] == 'yes' ? 'checked' : '' }}>
+        <input class="form-check-input custom-radio" type="radio" name="home_office[have_hours_record]" id="hoursRecordYes" value="1"
+          {{ isset($deductions->home_office['have_hours_record']) && $deductions->home_office['have_hours_record'] == '1' ? 'checked' : '' }}>
         <label class="form-check-label custom-label" for="hoursRecordYes">Yes</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input custom-radio" type="radio" name="home_office[have_hours_record]" id="hoursRecordNo" value="no"
-          {{ isset($deductions->home_office['have_hours_record']) && $deductions->home_office['have_hours_record'] == 'no' ? 'checked' : '' }}>
+        <input class="form-check-input custom-radio" type="radio" name="home_office[have_hours_record]" id="hoursRecordNo" value="0"
+          {{ isset($deductions->home_office['have_hours_record']) && $deductions->home_office['have_hours_record'] == '0' ? 'checked' : '' }}>
         <label class="form-check-label custom-label" for="hoursRecordNo">No</label>
       </div>
     </div>
@@ -53,13 +53,13 @@
         Do you have other home office expenses to claim, such as home telephone, office furniture or stationery?
       </p>
       <div class="form-check form-check-inline">
-        <input class="form-check-input custom-radio" type="radio" name="home_office[other_home_expenses_yes]" id="otherExpensesYes_YES" value="yes"
-          {{ isset($deductions->home_office['other_home_expenses_yes']) && $deductions->home_office['other_home_expenses_yes'] == 'yes' ? 'checked' : '' }}>
+        <input class="form-check-input custom-radio" type="radio" name="home_office[other_home_expenses_yes]" id="otherExpensesYes_YES" value="1"
+          {{ isset($deductions->home_office['other_home_expenses_yes']) && $deductions->home_office['other_home_expenses_yes'] == '1' ? 'checked' : '' }}>
         <label class="form-check-label custom-label" for="otherExpensesYes_YES">Yes</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input custom-radio" type="radio" name="home_office[other_home_expenses_yes]" id="otherExpensesNo_YES" value="no"
-          {{ isset($deductions->home_office['other_home_expenses_yes']) && $deductions->home_office['other_home_expenses_yes'] == 'no' ? 'checked' : '' }}>
+        <input class="form-check-input custom-radio" type="radio" name="home_office[other_home_expenses_yes]" id="otherExpensesNo_YES" value="0"
+          {{ isset($deductions->home_office['other_home_expenses_yes']) && $deductions->home_office['other_home_expenses_yes'] == '0' ? 'checked' : '' }}>
         <label class="form-check-label custom-label" for="otherExpensesNo_YES">No</label>
       </div>
 
@@ -160,13 +160,13 @@
         Do you have a record that represents the typical hours you worked at home for a continuous 4-week period (e.g. diary entries)?
       </p>
       <div class="form-check form-check-inline">
-        <input class="form-check-input custom-radio" type="radio" name="home_office[typical_hours_record]" id="typicalHoursYes" value="yes"
-          {{ isset($deductions->home_office['typical_hours_record']) && $deductions->home_office['typical_hours_record'] == 'yes' ? 'checked' : '' }}>
+        <input class="form-check-input custom-radio" type="radio" name="home_office[typical_hours_record]" id="typicalHoursYes" value="1"
+          {{ isset($deductions->home_office['typical_hours_record']) && $deductions->home_office['typical_hours_record'] == '1' ? 'checked' : '' }}>
         <label class="form-check-label custom-label" for="typicalHoursYes">Yes</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input custom-radio" type="radio" name="home_office[typical_hours_record]" id="typicalHoursNo" value="no"
-          {{ isset($deductions->home_office['typical_hours_record']) && $deductions->home_office['typical_hours_record'] == 'no' ? 'checked' : '' }}>
+        <input class="form-check-input custom-radio" type="radio" name="home_office[typical_hours_record]" id="typicalHoursNo" value="0"
+          {{ isset($deductions->home_office['typical_hours_record']) && $deductions->home_office['typical_hours_record'] == '0' ? 'checked' : '' }}>
         <label class="form-check-label custom-label" for="typicalHoursNo">No</label>
       </div>
 
@@ -176,13 +176,13 @@
           Do you have other home office expenses to claim, such as home telephone, office furniture or stationery?
         </p>
         <div class="form-check form-check-inline">
-          <input class="form-check-input custom-radio" type="radio" name="home_office[other_home_expenses]" id="otherExpensesYes" value="yes"
-            {{ isset($deductions->home_office['other_home_expenses']) && $deductions->home_office['other_home_expenses'] == 'yes' ? 'checked' : '' }}>
+          <input class="form-check-input custom-radio" type="radio" name="home_office[other_home_expenses]" id="otherExpensesYes" value="1"
+            {{ isset($deductions->home_office['other_home_expenses']) && $deductions->home_office['other_home_expenses'] == '1' ? 'checked' : '' }}>
           <label class="form-check-label custom-label" for="otherExpensesYes">Yes</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input custom-radio" type="radio" name="home_office[other_home_expenses]" id="otherExpensesNo" value="no"
-            {{ isset($deductions->home_office['other_home_expenses']) && $deductions->home_office['other_home_expenses'] == 'no' ? 'checked' : '' }}>
+          <input class="form-check-input custom-radio" type="radio" name="home_office[other_home_expenses]" id="otherExpensesNo" value="0"
+            {{ isset($deductions->home_office['other_home_expenses']) && $deductions->home_office['other_home_expenses'] == '0' ? 'checked' : '' }}>
           <label class="form-check-label custom-label" for="otherExpensesNo">No</label>
         </div>
 
@@ -328,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function toggleHoursRecordBlock() {
     const worked = document.querySelector('input[name="home_office[worked_from_home]"]:checked');
-    if (worked && worked.value === "yes") {
+    if (worked && worked.value === "1") {
       $("hoursRecordBlock").style.display = "block";
     } else {
       $("hoursRecordBlock").style.display = "none";
@@ -340,11 +340,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function toggleHoursDetailBlocks() {
     const selected = document.querySelector('input[name="home_office[have_hours_record]"]:checked');
-    if (selected?.value === "yes") {
+    if (selected?.value === "0") {
       $("blockIfHoursRecordYes").style.display = "block";
       $("blockIfHoursRecordNo").style.display = "none";
       $("typicalHoursYesBlock").style.display = "none";
-    } else if (selected?.value === "no") {
+    } else if (selected?.value === "0") {
       $("blockIfHoursRecordYes").style.display = "none";
       $("blockIfHoursRecordNo").style.display = "block";
     }
@@ -352,7 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function toggleTypicalHoursYesBlock() {
     const selected = document.querySelector('input[name="home_office[typical_hours_record]"]:checked');
-    $("typicalHoursYesBlock").style.display = selected?.value === "yes" ? "block" : "none";
+    $("typicalHoursYesBlock").style.display = selected?.value === "1" ? "block" : "none";
   }
 
   const fileInput = $("homeFileInput");

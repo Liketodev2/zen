@@ -36,28 +36,28 @@ class  BasicInfoFormController extends Controller
         $rules = [
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
-            'day' => 'nullable|integer|min:1|max:31',
+            'day' => 'nullable|string|min:1|max:31',
             'month' => 'nullable|string|min:1|max:12',
             'year' => 'nullable|string',
             'phone' => 'nullable|string|max:20',
             'gender' => 'nullable|in:male,female',
-            'has_spouse' => 'nullable|in:yes,no',
-            'future_tax_return' => 'nullable|in:yes,no',
-            'australian_citizenship' => 'nullable|in:yes,no',
+            'has_spouse' => 'nullable|boolean',
+            'future_tax_return' => 'nullable|boolean',
+            'australian_citizenship' => 'nullable|boolean',
             'visa_type' => 'nullable|string',
             'other_visa_type' => 'nullable|string',
-            'long_stay_183' => 'nullable|in:yes,no',
+            'long_stay_183' => 'nullable|boolean',
             'arrival_month' => 'nullable|string|min:1|max:12',
             'arrival_year' => 'nullable|string',
             'departure_month' => 'nullable|string|min:1|max:12',
             'departure_year' => 'nullable|string',
             'stay_purpose' => 'nullable|string',
-            'full_tax_year' => 'nullable|in:yes,no',
+            'full_tax_year' => 'nullable|boolean',
             'home_address' => 'nullable|string',
-            'same_as_home_address' => 'nullable|in:yes,no',
+            'same_as_home_address' => 'nullable|boolean',
             'postal_address' => 'nullable|string',
-            'has_education_debt' => 'nullable|in:yes,no',
-            'has_sfss_debt' => 'nullable|in:yes,no',
+            'has_education_debt' => 'nullable|boolean',
+            'has_sfss_debt' => 'nullable|boolean',
             'other_tax_debts' => 'nullable|string',
             'occupation' => 'nullable|string',
             'other_occupation' => 'nullable|string',
@@ -74,23 +74,6 @@ class  BasicInfoFormController extends Controller
         }
 
         $validated = $validator->validated();
-
-        foreach (
-            [
-                'has_spouse',
-                'future_tax_return',
-                'australian_citizenship',
-                'long_stay_183',
-                'full_tax_year',
-                'same_as_home_address',
-                'has_education_debt',
-                'has_sfss_debt'
-            ] as $field
-        ) {
-            if (isset($validated[$field])) {
-                $validated[$field] = $validated[$field] === 'yes' ? 1 : 0;
-            }
-        }
 
 
         $validated['tax_return_id'] = $taxReturn->id;

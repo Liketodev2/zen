@@ -29,8 +29,8 @@
                             type="radio"
                             name="gifts[{{ $i }}][has_receipt]"
                             id="has_receipt_yes_{{ $i }}"
-                            value="yes"
-                            {{ $receiptValue === 'yes' ? 'checked' : '' }}
+                            value="1"
+                            {{ $receiptValue === '1' ? 'checked' : '' }}
                         >
                         <label class="form-check-label custom-label" for="has_receipt_yes_{{ $i }}">Yes</label>
                     </div>
@@ -40,8 +40,8 @@
                             type="radio"
                             name="gifts[{{ $i }}][has_receipt]"
                             id="has_receipt_no_{{ $i }}"
-                            value="no"
-                            {{ $receiptValue === 'no' ? 'checked' : '' }}
+                            value="0"
+                            {{ $receiptValue === '1' ? 'checked' : '' }}
                         >
                         <label class="form-check-label custom-label" for="has_receipt_no_{{ $i }}">No</label>
                     </div>
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         type="radio"
                         name="gifts[__INDEX__][has_receipt]"
                         id="has_receipt_yes___INDEX__"
-                        value="yes"
+                        value="1"
                     >
                     <label class="form-check-label custom-label" for="has_receipt_yes___INDEX__">Yes</label>
                 </div>
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         type="radio"
                         name="gifts[__INDEX__][has_receipt]"
                         id="has_receipt_no___INDEX__"
-                        value="no"
+                        value="0"
                     >
                     <label class="form-check-label custom-label" for="has_receipt_no___INDEX__">No</label>
                 </div>

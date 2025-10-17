@@ -60,11 +60,11 @@
       <label class="choosing-business-type-text">Is any travel allowance listed on your PAYG Summary?</label><br>
       @php $paygValue = old('travel_expenses.payg_allowance', $deductions->travel_expenses['payg_allowance'] ?? ''); @endphp
       <div class="form-check form-check-inline">
-        <input class="form-check-input custom-radio" type="radio" name="travel_expenses[payg_allowance]" id="paygYes" value="yes" {{ $paygValue == 'yes' ? 'checked' : '' }}>
+        <input class="form-check-input custom-radio" type="radio" name="travel_expenses[payg_allowance]" id="paygYes" value="1" {{ $paygValue == '1' ? 'checked' : '' }}>
         <label class="form-check-label custom-label" for="paygYes">Yes</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input custom-radio" type="radio" name="travel_expenses[payg_allowance]" id="paygNo" value="no" {{ $paygValue == 'no' ? 'checked' : '' }}>
+        <input class="form-check-input custom-radio" type="radio" name="travel_expenses[payg_allowance]" id="paygNo" value="0" {{ $paygValue == '0' ? 'checked' : '' }}>
         <label class="form-check-label custom-label" for="paygNo">No</label>
       </div>
     </div>

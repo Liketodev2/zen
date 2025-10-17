@@ -13,8 +13,8 @@
         type="radio"
         name="education[car_travel]"
         id="car_travel_yes"
-        value="yes"
-        {{ old('education.car_travel', $deductions->education['car_travel'] ?? '') === 'yes' ? 'checked' : '' }}
+        value="1"
+        {{ old('education.car_travel', $deductions->education['car_travel'] ?? '') === '1' ? 'checked' : '' }}
       >
       <label class="form-check-label custom-label" for="car_travel_yes">Yes</label>
     </div>
@@ -24,13 +24,13 @@
         type="radio"
         name="education[car_travel]"
         id="car_travel_no"
-        value="no"
-        {{ old('education.car_travel', $deductions->education['car_travel'] ?? '') === 'no' ? 'checked' : '' }}
+        value="0"
+        {{ old('education.car_travel', $deductions->education['car_travel'] ?? '') === '0' ? 'checked' : '' }}
       >
       <label class="form-check-label custom-label" for="car_travel_no">No</label>
     </div>
 
-    <div id="car_travel_block" class="mt-3" style="display: {{ old('education.car_travel', $deductions->education['car_travel'] ?? '') === 'yes' ? 'block' : 'none' }};">
+    <div id="car_travel_block" class="mt-3" style="display: {{ old('education.car_travel', $deductions->education['car_travel'] ?? '') === '1' ? 'block' : 'none' }};">
       <div class="row">
         <div class="col-md-6 mb-3">
           <label class="form-label">In a few words, why do you use your car for Education?</label>
@@ -60,8 +60,8 @@
               type="radio"
               name="education[vehicle_owned]"
               id="vehicle_owned_yes"
-              value="yes"
-              {{ old('education.vehicle_owned', $deductions->education['vehicle_owned'] ?? '') === 'yes' ? 'checked' : '' }}
+              value="1"
+              {{ old('education.vehicle_owned', $deductions->education['vehicle_owned'] ?? '') === '1' ? 'checked' : '' }}
             >
             <label class="form-check-label custom-label" for="vehicle_owned_yes">Yes</label>
           </div>
@@ -71,8 +71,8 @@
               type="radio"
               name="education[vehicle_owned]"
               id="vehicle_owned_no"
-              value="no"
-              {{ old('education.vehicle_owned', $deductions->education['vehicle_owned'] ?? '') === 'no' ? 'checked' : '' }}
+              value="0"
+              {{ old('education.vehicle_owned', $deductions->education['vehicle_owned'] ?? '') === '0' ? 'checked' : '' }}
             >
             <label class="form-check-label custom-label" for="vehicle_owned_no">No</label>
           </div>
@@ -95,8 +95,8 @@
         type="radio"
         name="education[edu_expense]"
         id="edu_expense_yes"
-        value="yes"
-        {{ old('education.edu_expense', $deductions->education['edu_expense'] ?? '') === 'yes' ? 'checked' : '' }}
+        value="1"
+        {{ old('education.edu_expense', $deductions->education['edu_expense'] ?? '') === '1' ? 'checked' : '' }}
       >
       <label class="form-check-label custom-label" for="edu_expense_yes">Yes</label>
     </div>
@@ -106,13 +106,13 @@
         type="radio"
         name="education[edu_expense]"
         id="edu_expense_no"
-        value="no"
-        {{ old('education.edu_expense', $deductions->education['edu_expense'] ?? '') === 'no' ? 'checked' : '' }}
+        value="0"
+        {{ old('education.edu_expense', $deductions->education['edu_expense'] ?? '') === '0' ? 'checked' : '' }}
       >
       <label class="form-check-label custom-label" for="edu_expense_no">No</label>
     </div>
 
-    <div id="edu_expense_block" class="mt-3" style="display: {{ old('education.edu_expense', $deductions->education['edu_expense'] ?? '') === 'yes' ? 'block' : 'none' }};">
+    <div id="edu_expense_block" class="mt-3" style="display: {{ old('education.edu_expense', $deductions->education['edu_expense'] ?? '') === '1' ? 'block' : 'none' }};">
       <div class="col-md-6 mb-3">
         <label class="form-label">Why did you do this education?</label>
         <select name="education[edu_reason]" class="form-select">
@@ -264,14 +264,14 @@ document.addEventListener('DOMContentLoaded', function () {
   // Show/hide car travel block
   document.querySelectorAll('input[name="education[car_travel]"]').forEach(input => {
     input.addEventListener('change', function () {
-      document.getElementById('car_travel_block').style.display = this.value === 'yes' ? 'block' : 'none';
+      document.getElementById('car_travel_block').style.display = this.value === '1' ? 'block' : 'none';
     });
   });
 
   // Show/hide education block
   document.querySelectorAll('input[name="education[edu_expense]"]').forEach(input => {
     input.addEventListener('change', function () {
-      document.getElementById('edu_expense_block').style.display = this.value === 'yes' ? 'block' : 'none';
+      document.getElementById('edu_expense_block').style.display = this.value === '1' ? 'block' : 'none';
     });
   });
 

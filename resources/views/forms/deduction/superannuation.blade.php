@@ -30,17 +30,17 @@
       </label>
       <div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input custom-radio" type="radio" name="superannuation[confirmation]" id="confirmation_yes" value="yes" {{ ($superannuation['confirmation'] ?? '') === 'yes' ? 'checked' : '' }}>
+          <input class="form-check-input custom-radio" type="radio" name="superannuation[confirmation]" id="confirmation_yes" value="1" {{ ($superannuation['confirmation'] ?? '') === '1' ? 'checked' : '' }}>
           <label class="form-check-label custom-label" for="confirmation_yes">Yes</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input custom-radio" type="radio" name="superannuation[confirmation]" id="confirmation_no" value="no" {{ ($superannuation['confirmation'] ?? '') === 'no' ? 'checked' : '' }}>
+          <input class="form-check-input custom-radio" type="radio" name="superannuation[confirmation]" id="confirmation_no" value="0" {{ ($superannuation['confirmation'] ?? '') === '0' ? 'checked' : '' }}>
           <label class="form-check-label custom-label" for="confirmation_no">No</label>
         </div>
       </div>
     </div>
 
-    <div id="superannuationDetails" class="{{ ($superannuation['confirmation'] ?? '') === 'yes' ? '' : 'd-none' }}">
+    <div id="superannuationDetails" class="{{ ($superannuation['confirmation'] ?? '') === '1' ? '' : 'd-none' }}">
       <div class="row">
         <div class="col-md-6 mb-3">
           <label class="choosing-business-type-text">Full name of fund</label>

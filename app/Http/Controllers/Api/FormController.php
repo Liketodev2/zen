@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BasicInfoResource;
+use App\Http\Resources\DeductionResource;
 use App\Http\Resources\IncomeResource;
 use App\Models\Forms\BasicInfoForm;
+use App\Models\Forms\Deduction;
 use App\Models\Forms\Income;
 use App\Models\TaxReturn;
 use App\Services\IncomeFileService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class FormController extends Controller
@@ -303,4 +306,144 @@ class FormController extends Controller
                 'message' => $message,
             ]);
     }
+
+
+    /**
+     * @param Request $request
+     * @return DeductionResource|\Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function deduction(Request $request)
+    {
+        $rules = [
+            'tax_id' => 'required|exists:tax_returns,id',
+            'car_expenses'        => 'nullable|array',
+            'travel_expenses'     => 'nullable|array',
+            'mobile_phone'        => 'nullable|array',
+            'internet_access'     => 'nullable|array',
+            'computer'            => 'nullable|array',
+            'gifts'               => 'nullable|array',
+            'home_office'         => 'nullable|array',
+            'books'               => 'nullable|array',
+            'tax_affairs'         => 'nullable|array',
+            'uniforms'            => 'nullable|array',
+            'education'           => 'nullable|array',
+            'tools'               => 'nullable|array',
+            'superannuation'      => 'nullable|array',
+            'office_occupancy'    => 'nullable|array',
+            'union_fees'          => 'nullable|array',
+            'sun_protection'      => 'nullable|array',
+            'low_value_pool'      => 'nullable|array',
+            'interest_deduction'  => 'nullable|array',
+            'dividend_deduction'  => 'nullable|array',
+            'upp'                 => 'nullable|array',
+            'project_pool'        => 'nullable|array',
+            'investment_scheme'   => 'nullable|array',
+            'other'               => 'nullable|array',
+
+            'travel_expenses.travel_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'computer.computer_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'home_office.home_receipt' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'books.books_file'    => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'uniforms.uniform_receipt' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'education.edu_file'  => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'union_fees.file'     => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'sun_protection.sun_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'low_value_pool.files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation errors',
+                'errors'  => $validator->errors(),
+            ], 422);
+        }
+
+        $validated = $validator->validated();
+
+        $taxReturn = TaxReturn::where('id', $validated['tax_id'])
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if (!$taxReturn) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tax Return not found or unauthorized',
+            ], 404);
+        }
+
+        // Check if deduction already exists
+        $existing = Deduction::where('tax_return_id', $taxReturn->id)->first();
+
+        $fields = array_keys($rules);
+        $data = [];
+
+        foreach ($fields as $field) {
+            if ($field === 'tax_id') continue;
+            $data[$field] = $validated[$field] ?? ($existing->$field ?? null);
+        }
+
+        // Handle file uploads (similar to Income)
+        $attach = $existing ? ($existing->attach ?? []) : [];
+
+        // Handle all single file fields
+        $fileFields = [
+            'computer.computer_file' => 'computer',
+            'travel_expenses.travel_file' => 'travel_expenses',
+            'union_fees.file' => 'union_fees',
+            'sun_protection.sun_file' => 'sun_protection',
+            'education.edu_file' => 'education',
+            'uniforms.uniform_receipt' => 'uniforms',
+            'books.books_file' => 'books',
+            'home_office.home_receipt' => 'home_office',
+        ];
+
+        foreach ($fileFields as $input => $folder) {
+            [$field, $key] = explode('.', $input);
+            if ($request->hasFile($input)) {
+                if (!empty($attach[$field][$key])) {
+                    Storage::disk('s3')->delete($attach[$field][$key]);
+                }
+                $attach[$field][$key] = $request->file($input)->store($folder, 's3');
+            }
+        }
+
+        // Handle low_value_pool multiple files
+        if ($request->hasFile('low_value_pool.files')) {
+            if (!empty($attach['low_value_pool']['files'])) {
+                foreach ($attach['low_value_pool']['files'] as $oldFile) {
+                    Storage::disk('s3')->delete($oldFile);
+                }
+            }
+            $paths = [];
+            foreach ($request->file('low_value_pool.files') as $file) {
+                $paths[] = $file->store('low_value_pool', 's3');
+            }
+            $attach['low_value_pool']['files'] = $paths;
+        }
+
+        $data['attach'] = $attach;
+
+        // Create or update record
+        if ($existing) {
+            $existing->update($data);
+            $deduction = $existing->fresh();
+            $message = 'Deduction data updated successfully!';
+        } else {
+            $deduction = Deduction::create(array_merge($data, [
+                'tax_return_id' => $taxReturn->id,
+            ]));
+            $message = 'Deduction data saved successfully!';
+        }
+
+        return (new DeductionResource($deduction))
+            ->additional([
+                'success' => true,
+                'message' => $message,
+            ]);
+    }
+
 }

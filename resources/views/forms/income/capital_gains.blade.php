@@ -17,13 +17,13 @@
                 <div class="col-md-6 mb-3">
                     <p class="choosing-business-type-text">Have you applied an exemption or rollover?</p>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input custom-radio" type="radio" name="capital_gains[exemption_applied]" id="exemptionYes" value="yes"
-                            {{ isset($capitalGains['exemption_applied']) && $capitalGains['exemption_applied'] === 'yes' ? 'checked' : '' }}>
+                        <input class="form-check-input custom-radio" type="radio" name="capital_gains[exemption_applied]" id="exemptionYes" value="1"
+                            {{ isset($capitalGains['exemption_applied']) && $capitalGains['exemption_applied'] === '1' ? 'checked' : '' }}>
                         <label class="form-check-label custom-label" for="exemptionYes">Yes</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input custom-radio" type="radio" name="capital_gains[exemption_applied]" id="exemptionNo" value="no"
-                            {{ isset($capitalGains['exemption_applied']) && $capitalGains['exemption_applied'] === 'no' ? 'checked' : '' }}>
+                        <input class="form-check-input custom-radio" type="radio" name="capital_gains[exemption_applied]" id="exemptionNo" value="0"
+                            {{ isset($capitalGains['exemption_applied']) && $capitalGains['exemption_applied'] === '1' ? 'checked' : '' }}>
                         <label class="form-check-label custom-label" for="exemptionNo">No</label>
                     </div>
                 </div>
@@ -117,18 +117,18 @@
             <div class="col-md-6 mb-3">
                 <p class="choosing-business-type-text">Do you need to use a schedule?</p>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input custom-radio" type="radio" name="capital_gains[use_schedule]" id="scheduleYes" value="yes"
-                        {{ isset($capitalGains['use_schedule']) && $capitalGains['use_schedule'] === 'yes' ? 'checked' : '' }}>
+                    <input class="form-check-input custom-radio" type="radio" name="capital_gains[use_schedule]" id="scheduleYes" value="1"
+                        {{ isset($capitalGains['use_schedule']) && $capitalGains['use_schedule'] === '1' ? 'checked' : '' }}>
                     <label class="form-check-label custom-label" for="scheduleYes">Yes</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input custom-radio" type="radio" name="capital_gains[use_schedule]" id="scheduleNo" value="no"
-                        {{ isset($capitalGains['use_schedule']) && $capitalGains['use_schedule'] === 'no' ? 'checked' : '' }}>
+                    <input class="form-check-input custom-radio" type="radio" name="capital_gains[use_schedule]" id="scheduleNo" value="0"
+                        {{ isset($capitalGains['use_schedule']) && $capitalGains['use_schedule'] === '0' ? 'checked' : '' }}>
                     <label class="form-check-label custom-label" for="scheduleNo">No</label>
                 </div>
             </div>
 
-            <div class="col-12 mb-3 {{ isset($capitalGains['use_schedule']) && $capitalGains['use_schedule'] === 'yes' ? '' : 'd-none' }}" id="scheduleExtraBlock">
+            <div class="col-12 mb-3 {{ isset($capitalGains['use_schedule']) && $capitalGains['use_schedule'] === '1' ? '' : 'd-none' }}" id="scheduleExtraBlock">
                 <!-- Schedule fields here (abbreviated for brevity) -->
                 <div class="row">
                     <p class="choosing-business-type-text">Shares in companies listed on an Australian securities exchange</p>
@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const scheduleBlock = document.getElementById("scheduleExtraBlock");
 
     function updateScheduleVisibility() {
-        const scheduleYes = document.querySelector("input[name='capital_gains[use_schedule]'][value='yes']");
+        const scheduleYes = document.querySelector("input[name='capital_gains[use_schedule]'][value='1']");
         scheduleBlock.classList.toggle("d-none", !scheduleYes.checked);
     }
 

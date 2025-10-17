@@ -87,12 +87,12 @@
                 <p class="choosing-business-type-text">Did you have a Spouse/De Facto during this financial year?</p>
                 <div class="col-md-6 mb-3">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input custom-radio" type="radio" name="has_spouse" id="spouseYes" value="yes"
+                        <input class="form-check-input custom-radio" type="radio" name="has_spouse" id="spouseYes" value="1"
                             {{ old('has_spouse', $basicInfo->has_spouse ?? '') == '1' ? 'checked' : '' }}>
                         <label class="form-check-label custom-label" for="spouseYes">Yes</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input custom-radio" type="radio" name="has_spouse" id="spouseNo" value="no"
+                        <input class="form-check-input custom-radio" type="radio" name="has_spouse" id="spouseNo" value="0"
                             {{ old('has_spouse', $basicInfo->has_spouse ?? '') == '0' ? 'checked' : '' }}>
                         <label class="form-check-label custom-label" for="spouseNo">No</label>
                     </div>
@@ -103,12 +103,12 @@
                 <p class="choosing-business-type-text">Will you be required to complete an Australian Tax Return in the future?</p>
                 <div class="col-md-6 mb-3">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input custom-radio" type="radio" name="future_tax_return" id="futureTaxYes" value="yes"
+                        <input class="form-check-input custom-radio" type="radio" name="future_tax_return" id="futureTaxYes" value="1"
                             {{ old('future_tax_return', $basicInfo->future_tax_return ?? '') == '1' ? 'checked' : '' }}>
                         <label class="form-check-label custom-label" for="futureTaxYes">Yes</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input custom-radio" type="radio" name="future_tax_return" id="futureTaxNo" value="no"
+                        <input class="form-check-input custom-radio" type="radio" name="future_tax_return" id="futureTaxNo" value="0"
                             {{ old('future_tax_return', $basicInfo->future_tax_return ?? '') == '0' ? 'checked' : '' }}>
                         <label class="form-check-label custom-label" for="futureTaxNo">No</label>
                     </div>
@@ -124,12 +124,12 @@
                 <p class="choosing-business-type-text">Do you have Australian Citizenship?</p>
                 <div class="col mt-3 mb-3">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input custom-radio" type="radio" name="australian_citizenship" id="citizenshipYes" value="yes"
+                        <input class="form-check-input custom-radio" type="radio" name="australian_citizenship" id="citizenshipYes" value="1"
                             {{ old('australian_citizenship', $basicInfo->australian_citizenship ?? '') == '1' ? 'checked' : '' }}>
                         <label class="form-check-label custom-label" for="citizenshipYes">Yes</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input custom-radio" type="radio" name="australian_citizenship" id="citizenshipNo" value="no"
+                        <input class="form-check-input custom-radio" type="radio" name="australian_citizenship" id="citizenshipNo" value="0"
                             {{ old('australian_citizenship', $basicInfo->australian_citizenship ?? '') == '0' ? 'checked' : '' }}>
                         <label class="form-check-label custom-label" for="citizenshipNo">No</label>
                     </div>
@@ -174,12 +174,12 @@
                             Did you live or stay in one place continuously for more than 183 days, during your stay in Australia?
                         </p>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input custom-radio" type="radio" name="long_stay_183" id="stay183Yes" value="yes"
+                            <input class="form-check-input custom-radio" type="radio" name="long_stay_183" id="stay183Yes" value="1"
                                 {{ old('long_stay_183', $basicInfo->long_stay_183 ?? '') == '1' ? 'checked' : '' }}>
                             <label class="form-check-label custom-label" for="stay183Yes">Yes</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input custom-radio" type="radio" name="long_stay_183" id="stay183No" value="no"
+                            <input class="form-check-input custom-radio" type="radio" name="long_stay_183" id="stay183No" value="0"
                                 {{ old('long_stay_183', $basicInfo->long_stay_183 ?? '') == '0' ? 'checked' : '' }}>
                             <label class="form-check-label custom-label" for="stay183No">No</label>
                         </div>
@@ -255,12 +255,12 @@
                     </p>
                     <div class="col-md-6 mb-3">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input custom-radio" type="radio" name="full_tax_year" id="taxYearYes" value="yes"
+                            <input class="form-check-input custom-radio" type="radio" name="full_tax_year" id="taxYearYes" value="1"
                                 {{ old('full_tax_year', $basicInfo->full_tax_year ?? '') == '1' ? 'checked' : '' }}>
                             <label class="form-check-label custom-label" for="taxYearYes">Yes</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input custom-radio" type="radio" name="full_tax_year" id="taxYearNo" value="no"
+                            <input class="form-check-input custom-radio" type="radio" name="full_tax_year" id="taxYearNo" value="0"
                                 {{ old('full_tax_year', $basicInfo->full_tax_year ?? '') == '0' ? 'checked' : '' }}>
                             <label class="form-check-label custom-label" for="taxYearNo">No</label>
                         </div>
@@ -288,12 +288,12 @@
                     <div class="col-md-6">
                         <p class="choosing-business-type-text">Is this the same as your home address?</p>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input custom-radio" type="radio" name="same_as_home_address" id="sameAddressYes" value="yes"
+                            <input class="form-check-input custom-radio" type="radio" name="same_as_home_address" id="sameAddressYes" value="1"
                                 {{ old('same_as_home_address', $basicInfo->same_as_home_address ?? '') == '1' ? 'checked' : '' }}>
                             <label class="form-check-label custom-label" for="sameAddressYes">Yes</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input custom-radio" type="radio" name="same_as_home_address" id="sameAddressNo" value="no"
+                            <input class="form-check-input custom-radio" type="radio" name="same_as_home_address" id="sameAddressNo" value="0"
                                 {{ old('same_as_home_address', $basicInfo->same_as_home_address ?? '') == '0' ? 'checked' : '' }}>
                             <label class="form-check-label custom-label" for="sameAddressNo">No</label>
                         </div>
@@ -314,12 +314,12 @@
                     <div class="col-md-6 mb-3">
                         <p class="choosing-business-type-text">Do you have any HELP, TSL (now known as AASL), VSL or SSL debt?</p>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input custom-radio" type="radio" name="has_education_debt" id="eduDebtYes" value="yes"
+                            <input class="form-check-input custom-radio" type="radio" name="has_education_debt" id="eduDebtYes" value="1"
                                 {{ old('has_education_debt', $basicInfo->has_education_debt ?? '') == '1' ? 'checked' : '' }}>
                             <label class="form-check-label custom-label" for="eduDebtYes">Yes</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input custom-radio" type="radio" name="has_education_debt" id="eduDebtNo" value="no"
+                            <input class="form-check-input custom-radio" type="radio" name="has_education_debt" id="eduDebtNo" value="0"
                                 {{ old('has_education_debt', $basicInfo->has_education_debt ?? '') == '0' ? 'checked' : '' }}>
                             <label class="form-check-label custom-label" for="eduDebtNo">No</label>
                         </div>
@@ -327,12 +327,12 @@
                     <div class="col-md-6 mb-3">
                         <p class="choosing-business-type-text">Do you have any Student Financial Supplement Scheme (SFSS) debt?</p>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input custom-radio" type="radio" name="has_sfss_debt" id="sfssDebtYes" value="yes"
+                            <input class="form-check-input custom-radio" type="radio" name="has_sfss_debt" id="sfssDebtYes" value="1"
                                 {{ old('has_sfss_debt', $basicInfo->has_sfss_debt ?? '') == '1' ? 'checked' : '' }}>
                             <label class="form-check-label custom-label" for="sfssDebtYes">Yes</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input custom-radio" type="radio" name="has_sfss_debt" id="sfssDebtNo" value="no"
+                            <input class="form-check-input custom-radio" type="radio" name="has_sfss_debt" id="sfssDebtNo" value="0"
                                 {{ old('has_sfss_debt', $basicInfo->has_sfss_debt ?? '') == '0' ? 'checked' : '' }}>
                             <label class="form-check-label custom-label" for="sfssDebtNo">No</label>
                         </div>

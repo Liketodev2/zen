@@ -83,18 +83,18 @@
                         <input class="form-check-input custom-radio"
                                type="radio"
                                name="super_lump_sums[{{ $i }}][is_death_benefit]"
-                               value="yes"
+                               value="1"
                                id="deathYes{{ $i }}"
-                               @checked(($lump['is_death_benefit'] ?? '') === 'yes')>
+                               @checked(($lump['is_death_benefit'] ?? '') === '1')>
                         <label class="form-check-label custom-label" for="deathYes{{ $i }}">Yes</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input custom-radio"
                                type="radio"
                                name="super_lump_sums[{{ $i }}][is_death_benefit]"
-                               value="no"
+                               value="0"
                                id="deathNo{{ $i }}"
-                               @checked(($lump['is_death_benefit'] ?? '') === 'no')>
+                               @checked(($lump['is_death_benefit'] ?? '') === '0')>
                         <label class="form-check-label custom-label" for="deathNo{{ $i }}">No</label>
                     </div>
                 </div>

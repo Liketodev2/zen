@@ -114,11 +114,11 @@
             @endphp
 
             <div class="form-check form-check-inline">
-              <input class="form-check-input custom-radio under60-radio" type="radio" name="superannuation[{{ $i }}][under60_dependent]" id="under60Yes_{{ $i }}" value="yes" {{ $under60 === 'yes' ? 'checked' : '' }}>
+              <input class="form-check-input custom-radio under60-radio" type="radio" name="superannuation[{{ $i }}][under60_dependent]" id="under60Yes_{{ $i }}" value="1" {{ $under60 === '1' ? 'checked' : '' }}>
               <label class="form-check-label custom-label" for="under60Yes_{{ $i }}">Yes</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input custom-radio under60-radio" type="radio" name="superannuation[{{ $i }}][under60_dependent]" id="under60No_{{ $i }}" value="no" {{ $under60 === 'no' ? 'checked' : '' }}>
+              <input class="form-check-input custom-radio under60-radio" type="radio" name="superannuation[{{ $i }}][under60_dependent]" id="under60No_{{ $i }}" value="0" {{ $under60 === '0' ? 'checked' : '' }}>
               <label class="form-check-label custom-label" for="under60No_{{ $i }}">No</label>
             </div>
           </div>

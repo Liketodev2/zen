@@ -43,7 +43,7 @@ class OtherController extends Controller
             'seniors_offset'                       => 'nullable|array',
             'medicare_reduction_exemption'         => 'nullable|array',
             'part_year_tax_free_threshold'         => 'nullable|array',
-            'medical_expenses_offset'               => 'nullable|array',
+            'medical_expenses_offset'              => 'nullable|array',
             'under_18'                             => 'nullable|array',
             'working_holiday_maker_net_income'     => 'nullable|array',
             'superannuation_income_stream_offset'  => 'nullable|array',

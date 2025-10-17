@@ -27,16 +27,16 @@
     <div>
       <p class="choosing-business-type-text">Do you use your motor vehicle(s) for work-related travel?</p>
       <div class="form-check form-check-inline">
-        <input class="form-check-input custom-radio vehicle-use" type="radio" name="car_expenses[vehicle_use]" id="vehicleUseYes" value="yes" {{ $vehicleUse === 'yes' ? 'checked' : '' }}>
+        <input class="form-check-input custom-radio vehicle-use" type="radio" name="car_expenses[vehicle_use]" id="vehicleUseYes" value="1" {{ $vehicleUse === '1' ? 'checked' : '' }}>
         <label class="form-check-label custom-label" for="vehicleUseYes">Yes</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input custom-radio vehicle-use" type="radio" name="car_expenses[vehicle_use]" id="vehicleUseNo" value="no" {{ $vehicleUse === 'no' ? 'checked' : '' }}>
+        <input class="form-check-input custom-radio vehicle-use" type="radio" name="car_expenses[vehicle_use]" id="vehicleUseNo" value="0" {{ $vehicleUse === '0' ? 'checked' : '' }}>
         <label class="form-check-label custom-label" for="vehicleUseNo">No</label>
       </div>
     </div>
 
-    <div class="vehicle-extra-details mt-3" style="{{ $vehicleUse === 'yes' ? 'block' : 'none' }};">
+    <div class="vehicle-extra-details mt-3" style="{{ $vehicleUse === '1' ? 'block' : 'none' }};">
       <div id="vehicleContainer">
         <!-- Dynamic vehicle blocks inserted here -->
         @for($i = 0; $i < $vehicleCount; $i++)
@@ -49,11 +49,11 @@
                 $registeredOwner = $vehicles[$i]['registered_owner'] ?? '';
               @endphp
               <div class="form-check form-check-inline">
-                <input class="form-check-input custom-radio" id="registeredOwnerYes_{{ $i }}" type="radio" name="car_expenses[vehicles][{{ $i }}][registered_owner]" value="yes" {{ $registeredOwner === 'yes' ? 'checked' : '' }}>
+                <input class="form-check-input custom-radio" id="registeredOwnerYes_{{ $i }}" type="radio" name="car_expenses[vehicles][{{ $i }}][registered_owner]" value="1" {{ $registeredOwner === '1' ? 'checked' : '' }}>
                 <label class="form-check-label custom-label" for="registeredOwnerYes_{{ $i }}">Yes</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input custom-radio" id="registeredOwnerNo_{{ $i }}" type="radio" name="car_expenses[vehicles][{{ $i }}][registered_owner]" value="no" {{ $registeredOwner === 'no' ? 'checked' : '' }}>
+                <input class="form-check-input custom-radio" id="registeredOwnerNo_{{ $i }}" type="radio" name="car_expenses[vehicles][{{ $i }}][registered_owner]" value="0" {{ $registeredOwner === '0' ? 'checked' : '' }}>
                 <label class="form-check-label custom-label" for="registeredOwnerNo_{{ $i }}">No</label>
               </div>
             </div>
@@ -74,16 +74,16 @@
                 $hasLogbook = $vehicles[$i]['has_logbook'] ?? '';
               @endphp
               <div class="form-check form-check-inline">
-                <input class="form-check-input logbook-radio custom-radio" id="logbookYes_{{ $i }}" type="radio" name="car_expenses[vehicles][{{ $i }}][has_logbook]" value="yes" {{ $hasLogbook === 'yes' ? 'checked' : '' }}>
+                <input class="form-check-input logbook-radio custom-radio" id="logbookYes_{{ $i }}" type="radio" name="car_expenses[vehicles][{{ $i }}][has_logbook]" value="1" {{ $hasLogbook === '1' ? 'checked' : '' }}>
                 <label class="form-check-label custom-label" for="logbookYes_{{ $i }}">Yes</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input logbook-radio custom-radio" id="logbookNo_{{ $i }}" type="radio" name="car_expenses[vehicles][{{ $i }}][has_logbook]" value="no" {{ $hasLogbook === 'no' ? 'checked' : '' }}>
+                <input class="form-check-input logbook-radio custom-radio" id="logbookNo_{{ $i }}" type="radio" name="car_expenses[vehicles][{{ $i }}][has_logbook]" value="0" {{ $hasLogbook === '0' ? 'checked' : '' }}>
                 <label class="form-check-label custom-label" for="logbookNo_{{ $i }}">No</label>
               </div>
             </div>
 
-            <div class="col-md-12 mb-3 logbook-extra" style="{{ $hasLogbook === 'yes' ? 'block' : 'none' }};">
+            <div class="col-md-12 mb-3 logbook-extra" style="{{ $hasLogbook === '1' ? 'block' : 'none' }};">
               <div class="row gx-3 gy-2">
                 <div class="col-md-6">
                   <label class="choosing-business-type-text" for="startOdometer_{{ $i }}">Start of logbook period odometer reading</label>
@@ -291,11 +291,11 @@
       <div class="col-md-12 mb-3">
         <p class="choosing-business-type-text">Do you have receipts or logs for all parking and tolls claimed?</p>
         <div class="form-check form-check-inline">
-          <input class="form-check-input custom-radio" type="radio" name="car_expenses[has_receipts]" id="hasReceiptsYes" value="yes" {{ $hasReceipts === 'yes' ? 'checked' : '' }}>
+          <input class="form-check-input custom-radio" type="radio" name="car_expenses[has_receipts]" id="hasReceiptsYes" value="1" {{ $hasReceipts === '1' ? 'checked' : '' }}>
           <label class="form-check-label custom-label" for="hasReceiptsYes">Yes</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input custom-radio" type="radio" name="car_expenses[has_receipts]" id="hasReceiptsNo" value="no" {{ $hasReceipts === 'no' ? 'checked' : '' }}>
+          <input class="form-check-input custom-radio" type="radio" name="car_expenses[has_receipts]" id="hasReceiptsNo" value="0" {{ $hasReceipts === '0' ? 'checked' : '' }}>
           <label class="form-check-label custom-label" for="hasReceiptsNo">No</label>
         </div>
       </div>
@@ -313,7 +313,7 @@
 
     function toggleVehicleBlock() {
       const selected = document.querySelector('input[name="car_expenses[vehicle_use]"]:checked');
-      extraDetails.style.display = (selected && selected.value === "yes") ? "block" : "none";
+      extraDetails.style.display = (selected && selected.value === "1") ? "block" : "none";
     }
 
     vehicleRadios.forEach(radio => radio.addEventListener("change", toggleVehicleBlock));
@@ -364,11 +364,11 @@
             <div class="col-md-12 mb-3">
               <p class="choosing-business-type-text">Is the vehicle registered in your name (do you own the vehicle)?</p>
               <div class="form-check form-check-inline">
-                <input class="form-check-input custom-radio" id="registeredOwnerYes_${index}" type="radio" name="car_expenses[vehicles][${index}][registered_owner]" value="yes">
+                <input class="form-check-input custom-radio" id="registeredOwnerYes_${index}" type="radio" name="car_expenses[vehicles][${index}][registered_owner]" value="1">
                 <label class="form-check-label custom-label" for="registeredOwnerYes_${index}">Yes</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input custom-radio" id="registeredOwnerNo_${index}" type="radio" name="car_expenses[vehicles][${index}][registered_owner]" value="no">
+                <input class="form-check-input custom-radio" id="registeredOwnerNo_${index}" type="radio" name="car_expenses[vehicles][${index}][registered_owner]" value="1">
                 <label class="form-check-label custom-label" for="registeredOwnerNo_${index}">No</label>
               </div>
             </div>
@@ -386,11 +386,11 @@
             <div class="col-md-12 mb-3">
               <p class="choosing-business-type-text">Did you record all your trips in a car logbook for 12 continuous weeks (1 time during the past 5 years)?</p>
               <div class="form-check form-check-inline">
-                <input class="form-check-input logbook-radio custom-radio" id="logbookYes_${index}" type="radio" name="car_expenses[vehicles][${index}][has_logbook]" value="yes">
+                <input class="form-check-input logbook-radio custom-radio" id="logbookYes_${index}" type="radio" name="car_expenses[vehicles][${index}][has_logbook]" value="1">
                 <label class="form-check-label custom-label" for="logbookYes_${index}">Yes</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input logbook-radio custom-radio" id="logbookNo_${index}" type="radio" name="car_expenses[vehicles][${index}][has_logbook]" value="no">
+                <input class="form-check-input logbook-radio custom-radio" id="logbookNo_${index}" type="radio" name="car_expenses[vehicles][${index}][has_logbook]" value="0">
                 <label class="form-check-label custom-label" for="logbookNo_${index}">No</label>
               </div>
             </div>
@@ -506,7 +506,7 @@
 
         const toggleLogbookExtra = () => {
           const selected = [...radios].find(r => r.checked);
-          logbookExtra.style.display = selected && selected.value === "yes" ? "block" : "none";
+          logbookExtra.style.display = selected && selected.value === "1" ? "block" : "none";
         };
 
         radios.forEach(r => r.addEventListener("change", toggleLogbookExtra));
