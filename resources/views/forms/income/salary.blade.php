@@ -93,36 +93,36 @@
                                 @endphp
 
                                 <div class="form-check form-switch d-flex align-items-center gap-3 mb-3">
-                                    <input type="hidden" name="salary[{{ $i }}][allowances]" value="off">
+                                    <input type="hidden" name="salary[{{ $i }}][allowances]" value="0">
                                     <input
                                         class="form-check-input mt-0"
                                         type="checkbox"
                                         name="salary[{{ $i }}][allowances]"
-                                        value="on"
+                                        value="1"
                                         {{ $allowanceChecked ? 'checked' : '' }}
                                     >
                                     <label class="form-check-label">Allowances</label>
                                 </div>
 
                                 <div class="form-check form-switch d-flex align-items-center gap-3 mb-3">
-                                    <input type="hidden" name="salary[{{ $i }}][fringe_benefits]" value="off">
+                                    <input type="hidden" name="salary[{{ $i }}][fringe_benefits]" value="0">
                                     <input
                                         class="form-check-input mt-0"
                                         type="checkbox"
                                         name="salary[{{ $i }}][fringe_benefits]"
-                                        value="on"
+                                        value="1"
                                         {{ $fringeChecked ? 'checked' : '' }}
                                     >
                                     <label class="form-check-label">Fringe benefits</label>
                                 </div>
 
                                 <div class="form-check form-switch d-flex align-items-center gap-3 mb-3">
-                                    <input type="hidden" name="salary[{{ $i }}][reportable_super]" value="off">
+                                    <input type="hidden" name="salary[{{ $i }}][reportable_super]" value="0">
                                     <input
                                         class="form-check-input mt-0"
                                         type="checkbox"
                                         name="salary[{{ $i }}][reportable_super]"
-                                        value="on"
+                                        value="1"
                                         {{ $superChecked ? 'checked' : '' }}
                                     >
                                     <label class="form-check-label">Reportable super & lump sum payments</label>
@@ -263,32 +263,32 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="row mb-3 income-details" style="display:none;">
                 <div class="col-md-6 mb-3">
                     <div class="form-check form-switch d-flex align-items-center gap-3 mb-3">
-                        <input type="hidden" name="salary[__INDEX__][allowances]" value="off">
+                        <input type="hidden" name="salary[__INDEX__][allowances]" value="1">
                         <input
                             class="form-check-input mt-0"
                             type="checkbox"
                             name="salary[__INDEX__][allowances]"
-                            value="on"
+                            value="1"
                         >
                         <label class="form-check-label">Allowances</label>
                     </div>
                     <div class="form-check form-switch d-flex align-items-center gap-3 mb-3">
-                        <input type="hidden" name="salary[__INDEX__][fringe_benefits]" value="off">
+                        <input type="hidden" name="salary[__INDEX__][fringe_benefits]" value="0">
                         <input
                             class="form-check-input mt-0"
                             type="checkbox"
                             name="salary[__INDEX__][fringe_benefits]"
-                            value="on"
+                            value="1"
                         >
                         <label class="form-check-label">Fringe benefits</label>
                     </div>
                     <div class="form-check form-switch d-flex align-items-center gap-3 mb-3">
-                        <input type="hidden" name="salary[__INDEX__][reportable_super]" value="off">
+                        <input type="hidden" name="salary[__INDEX__][reportable_super]" value="0">
                         <input
                             class="form-check-input mt-0"
                             type="checkbox"
                             name="salary[__INDEX__][reportable_super]"
-                            value="on"
+                            value="1"
                         >
                         <label class="form-check-label">Reportable super & lump sum payments</label>
                     </div>
