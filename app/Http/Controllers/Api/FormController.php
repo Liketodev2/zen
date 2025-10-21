@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\BasicInfoResource;
 use App\Http\Resources\DeductionResource;
 use App\Http\Resources\IncomeResource;
+use App\Http\Resources\OtherResource;
 use App\Models\Forms\BasicInfoForm;
 use App\Models\Forms\Deduction;
 use App\Models\Forms\Income;
+use App\Models\Forms\Other;
 use App\Models\TaxReturn;
 use App\Services\IncomeFileService;
 use Illuminate\Http\Request;
@@ -31,108 +33,6 @@ class FormController extends Controller
     {
         $this->fileService = $fileService;
     }
-
-
-
-    /**
-     * @param Request $request
-     * @return BasicInfoResource|\Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
-     */
-//    public function basicInfo(Request $request)
-//    {
-//        $rules = [
-//            'tax_id' => 'required|exists:tax_returns,id',
-//            'first_name' => 'nullable|string|max:255',
-//            'last_name' => 'nullable|string|max:255',
-//            'day' => 'nullable|integer|min:1|max:31',
-//            'month' => 'nullable|string|min:1|max:12',
-//            'year' => 'nullable|string',
-//            'phone' => 'nullable|string|max:20',
-//            'gender' => 'nullable|in:male,female',
-//            'has_spouse' => 'nullable|in:yes,no',
-//            'future_tax_return' => 'nullable|in:yes,no',
-//            'australian_citizenship' => 'nullable|in:yes,no',
-//            'visa_type' => 'nullable|string',
-//            'other_visa_type' => 'nullable|string',
-//            'long_stay_183' => 'nullable|in:yes,no',
-//            'arrival_month' => 'nullable|string|min:1|max:12',
-//            'arrival_year' => 'nullable|string',
-//            'departure_month' => 'nullable|string|min:1|max:12',
-//            'departure_year' => 'nullable|string',
-//            'stay_purpose' => 'nullable|string',
-//            'full_tax_year' => 'nullable|in:yes,no',
-//            'home_address' => 'nullable|string',
-//            'same_as_home_address' => 'nullable|in:yes,no',
-//            'postal_address' => 'nullable|string',
-//            'has_education_debt' => 'nullable|in:yes,no',
-//            'has_sfss_debt' => 'nullable|in:yes,no',
-//            'other_tax_debts' => 'nullable|string',
-//            'occupation' => 'nullable|string',
-//            'other_occupation' => 'nullable|string',
-//        ];
-//
-//
-//        $validator = Validator::make($request->all(), $rules);
-//
-//        if ($validator->fails()) {
-//            return response()->json([
-//                'success' => false,
-//                'message' => 'Validation errors',
-//                'errors' => $validator->errors(),
-//            ], 422);
-//        }
-//
-//        $validated = $validator->validated();
-//
-//
-//        $taxReturn = TaxReturn::where('id', $validated['tax_id'])
-//            ->where('user_id', $request->user()->id)
-//            ->first();
-//
-//        if (!$taxReturn) {
-//            return response()->json([
-//                'success' => false,
-//                'message' => 'Tax Return not found or unauthorized',
-//            ], 404);
-//        }
-//
-//        $booleanFields = [
-//            'has_spouse',
-//            'future_tax_return',
-//            'australian_citizenship',
-//            'long_stay_183',
-//            'full_tax_year',
-//            'same_as_home_address',
-//            'has_education_debt',
-//            'has_sfss_debt',
-//        ];
-//
-//        foreach ($booleanFields as $field) {
-//            if (isset($validated[$field])) {
-//                $validated[$field] = $validated[$field] === 'yes' ? 1 : 0;
-//            }
-//        }
-//
-//        $validated['tax_return_id'] = $taxReturn->id;
-//
-//        $basicInfo = BasicInfoForm::firstOrNew([
-//            'tax_return_id' => $taxReturn->id,
-//        ]);
-//
-//        $basicInfo->fill($validated);
-//        $basicInfo->save();
-//
-//        $message = $basicInfo->wasRecentlyCreated
-//            ? 'Form saved successfully!'
-//            : 'Form updated successfully!';
-//
-//        return (new BasicInfoResource($basicInfo))
-//            ->additional([
-//                'success' => true,
-//                'message' => $message,
-//            ]);
-//    }
 
 
     public function basicInfo(Request $request)
@@ -445,5 +345,119 @@ class FormController extends Controller
                 'message' => $message,
             ]);
     }
+
+
+    /**
+     * Store or update "Other" section data for a Tax Return.
+     *
+     * @param Request $request
+     * @return OtherResource|\Illuminate\Http\JsonResponse
+     */
+    public function other(Request $request)
+    {
+        $rules = [
+            'tax_id'                               => 'required|exists:tax_returns,id',
+            'any_dependent_children'               => 'nullable|string|max:255',
+            'additional_questions'                 => 'nullable|string|max:255',
+            'income_tests'                         => 'nullable|array',
+            'mls'                                  => 'nullable|array',
+            'spouse_details'                       => 'nullable|array',
+            'private_health_insurance'             => 'nullable|array',
+            'zone_overseas_forces_offset'          => 'nullable|array',
+            'seniors_offset'                       => 'nullable|array',
+            'medicare_reduction_exemption'         => 'nullable|array',
+            'part_year_tax_free_threshold'         => 'nullable|array',
+            'medical_expenses_offset'              => 'nullable|array',
+            'under_18'                             => 'nullable|array',
+            'working_holiday_maker_net_income'     => 'nullable|array',
+            'superannuation_income_stream_offset'  => 'nullable|array',
+            'superannuation_contributions_spouse'  => 'nullable|array',
+            'tax_losses_earlier_income_years'      => 'nullable|array',
+            'dependent_invalid_and_carer'          => 'nullable|array',
+            'superannuation_co_contribution'       => 'nullable|array',
+            'other_tax_offsets_refundable'         => 'nullable|array',
+
+            // Files validation with max size 5MB
+            'additional_file.*'                    => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'private_health_insurance.*.*'         => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'medicare_certificate'                 => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'medical_expense_file'                 => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation errors',
+                'errors'  => $validator->errors(),
+            ], 422);
+        }
+
+        $validated = $validator->validated();
+
+        $taxReturn = TaxReturn::where('id', $validated['tax_id'])
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if (!$taxReturn) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tax Return not found or unauthorized',
+            ], 404);
+        }
+
+        $existing = Other::where('tax_return_id', $taxReturn->id)->first();
+
+        $data = collect($validated)->except(['tax_id'])->toArray();
+
+        $attach = $existing ? ($existing->attach ?? []) : [];
+
+        if ($request->hasFile('additional_file')) {
+            $attach['additional_file'] = [];
+            foreach ($request->file('additional_file') as $file) {
+                $path = $file->store('attachments', 's3');
+                $attach['additional_file'][] = Storage::disk('s3')->url($path);
+            }
+        }
+
+        if ($request->hasFile('private_health_insurance')) {
+            foreach ($request->file('private_health_insurance') as $index => $fileGroup) {
+                foreach ($fileGroup as $key => $file) {
+                    $path = $file->store('attachments', 's3');
+                    $attach['private_health_insurance'][$index][$key] = Storage::disk('s3')->url($path);
+                }
+            }
+        }
+
+        if ($request->hasFile('medicare_certificate')) {
+            $path = $request->file('medicare_certificate')->store('attachments', 's3');
+            $attach['medicare_certificate'] = Storage::disk('s3')->url($path);
+        }
+
+        if ($request->hasFile('medical_expense_file')) {
+            $path = $request->file('medical_expense_file')->store('attachments', 's3');
+            $attach['medical_expense_file'] = Storage::disk('s3')->url($path);
+        }
+
+        $data['attach'] = $attach;
+
+
+        if ($existing) {
+            $existing->update($data);
+            $other = $existing->fresh();
+            $message = 'Other data updated successfully!';
+        } else {
+            $other = Other::create(array_merge($data, [
+                'tax_return_id' => $taxReturn->id,
+            ]));
+            $message = 'Other data saved successfully!';
+        }
+
+        return (new OtherResource($other))->additional([
+            'success' => true,
+            'message' => $message,
+        ]);
+    }
+
 
 }

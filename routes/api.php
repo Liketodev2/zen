@@ -41,6 +41,6 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/basic-info', [FormController::class, 'basicInfo']);
         Route::post('/income', [FormController::class, 'income']);
         Route::post('/deduction', [FormController::class, 'deduction']);
-        Route::post('/deduction', [FormController::class, 'deduction']);
+        Route::post('/other', [FormController::class, 'other']);
     });
 });

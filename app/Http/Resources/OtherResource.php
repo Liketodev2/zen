@@ -2,11 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Traits\HasAttachFiles;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OtherResource extends JsonResource
 {
+    use HasAttachFiles;
+
     /**
      * Transform the resource into an array.
      *
@@ -14,6 +17,10 @@ class OtherResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        $data = parent::toArray($request);
+        if (!empty($this->attach) && is_array($this->attach)) {
+            $data = $this->mergeAttachFiles($data, $this->attach);
+        }
+        return $data;
     }
 }

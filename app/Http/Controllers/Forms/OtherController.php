@@ -54,7 +54,7 @@ class OtherController extends Controller
             'other_tax_offsets_refundable'         => 'nullable|array',
 
             // Files validation with max size 5MB
-            'additional_file.*'                     => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'additional_file.*'                    => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'private_health_insurance.*.*'         => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'medicare_certificate'                 => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'medical_expense_file'                 => 'nullable|file|mimes:pdf,jpg,png|max:5120',
