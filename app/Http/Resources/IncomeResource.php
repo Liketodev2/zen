@@ -2,12 +2,16 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Traits\HasAttachFiles;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
 class IncomeResource extends JsonResource
 {
+
+    use HasAttachFiles;
+
     /**
      * Transform the resource into an array.
      *
@@ -18,8 +22,14 @@ class IncomeResource extends JsonResource
         $data = parent::toArray($request);
 
         // Convert attach file paths to full S3 URLs
-        if (!empty($data['attach'])) {
-            $data['attach'] = $this->transformAttach($data['attach']);
+//        if (!empty($data['attach'])) {
+//            $data['attach'] = $this->transformAttach($data['attach']);
+//        }
+//
+//        return $data;
+
+        if (!empty($this->attach) && is_array($this->attach)) {
+            $data = $this->mergeAttachFiles($data, $this->attach);
         }
 
         return $data;
@@ -46,4 +56,7 @@ class IncomeResource extends JsonResource
 
         return $attach;
     }
+
+
+
 }
