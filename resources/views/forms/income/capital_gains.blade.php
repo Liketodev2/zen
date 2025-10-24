@@ -23,7 +23,7 @@
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input custom-radio" type="radio" name="capital_gains[exemption_applied]" id="exemptionNo" value="0"
-                            {{ isset($capitalGains['exemption_applied']) && $capitalGains['exemption_applied'] === '1' ? 'checked' : '' }}>
+                            {{ isset($capitalGains['exemption_applied']) && $capitalGains['exemption_applied'] === '0' ? 'checked' : '' }}>
                         <label class="form-check-label custom-label" for="exemptionNo">No</label>
                     </div>
                 </div>
@@ -163,8 +163,8 @@
             </div>
             <div class="col-md-6 mb-3">
                 <p id="managedFundName" class="choosing-business-type-text text-muted mb-0">
-                     @if(!empty($capitalGains['cgt_attachment']))
-                            <a href="{{ Storage::disk('s3')->url($capitalGains['cgt_attachment']) }}" target="_blank" class="btn btn-outline-success">
+                     @if(!empty($incomes->attach['capital_gains_attachment']))
+                            <a href="{{ Storage::disk('s3')->url($incomes->attach['capital_gains_attachment']) }}" target="_blank" class="btn btn-outline-success">
                                 <i class="fa-solid fa-file"></i> View file
                             </a>
                     @else

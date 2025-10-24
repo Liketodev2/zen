@@ -10,16 +10,19 @@ class Income extends Model
 {
     use HasFactory;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
-        'attach',
-        'managed_funds',
-        'termination_payments',
+        'tax_return_id',
         'salary',
         'interests',
         'dividends',
         'government_allowances',
         'government_pensions',
         'capital_gains',
+        'managed_funds',
+        'termination_payments',
         'rent',
         'partnerships',
         'annuities',
@@ -31,31 +34,36 @@ class Income extends Model
         'business_losses',
         'foreign_income',
         'other_income',
-        'tax_return_id',
+        'attach',
     ];
 
+
+    /**
+     * @var string[]
+     */
     protected $casts = [
-        'attach' => 'array',
-        'salary' => 'array', // Salary / Wages
-        'interests' => 'array', // Interest
-        'dividends' => 'array', // Dividends
-        'government_allowances' => 'array', // Government Allowances
-        'government_pensions' => 'array', // Government Pension
-        'capital_gains' => 'array', // Capital Gains or Losses
-        'managed_funds' => 'array', // Managed Funds
-        'termination_payments' => 'array', // Termination Payments
-        'rent' => 'array', // Rent Received
-        'partnerships' => 'array', // Partnerships and Trusts
-        'annuities' => 'array', // Australian Annuities
-        'superannuation' => 'array', // Superannuation Income Stream
-        'super_lump_sums' => 'array', // Super Lump Sums
-        'ess' => 'array', // Employee Share Schemes
-        'personal_services' => 'array', // Personal Services Income
-        'business_income' => 'array', // Income / Loss From Business
-        'business_losses' => 'array', // Deferred Business Losses
-        'foreign_income' => 'array', // Foreign Source Income
-        'other_income' => 'array', // Other Income
+        'salary'                => 'array',
+        'interests'             => 'array',
+        'dividends'             => 'array',
+        'government_allowances' => 'array',
+        'government_pensions'   => 'array',
+        'capital_gains'         => 'array',
+        'managed_funds'         => 'array',
+        'termination_payments'  => 'array',
+        'rent'                  => 'array',
+        'partnerships'          => 'array',
+        'annuities'             => 'array',
+        'superannuation'        => 'array',
+        'super_lump_sums'       => 'array',
+        'ess'                   => 'array',
+        'personal_services'     => 'array',
+        'business_income'       => 'array',
+        'business_losses'       => 'array',
+        'foreign_income'        => 'array',
+        'other_income'          => 'array',
+        'attach'                => 'array',
     ];
+
 
     public function taxReturn()
     {
