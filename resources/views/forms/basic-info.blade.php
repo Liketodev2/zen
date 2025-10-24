@@ -137,7 +137,7 @@
             </div>
 
             <!-- Non-citizen section -->
-            <div class="row mb-3" id="nonCitizenSection" style="display: {{ old('australian_citizenship', $basicInfo->australian_citizenship ?? '') == 'no' ? 'block' : 'none' }};">
+            <div class="row mb-3" id="nonCitizenSection" style="display: {{ old('australian_citizenship', $basicInfo->australian_citizenship ?? '') == '0' ? 'block' : 'none' }};">
                 <div class="row mb-3">
                     <div class="col-md-6 mb-3">
                         <select class="form-control" name="visa_type" id="visaSelect">
@@ -298,7 +298,7 @@
                             <label class="form-check-label custom-label" for="sameAddressNo">No</label>
                         </div>
                     </div>
-                    <div class="col-md-6" id="postalAddressField" style="display: {{ old('same_as_home_address', $basicInfo->same_as_home_address ?? '') == 'no' ? 'block' : 'none' }};">
+                    <div class="col-md-6" id="postalAddressField" style="display: {{ old('same_as_home_address', $basicInfo->same_as_home_address ?? '') == '0' ? 'block' : 'none' }};">
                         <input type="text" name="postal_address" class="form-control border-dark" placeholder="Postal Address"
                             value="{{ old('postal_address', $basicInfo->postal_address ?? '') }}">
                     </div>
@@ -411,7 +411,7 @@
 
         function toggleCitizenSection() {
             const selectedValue = document.querySelector('input[name="australian_citizenship"]:checked')?.value;
-            nonCitizenSection.style.display = (selectedValue === 'no') ? 'block' : 'none';
+            nonCitizenSection.style.display = (selectedValue === '0') ? 'block' : 'none';
         }
 
         // Visa type toggle
@@ -428,7 +428,7 @@
 
         function togglePostalAddress() {
             const selectedValue = document.querySelector('input[name="same_as_home_address"]:checked')?.value;
-            postalAddressField.style.display = (selectedValue === 'no') ? 'block' : 'none';
+            postalAddressField.style.display = (selectedValue === '0') ? 'block' : 'none';
         }
 
         // Occupation toggle
