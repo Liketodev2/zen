@@ -49,12 +49,16 @@ class IncomeResource extends JsonResource
      */
     private function formatManagedFunds($managedFunds)
     {
-        if (!$managedFunds || !is_array($managedFunds)) return [];
+        if (empty($managedFunds) || !is_array($managedFunds)) {
+            return null;
+        }
 
         $result = [];
 
-        // Keep 'info' as is
-        $result['info'] = $managedFunds['info'] ?? [];
+        // Keep 'info' as is if present
+        if (!empty($managedFunds['info'])) {
+            $result['info'] = $managedFunds['info'];
+        }
 
         // Convert top-level managed_fund_files to full URLs
         if (!empty($managedFunds['managed_fund_files']) && is_array($managedFunds['managed_fund_files'])) {
@@ -62,11 +66,10 @@ class IncomeResource extends JsonResource
                 fn($file) => $this->toFullUrl($file),
                 $managedFunds['managed_fund_files']
             );
-        } else {
-            $result['managed_fund_files'] = [];
         }
 
-        return $result;
+        // If result still empty after processing, return null
+        return empty($result) ? null : $result;
     }
 
 
@@ -110,7 +113,11 @@ class IncomeResource extends JsonResource
      */
     private function formatRent($rent)
     {
-        if (!$rent || !is_array($rent)) return [];
+        if (empty($rent) || !is_array($rent)) {
+            return null;
+        }
+
+        $hasData = false;
 
         foreach ($rent as $index => $r) {
             if (!empty($r['rent_files']) && is_array($r['rent_files'])) {
@@ -118,12 +125,14 @@ class IncomeResource extends JsonResource
                     fn($file) => $this->toFullUrl($file),
                     $r['rent_files']
                 );
+                $hasData = true;
+            } elseif (!empty($r)) {
+                $hasData = true;
             }
         }
 
-        return $rent;
+        return $hasData ? $rent : null;
     }
-
 
     /**
      * @param $path
