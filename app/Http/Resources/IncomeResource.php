@@ -24,7 +24,7 @@ class IncomeResource extends JsonResource
             'government_pensions' => $this->government_pensions,
             'capital_gains' => $this->formatCapitalGains($this->capital_gains),
             'managed_funds' => $this->formatManagedFunds($this->managed_funds),
-            'termination_payments' => $this->termination_payments,
+            'termination_payments' => $this->formatTerminationPayments($this->termination_payments),
             'rent' => $this->formatRent($this->rent),
             'partnerships' => $this->partnerships,
             'annuities' => $this->annuities,
@@ -134,6 +134,38 @@ class IncomeResource extends JsonResource
         return $hasData ? $rent : null;
     }
 
+
+    /**
+     * @param $terminationPayments
+     * @return array|null
+     */
+    private function formatTerminationPayments($terminationPayments)
+    {
+        if (empty($terminationPayments) || !is_array($terminationPayments)) {
+            return null;
+        }
+
+        $hasData = false;
+
+        foreach ($terminationPayments as $index => $etp) {
+            if (is_array($etp)) {
+                // Convert ETP attached files to URLs
+                if (!empty($etp['etp_files']) && is_array($etp['etp_files'])) {
+                    $terminationPayments[$index]['etp_files'] = array_map(
+                        fn($file) => $this->toFullUrl($file),
+                        $etp['etp_files']
+                    );
+                    $hasData = true;
+                } elseif (!empty(array_filter($etp))) {
+                    $hasData = true;
+                }
+            }
+        }
+
+        return $hasData ? $terminationPayments : null;
+    }
+
+
     /**
      * @param $path
      * @return string|null
@@ -148,4 +180,7 @@ class IncomeResource extends JsonResource
         // Otherwise, generate full URL from Storage
         return Storage::url($path);
     }
+
+
+
 }

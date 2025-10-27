@@ -140,12 +140,13 @@ class FormController extends Controller
             'business_losses'       => 'nullable|array',
             'foreign_income'        => 'nullable|array',
             'other_income'          => 'nullable|array',
-            'capital_gains.cgt_attachment' => 'nullable|file|mimes:pdf,jpg,png|max:5120', // 5MB
-            'managed_fund_files.*'  => 'nullable|file|mimes:pdf,jpg,png|max:5120', // 5MB
-            'termination_payments.*.etp_files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120', // 5MB
-            'rent.*.rent_files.*'   => 'nullable|file|mimes:pdf,jpg,png|max:5120', // 5MB
-        ];
 
+            // File rules
+            'capital_gains.cgt_attachment' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'managed_fund_files.*'         => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'termination_payments.*.etp_files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'rent.*.rent_files.*'          => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+        ];
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -153,13 +154,13 @@ class FormController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation errors',
-                'errors' => $validator->errors(),
+                'errors'  => $validator->errors(),
             ], 422);
         }
 
         $validated = $validator->validated();
 
-
+        // Check tax return ownership
         $taxReturn = TaxReturn::where('id', $validated['tax_id'])
             ->where('user_id', $request->user()->id)
             ->first();
@@ -171,11 +172,10 @@ class FormController extends Controller
             ], 404);
         }
 
-
-        // Check if an Income record already exists for this tax return
+        // Fetch existing income data if available
         $existing = Income::where('tax_return_id', $taxReturn->id)->first();
 
-        // Merge request data with existing data
+        // Merge with existing values
         $fields = array_keys($rules);
         $data   = [];
         foreach ($fields as $field) {
@@ -183,15 +183,22 @@ class FormController extends Controller
             $data[$field] = $validated[$field] ?? ($existing->$field ?? null);
         }
 
-        // Handle file uploads
+        // Initialize attachments
         $attach = $existing ? ($existing->attach ?? []) : [];
-        $attach = $this->fileService->handleAllFiles($request, $attach);
+
+        // Use the service for all file handling
+        $this->fileService->handleCapitalGainsFiles($request, $attach, $data);
+        $this->fileService->handleManagedFundsFiles($request, $attach, $data);
+        $this->fileService->handleTerminationPaymentsFiles($request, $attach, $data);
+        $this->fileService->handleRentFiles($request, $attach, $data);
+
+        // Save updated attachment data
         $data['attach'] = $attach;
 
         // Create or update record
         if ($existing) {
             $existing->update($data);
-            $income  = $existing->fresh(); // get updated record
+            $income = $existing->fresh();
             $message = 'Income data updated successfully!';
         } else {
             $income = Income::create(array_merge($data, [
@@ -206,6 +213,103 @@ class FormController extends Controller
                 'message' => $message,
             ]);
     }
+
+
+
+//    /**
+//     * @param Request $request
+//     * @return IncomeResource|\Illuminate\Http\JsonResponse
+//     * @throws \Illuminate\Validation\ValidationException
+//     */
+//    public function income(Request $request)
+//    {
+//        $rules = [
+//            'tax_id' => 'required|exists:tax_returns,id',
+//            'salary'                => 'nullable|array',
+//            'interests'             => 'nullable|array',
+//            'dividends'             => 'nullable|array',
+//            'government_allowances' => 'nullable|array',
+//            'government_pensions'   => 'nullable|array',
+//            'capital_gains'         => 'nullable|array',
+//            'managed_funds'         => 'nullable|array',
+//            'termination_payments'  => 'nullable|array',
+//            'rent'                  => 'nullable|array',
+//            'partnerships'          => 'nullable|array',
+//            'annuities'             => 'nullable|array',
+//            'superannuation'        => 'nullable|array',
+//            'super_lump_sums'       => 'nullable|array',
+//            'ess'                   => 'nullable|array',
+//            'personal_services'     => 'nullable|array',
+//            'business_income'       => 'nullable|array',
+//            'business_losses'       => 'nullable|array',
+//            'foreign_income'        => 'nullable|array',
+//            'other_income'          => 'nullable|array',
+//            'capital_gains.cgt_attachment' => 'nullable|file|mimes:pdf,jpg,png|max:5120', // 5MB
+//            'managed_fund_files.*'  => 'nullable|file|mimes:pdf,jpg,png|max:5120', // 5MB
+//            'termination_payments.*.etp_files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120', // 5MB
+//            'rent.*.rent_files.*'   => 'nullable|file|mimes:pdf,jpg,png|max:5120', // 5MB
+//        ];
+//
+//
+//        $validator = Validator::make($request->all(), $rules);
+//
+//        if ($validator->fails()) {
+//            return response()->json([
+//                'success' => false,
+//                'message' => 'Validation errors',
+//                'errors' => $validator->errors(),
+//            ], 422);
+//        }
+//
+//        $validated = $validator->validated();
+//
+//
+//        $taxReturn = TaxReturn::where('id', $validated['tax_id'])
+//            ->where('user_id', $request->user()->id)
+//            ->first();
+//
+//        if (!$taxReturn) {
+//            return response()->json([
+//                'success' => false,
+//                'message' => 'Tax Return not found or unauthorized',
+//            ], 404);
+//        }
+//
+//
+//        // Check if an Income record already exists for this tax return
+//        $existing = Income::where('tax_return_id', $taxReturn->id)->first();
+//
+//        // Merge request data with existing data
+//        $fields = array_keys($rules);
+//        $data   = [];
+//        foreach ($fields as $field) {
+//            if ($field === 'tax_id') continue;
+//            $data[$field] = $validated[$field] ?? ($existing->$field ?? null);
+//        }
+//
+//        // Handle file uploads
+//        $attach = $existing ? ($existing->attach ?? []) : [];
+//        $attach = $this->fileService->handleAllFiles($request, $attach);
+//        $data['attach'] = $attach;
+//
+//        // Create or update record
+//        if ($existing) {
+//            $existing->update($data);
+//            $income  = $existing->fresh();
+//            $message = 'Income data updated successfully!';
+//        } else {
+//            $income = Income::create(array_merge($data, [
+//                'tax_return_id' => $taxReturn->id,
+//            ]));
+//            $message = 'Income data saved successfully!';
+//        }
+//
+//        return (new IncomeResource($income))
+//            ->additional([
+//                'success' => true,
+//                'message' => $message,
+//            ]);
+//    }
 
 
     /**
