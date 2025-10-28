@@ -195,6 +195,23 @@ class FormController extends Controller
         // Save updated attachment data
         $data['attach'] = $attach;
 
+
+        if ($request->has('other_income')) {
+            $data['other_income'] = $request->input('other_income');
+        }
+
+        if ($request->has('salary')) {
+            $data['salary'] = $request->input('salary');
+        }
+
+        if ($request->has('interests')) {
+            $data['interests'] = $request->input('interests');
+        }
+
+        if ($request->has('government_pensions')) {
+            $data['government_pensions'] = $request->input('government_pensions');
+        }
+
         // Create or update record
         if ($existing) {
             $existing->update($data);

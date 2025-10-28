@@ -70,6 +70,17 @@ class IncomeController extends Controller
             'foreign_income' => 'nullable|array',
             'other_income' => 'nullable|array',
 
+            'other_income.info' => 'nullable|array',
+            'other_income.info.*.other_income_type' => 'nullable|string',
+            'other_income.info.*.other_income_amount' => 'nullable|numeric',
+            'other_income.info.*.bal_adj_financial' => 'nullable|numeric',
+            'other_income.info.*.bal_adj_rental' => 'nullable|numeric',
+            'other_income.info.*.bal_adj_remaining' => 'nullable|numeric',
+            'other_income.fhss_amount' => 'nullable|numeric',
+            'other_income.fhss_tax_withheld' => 'nullable|numeric',
+            'other_income.professional_income' => 'nullable|numeric',
+
+            // File upload rules
             'capital_gains.cgt_attachment' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'managed_fund_files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'termination_payments.*.etp_files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
@@ -88,12 +99,13 @@ class IncomeController extends Controller
 
         $validated = $validator->validated();
 
+
         // Normalize super lump sums
         if (!empty($validated['super_lump_sums'])) {
             $sums = $validated['super_lump_sums'];
             $validated['super_lump_sums'] = [
                 'lump_sum_count' => $sums['lump_sum_count'] ?? count($sums['payments'] ?? []),
-                'payments' => array_values($sums['payments'] ?? [])
+                'payments' => array_values($sums['payments'] ?? []),
             ];
         }
 
@@ -117,7 +129,7 @@ class IncomeController extends Controller
 
             $newValue = $validated[$field] ?? [];
 
-            // Merge existing and new values
+            // Merge existing and new values recursively
             $merged = array_replace_recursive($existingValue ?: [], $newValue ?: []);
 
             // Store null if empty
@@ -134,13 +146,31 @@ class IncomeController extends Controller
 
         $data['attach'] = empty($attach) ? null : $attach;
 
+
+        if ($request->has('other_income')) {
+            $data['other_income'] = $request->input('other_income');
+        }
+
+        if ($request->has('salary')) {
+            $data['salary'] = $request->input('salary');
+        }
+
+        if ($request->has('interests')) {
+            $data['interests'] = $request->input('interests');
+        }
+
+        if ($request->has('government_pensions')) {
+            $data['government_pensions'] = $request->input('government_pensions');
+        }
+
+
         if ($existing) {
             $existing->update($data);
             $message = 'Income data updated successfully!';
             $incomeId = $existing->id;
         } else {
             $income = Income::create(array_merge($data, [
-                'tax_return_id' => $taxReturn->id
+                'tax_return_id' => $taxReturn->id,
             ]));
             $message = 'Income data saved successfully!';
             $incomeId = $income->id;
@@ -149,9 +179,10 @@ class IncomeController extends Controller
         return response()->json([
             'success'  => true,
             'message'  => $message,
-            'incomeId' => $incomeId
+            'incomeId' => $incomeId,
         ]);
     }
+
 
 
 
