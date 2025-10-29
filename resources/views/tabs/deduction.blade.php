@@ -107,14 +107,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         item.addEventListener("click", () => {
-            if (formToShow && formToShow.classList.contains("d-none")) {
+            if (formToShow) {
+                // Show the form
                 formToShow.classList.remove("d-none");
+
+                // Mark the clicked item as active
                 item.classList.add("active");
 
-                const target = document.getElementById("deduction-forms_title");
-                if (target) {
-                    target.scrollIntoView({ behavior: "smooth", block: "start" });
-                }
+                // Scroll to the specific form smoothly
+                formToShow.scrollIntoView({ behavior: "smooth", block: "start" });
             }
         });
     });

@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Validator;
 class IncomeController extends Controller
 {
 
-
     /**
      * @var IncomeFileService
      */

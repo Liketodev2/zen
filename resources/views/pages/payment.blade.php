@@ -26,7 +26,7 @@
                 <div class="payment_details mt-4">
                     <div class="info">
                         <p>
-                            <span>${{ $amount }} - Individual Tax Return Completion</span>
+                            <span>AUD {{ $amount }} - Individual Tax Return Completion</span>
                         </p>
                     </div>
 

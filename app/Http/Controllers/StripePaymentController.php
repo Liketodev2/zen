@@ -90,7 +90,7 @@ class StripePaymentController extends Controller
         try {
             $charge = \Stripe\Charge::create([
                 'amount' => intval(env('AMOUNT', 100) * 100),
-                'currency' => 'usd',
+                'currency' => 'aud', // ✅ use your account’s currency
                 'source' => $validated['stripeToken'],
                 'description' => 'Tax Payment for Tax ID #' . $tax->id,
                 'metadata' => [
