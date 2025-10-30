@@ -252,6 +252,10 @@ class FormController extends Controller
             }
         }
 
+
+
+        dd( $request->all());
+
         // 🧾 Validation rules
         $rules = [
             'tax_id' => 'required|exists:tax_returns,id',
@@ -281,6 +285,9 @@ class FormController extends Controller
             'termination_payments.*.etp_files.*'=> 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'rent.*.rent_files.*'               => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ];
+
+
+
 
         // 🧰 Validate input
         $validator = Validator::make($request->all(), $rules);
