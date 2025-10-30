@@ -252,8 +252,6 @@ class FormController extends Controller
             }
         }
 
-  return response()->json($request->all());
-
 
 
         // 🧾 Validation rules
