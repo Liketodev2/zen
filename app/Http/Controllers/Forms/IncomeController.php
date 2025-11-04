@@ -86,6 +86,8 @@ class IncomeController extends Controller
             'rent.*.rent_files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ];
 
+
+
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {

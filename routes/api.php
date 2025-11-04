@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\FormController;
+use App\Http\Controllers\Api\IncomeController;
 use App\Http\Controllers\Api\TaxReturnController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,8 +40,19 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::group(['prefix' => 'forms'], function () {
         Route::post('/basic-info', [FormController::class, 'basicInfo']);
-        Route::post('/income', [FormController::class, 'income']);
+//        Route::post('/income', [FormController::class, 'income']);
         Route::post('/deduction', [FormController::class, 'deduction']);
         Route::post('/other', [FormController::class, 'other']);
+
+        Route::group(['prefix' => 'income'], function () {
+            Route::post('/', [IncomeController::class, 'income']);
+            Route::post('/capital-gains', [IncomeController::class, 'saveCapitalGains']);
+            Route::post('/managed-funds', [IncomeController::class, 'saveManagedFunds']);
+            Route::post('/termination-payments', [IncomeController::class, 'saveTerminationPayments']);
+            Route::post('/rent', [IncomeController::class, 'saveRent']);
+        });
     });
+
+
+
 });

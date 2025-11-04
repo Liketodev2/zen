@@ -35,6 +35,11 @@ class FormController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @return BasicInfoResource|\Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function basicInfo(Request $request)
     {
         $rules = [
@@ -71,11 +76,7 @@ class FormController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation errors',
-                'errors' => $validator->errors(),
-            ], 422);
+            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
         }
 
         $validated = $validator->validated();
@@ -86,8 +87,8 @@ class FormController extends Controller
 
         if (!$taxReturn) {
             return response()->json([
-                'success' => false,
-                'message' => 'Tax Return not found or unauthorized',
+                'validation' => false,
+                'error' => 'Tax Return not found or unauthorized',
             ], 404);
         }
 
@@ -112,129 +113,9 @@ class FormController extends Controller
     }
 
 
-//    /**
-//     * @param Request $request
-//     * @return IncomeResource|\Illuminate\Http\JsonResponse
-//     * @throws \Illuminate\Validation\ValidationException
-//     */
-//    public function income(Request $request)
-//    {
-//        $rules = [
-//            'tax_id' => 'required|exists:tax_returns,id',
-//            'salary'                => 'nullable|array',
-//            'interests'             => 'nullable|array',
-//            'dividends'             => 'nullable|array',
-//            'government_allowances' => 'nullable|array',
-//            'government_pensions'   => 'nullable|array',
-//            'capital_gains'         => 'nullable|array',
-//            'managed_funds'         => 'nullable|array',
-//            'termination_payments'  => 'nullable|array',
-//            'rent'                  => 'nullable|array',
-//            'partnerships'          => 'nullable|array',
-//            'annuities'             => 'nullable|array',
-//            'superannuation'        => 'nullable|array',
-//            'super_lump_sums'       => 'nullable|array',
-//            'ess'                   => 'nullable|array',
-//            'personal_services'     => 'nullable|array',
-//            'business_income'       => 'nullable|array',
-//            'business_losses'       => 'nullable|array',
-//            'foreign_income'        => 'nullable|array',
-//            'other_income'          => 'nullable|array',
-//
-//            // File rules
-//            'capital_gains.cgt_attachment' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-//            'managed_fund_files.*'         => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-//            'termination_payments.*.etp_files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-//            'rent.*.rent_files.*'          => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-//        ];
-//
-//        $validator = Validator::make($request->all(), $rules);
-//
-//        if ($validator->fails()) {
-//            return response()->json([
-//                'success' => false,
-//                'message' => 'Validation errors',
-//                'errors'  => $validator->errors(),
-//            ], 422);
-//        }
-//
-//        $validated = $validator->validated();
-//
-//        // Check tax return ownership
-//        $taxReturn = TaxReturn::where('id', $validated['tax_id'])
-//            ->where('user_id', $request->user()->id)
-//            ->first();
-//
-//        if (!$taxReturn) {
-//            return response()->json([
-//                'success' => false,
-//                'message' => 'Tax Return not found or unauthorized',
-//            ], 404);
-//        }
-//
-//        // Fetch existing income data if available
-//        $existing = Income::where('tax_return_id', $taxReturn->id)->first();
-//
-//        // Merge with existing values
-//        $fields = array_keys($rules);
-//        $data   = [];
-//        foreach ($fields as $field) {
-//            if ($field === 'tax_id') continue;
-//            $data[$field] = $validated[$field] ?? ($existing->$field ?? null);
-//        }
-//
-//        // Initialize attachments
-//        $attach = $existing ? ($existing->attach ?? []) : [];
-//
-//        // Use the service for all file handling
-//        $this->fileService->handleCapitalGainsFiles($request, $attach, $data);
-//        $this->fileService->handleManagedFundsFiles($request, $attach, $data);
-//        $this->fileService->handleTerminationPaymentsFiles($request, $attach, $data);
-//        $this->fileService->handleRentFiles($request, $attach, $data);
-//
-//        // Save updated attachment data
-//        $data['attach'] = $attach;
-//
-//
-//        if ($request->has('other_income')) {
-//            $data['other_income'] = $request->input('other_income');
-//        }
-//
-//        if ($request->has('salary')) {
-//            $data['salary'] = $request->input('salary');
-//        }
-//
-//        if ($request->has('interests')) {
-//            $data['interests'] = $request->input('interests');
-//        }
-//
-//        if ($request->has('government_pensions')) {
-//            $data['government_pensions'] = $request->input('government_pensions');
-//        }
-//
-//        // Create or update record
-//        if ($existing) {
-//            $existing->update($data);
-//            $income = $existing->fresh();
-//            $message = 'Income data updated successfully!';
-//        } else {
-//            $income = Income::create(array_merge($data, [
-//                'tax_return_id' => $taxReturn->id,
-//            ]));
-//            $message = 'Income data saved successfully!';
-//        }
-//
-//        return (new IncomeResource($income))
-//            ->additional([
-//                'success' => true,
-//                'message' => $message,
-//            ]);
-//    }
-
 
     public function income(Request $request)
     {
-        // 🧩 Decode any JSON strings (for stringified array data)
         $arrayFields = [
             'salary', 'interests', 'dividends', 'government_allowances',
             'government_pensions', 'capital_gains', 'managed_funds',
@@ -412,11 +293,7 @@ class FormController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation errors',
-                'errors'  => $validator->errors(),
-            ], 422);
+            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
         }
 
         $validated = $validator->validated();
@@ -427,8 +304,8 @@ class FormController extends Controller
 
         if (!$taxReturn) {
             return response()->json([
-                'success' => false,
-                'message' => 'Tax Return not found or unauthorized',
+                'validation' => false,
+                'error' => 'Tax Return not found or unauthorized',
             ], 404);
         }
 
@@ -543,11 +420,7 @@ class FormController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation errors',
-                'errors'  => $validator->errors(),
-            ], 422);
+            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
         }
 
         $validated = $validator->validated();
@@ -558,8 +431,8 @@ class FormController extends Controller
 
         if (!$taxReturn) {
             return response()->json([
-                'success' => false,
-                'message' => 'Tax Return not found or unauthorized',
+                'validation' => false,
+                'error' => 'Tax Return not found or unauthorized',
             ], 404);
         }
 
