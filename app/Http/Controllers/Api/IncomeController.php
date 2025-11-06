@@ -118,11 +118,17 @@ class IncomeController extends Controller
         $attach = $income->attach ?? [];
         $data = $income->toArray();
 
-        $data['capital_gains'] = $request->input('capital_gains', $data['capital_gains'] ?? []);
+        // Merge existing capital gains data with request data
+        $existingCapitalGains = $data['capital_gains'] ?? [];
+        $requestCapitalGains = $request->input('capital_gains', []);
+        $data['capital_gains'] = array_merge($existingCapitalGains, $requestCapitalGains);
 
         $this->fileService->handleCapitalGainsFiles($request, $attach, $data);
 
-        $income->update(['capital_gains' => $data['capital_gains'], 'attach' => $attach]);
+        $income->update([
+            'capital_gains' => $data['capital_gains'],
+            'attach' => $attach
+        ]);
 
         return response()->json([
             'success' => true,
@@ -130,6 +136,7 @@ class IncomeController extends Controller
             'data' => new IncomeResource($income->fresh()),
         ]);
     }
+
 
 
     /**
