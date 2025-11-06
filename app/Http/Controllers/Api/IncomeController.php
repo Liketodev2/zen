@@ -168,11 +168,18 @@ class IncomeController extends Controller
         $attach = $income->attach ?? [];
         $data = $income->toArray();
 
-        $data['managed_funds'] = $request->input('managed_funds', $data['managed_funds'] ?? []);
+//        $data['managed_funds'] = $request->input('managed_funds', $data['managed_funds'] ?? []);
+
+        // Merge existing capital gains data with request data
+        $existingManagedFunds = $data['managed_funds'] ?? [];
+        $requestManagedFunds = $request->input('managed_funds', []);
+        $data['managed_funds'] = array_merge($existingManagedFunds, $requestManagedFunds);
 
         $this->fileService->handleManagedFundsFiles($request, $attach, $data);
-
-        $income->update(['managed_funds' => $data['managed_funds'], 'attach' => $attach]);
+        $income->update([
+            'managed_funds' => $data['managed_funds'],
+            'attach' => $attach
+        ]);
 
         return response()->json([
             'success' => true,
