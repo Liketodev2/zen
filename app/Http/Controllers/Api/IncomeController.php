@@ -170,7 +170,7 @@ class IncomeController extends Controller
 
 //        $data['managed_funds'] = $request->input('managed_funds', $data['managed_funds'] ?? []);
 
-        // Merge existing capital gains data with request data
+        // Merge existing managed funds data with request data
         $existingManagedFunds = $data['managed_funds'] ?? [];
         $requestManagedFunds = $request->input('managed_funds', []);
         $data['managed_funds'] = array_merge($existingManagedFunds, $requestManagedFunds);
@@ -218,7 +218,12 @@ class IncomeController extends Controller
         $attach = $income->attach ?? [];
         $data = $income->toArray();
 
-        $data['termination_payments'] = $request->input('termination_payments', $data['termination_payments'] ?? []);
+//        $data['termination_payments'] = $request->input('termination_payments', $data['termination_payments'] ?? []);
+
+        // Merge existing termination payments data with request data
+        $existingTerminationPayments= $data['termination_payments'] ?? [];
+        $requestTerminationPayments = $request->input('termination_payments', []);
+        $data['termination_payments'] = array_merge($existingTerminationPayments, $requestTerminationPayments);
 
         $this->fileService->handleTerminationPaymentsFiles($request, $attach, $data);
 
@@ -261,7 +266,12 @@ class IncomeController extends Controller
         $attach = $income->attach ?? [];
         $data = $income->toArray();
 
-        $data['rent'] = $request->input('rent', $data['rent'] ?? []);
+//        $data['rent'] = $request->input('rent', $data['rent'] ?? []);
+
+        // Merge existing rent data with request data
+        $existingRent = $data['rent'] ?? [];
+        $requestRent = $request->input('rent', []);
+        $data['rent'] = array_merge($existingRent, $requestRent);
 
         $this->fileService->handleRentFiles($request, $attach, $data);
 
