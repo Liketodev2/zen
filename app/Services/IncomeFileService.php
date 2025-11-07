@@ -111,4 +111,35 @@ class IncomeFileService
             }
         }
     }
+
+
+    /**
+     * @param Request $request
+     * @param array $attach
+     * @param array $data
+     * @return void
+     */
+    public function handleRentFilesForApi(Request $request, array &$attach, array &$data): void
+    {
+        if ($request->hasFile('rent.rent_files')) {
+
+            // Delete old file if any
+            if (!empty($attach['rent']['rent_files'])) {
+                Storage::disk('s3')->delete($attach['rent']['rent_files']);
+            }
+
+            // Upload new file
+            $path = $request->file('rent.rent_files')->store('rent', 's3');
+
+            // Update references
+            $attach['rent']['rent_files'] = $path;
+            $data['rent']['rent_files'] = $path;
+
+        } else {
+            // Keep existing file if no new one uploaded
+            if (!empty($attach['rent']['rent_files'])) {
+                $data['rent']['rent_files'] = $attach['rent']['rent_files'];
+            }
+        }
+    }
 }
