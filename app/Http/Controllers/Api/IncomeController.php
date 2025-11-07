@@ -285,12 +285,13 @@ class IncomeController extends Controller
 //    }
 
 
+
     public function saveRent(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'tax_id' => 'required|exists:tax_returns,id',
             'rent' => 'nullable|array',
-            'rent.rent_files' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'rent.*.rent_files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ]);
 
         if ($validator->fails()) {
@@ -300,7 +301,6 @@ class IncomeController extends Controller
             ], 422);
         }
 
-        // Verify ownership
         $taxReturn = TaxReturn::where('id', $request->tax_id)
             ->where('user_id', $request->user()->id)
             ->first();
@@ -312,28 +312,36 @@ class IncomeController extends Controller
             ], 404);
         }
 
-        // Get or create income record
         $income = Income::firstOrCreate(['tax_return_id' => $taxReturn->id]);
-        $attach = $income->attach ?? [];
-        $data = $income->toArray();
 
-        /**
-         * 🧹 Normalize rent structure
-         * If rent is like [0 => {...}], flatten it into an associative object.
-         */
-        $existingRent = $data['rent'] ?? [];
-        if (isset($existingRent[0]) && is_array($existingRent[0])) {
-            $existingRent = $existingRent[0];
+        // ✅ Decode JSON fields safely
+        $attach = $income->attach;
+        if (is_string($attach)) {
+            $attach = json_decode($attach, true) ?: [];
+        } elseif (!is_array($attach)) {
+            $attach = [];
         }
 
-        // Merge new rent data safely
-        $requestRent = $request->input('rent', []);
-        $data['rent'] = array_merge($existingRent, $requestRent);
+        $data = $income->toArray();
+        $existingRent = $data['rent'] ?? [];
+        if (is_string($existingRent)) {
+            $existingRent = json_decode($existingRent, true) ?: [];
+        } elseif (!is_array($existingRent)) {
+            $existingRent = [];
+        }
 
-        // Handle rent file upload
+        // Merge request rent data
+        $requestRent = $request->input('rent', []);
+        foreach ($requestRent as $index => $rentData) {
+            $existingRent[$index] = array_merge($existingRent[$index] ?? [], $rentData);
+        }
+
+        $data['rent'] = array_values($existingRent);
+
+        // Handle file uploads
         $this->fileService->handleRentFilesForApi($request, $attach, $data);
 
-        // Save
+        // Update database
         $income->update([
             'rent' => $data['rent'],
             'attach' => $attach,
@@ -345,7 +353,6 @@ class IncomeController extends Controller
             'data' => new IncomeResource($income->fresh()),
         ]);
     }
-
 
 
 }
