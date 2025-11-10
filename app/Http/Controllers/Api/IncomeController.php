@@ -241,51 +241,6 @@ class IncomeController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-//    public function saveRent(Request $request)
-//    {
-//        $validator = Validator::make($request->all(), [
-//            'tax_id' => 'required|exists:tax_returns,id',
-//            'rent' => 'nullable|array',
-//            'rent.*.rent_files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-//        ]);
-//
-//        if ($validator->fails()) {
-//            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
-//        }
-//
-//        $taxReturn = TaxReturn::where('id', $request->tax_id)
-//            ->where('user_id', $request->user()->id)
-//            ->first();
-//
-//        if(!$taxReturn) {
-//            return response()->json(['error' => 'Tax return not found!', 'validation' => false], 404);
-//        }
-//
-//
-//        $income = Income::firstOrCreate(['tax_return_id' => $taxReturn->id]);
-//        $attach = $income->attach ?? [];
-//        $data = $income->toArray();
-//
-////        $data['rent'] = $request->input('rent', $data['rent'] ?? []);
-//
-//        // Merge existing rent data with request data
-//        $existingRent = $data['rent'] ?? [];
-//        $requestRent = $request->input('rent', []);
-//        $data['rent'] = array_merge($existingRent, $requestRent);
-//
-//        $this->fileService->handleRentFiles($request, $attach, $data);
-//
-//        $income->update(['rent' => $data['rent'], 'attach' => $attach]);
-//
-//        return response()->json([
-//            'success' => true,
-//            'message' => 'Rent details saved successfully!',
-//            'data' => new IncomeResource($income->fresh()),
-//        ]);
-//    }
-
-
-
     public function saveRent(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -314,29 +269,13 @@ class IncomeController extends Controller
 
         $income = Income::firstOrCreate(['tax_return_id' => $taxReturn->id]);
 
-        // ✅ Decode JSON fields safely
-        $attach = $income->attach;
-        if (is_string($attach)) {
-            $attach = json_decode($attach, true) ?: [];
-        } elseif (!is_array($attach)) {
-            $attach = [];
-        }
+        // Decode attachments safely
+        $attach = is_string($income->attach)
+            ? json_decode($income->attach, true) ?: []
+            : ($income->attach ?? []);
 
-        $data = $income->toArray();
-        $existingRent = $data['rent'] ?? [];
-        if (is_string($existingRent)) {
-            $existingRent = json_decode($existingRent, true) ?: [];
-        } elseif (!is_array($existingRent)) {
-            $existingRent = [];
-        }
-
-        // Merge request rent data
-        $requestRent = $request->input('rent', []);
-        foreach ($requestRent as $index => $rentData) {
-            $existingRent[$index] = array_merge($existingRent[$index] ?? [], $rentData);
-        }
-
-        $data['rent'] = array_values($existingRent);
+        // ✅ Replace all rent data instead of merging
+        $data['rent'] = $request->input('rent', []);
 
         // Handle file uploads
         $this->fileService->handleRentFilesForApi($request, $attach, $data);
@@ -353,6 +292,7 @@ class IncomeController extends Controller
             'data' => new IncomeResource($income->fresh()),
         ]);
     }
+
 
 
 }

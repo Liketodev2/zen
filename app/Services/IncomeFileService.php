@@ -86,51 +86,57 @@ class IncomeFileService
     /**
      * Handle Rent Files
      */
+//    public function handleRentFiles(Request $request, array &$attach, array &$data): void
+//    {
+//        $rentFiles = $request->file('rent', []);
+//
+//        foreach ($rentFiles as $index => $files) {
+//            if ($request->hasFile("rent.$index.rent_files")) {
+//                // Delete old files
+//                if (!empty($attach['rent'][$index]['rent_files'])) {
+//                    foreach ($attach['rent'][$index]['rent_files'] as $oldFile) {
+//                        Storage::disk('s3')->delete($oldFile);
+//                    }
+//                }
+//
+//                // Store new files
+//                $paths = [];
+//                foreach ($files['rent_files'] as $file) {
+//                    $paths[] = $file->store('rent', 's3');
+//                }
+//
+//                // Update both attach & data
+//                $attach['rent'][$index]['rent_files'] = $paths;
+//                $data['rent'][$index]['rent_files'] = $paths;
+//            }
+//        }
+//    }
+
+
     public function handleRentFiles(Request $request, array &$attach, array &$data): void
     {
-        $rentFiles = $request->file('rent', []);
+        $newRentData = $data['rent'] ?? [];
 
-        foreach ($rentFiles as $index => $files) {
-            if ($request->hasFile("rent.$index.rent_files")) {
-                // Delete old files
-                if (!empty($attach['rent'][$index]['rent_files'])) {
-                    foreach ($attach['rent'][$index]['rent_files'] as $oldFile) {
-                        Storage::disk('s3')->delete($oldFile);
+        // Delete old rent items that no longer exist in the request
+        if (!empty($attach['rent'])) {
+            foreach ($attach['rent'] as $index => $oldRent) {
+                if (!isset($newRentData[$index])) {
+                    // Delete files
+                    if (!empty($oldRent['rent_files'])) {
+                        foreach ($oldRent['rent_files'] as $file) {
+                            Storage::disk('s3')->delete($file);
+                        }
                     }
+                    // Remove from attach
+                    unset($attach['rent'][$index]);
                 }
-
-                // Store new files
-                $paths = [];
-                foreach ($files['rent_files'] as $file) {
-                    $paths[] = $file->store('rent', 's3');
-                }
-
-                // Update both attach & data
-                $attach['rent'][$index]['rent_files'] = $paths;
-                $data['rent'][$index]['rent_files'] = $paths;
             }
         }
-    }
 
-
-    /**
-     * @param Request $request
-     * @param array $attach
-     * @param array $data
-     * @return void
-     */
-    public function handleRentFilesForApi(Request $request, array &$attach, array &$data): void
-    {
-
-        // Ensure nested structure exists
-        if (!isset($attach['rent'])) {
-            $attach['rent'] = [];
-        }
-
-        foreach ($data['rent'] as $index => &$rentItem) {
+        // Handle new/updated rent files
+        foreach ($newRentData as $index => &$rentItem) {
             if ($request->hasFile("rent.$index.rent_files")) {
-
-                // Delete old files
+                // Delete old files for this item
                 if (!empty($attach['rent'][$index]['rent_files'])) {
                     foreach ($attach['rent'][$index]['rent_files'] as $oldFile) {
                         Storage::disk('s3')->delete($oldFile);
@@ -146,11 +152,61 @@ class IncomeFileService
                 $attach['rent'][$index]['rent_files'] = $paths;
                 $rentItem['rent_files'] = $paths;
             } else {
-                // Keep old files if not replaced
+                // Keep existing files if no new files
+                if (!empty($attach['rent'][$index]['rent_files'])) {
+                    $rentItem['rent_files'] = $attach['rent'][$index]['rent_files'];
+                }
+            }
+        }
+
+        // Reindex attach array to match new rent data
+        $attach['rent'] = array_values($attach['rent']);
+        $data['rent'] = array_values($newRentData);
+    }
+
+
+
+
+    /**
+     * @param Request $request
+     * @param array $attach
+     * @param array $data
+     * @return void
+     */
+    public function handleRentFilesForApi(Request $request, array &$attach, array &$data): void
+    {
+        if (!isset($attach['rent'])) {
+            $attach['rent'] = [];
+        }
+
+        foreach ($data['rent'] as $index => &$rentItem) {
+
+            // If new files are uploaded for this rent item
+            if ($request->hasFile("rent.$index.rent_files")) {
+
+                // Delete old files only for this item
+                if (!empty($attach['rent'][$index]['rent_files'])) {
+                    foreach ($attach['rent'][$index]['rent_files'] as $oldFile) {
+                        Storage::disk('s3')->delete($oldFile);
+                    }
+                }
+
+                // Upload new files
+                $paths = [];
+                foreach ($request->file("rent.$index.rent_files") as $file) {
+                    $paths[] = $file->store('rent', 's3');
+                }
+
+                $attach['rent'][$index]['rent_files'] = $paths;
+                $rentItem['rent_files'] = $paths;
+
+            } else {
+                // Keep existing files if no new files were uploaded
                 if (!empty($attach['rent'][$index]['rent_files'])) {
                     $rentItem['rent_files'] = $attach['rent'][$index]['rent_files'];
                 }
             }
         }
     }
+
 }
