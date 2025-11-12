@@ -218,7 +218,6 @@ class IncomeController extends Controller
         $attach = $income->attach ?? [];
         $data = $income->toArray();
 
-//        $data['termination_payments'] = $request->input('termination_payments', $data['termination_payments'] ?? []);
 
         // Merge existing termination payments data with request data
         $existingTerminationPayments= $data['termination_payments'] ?? [];

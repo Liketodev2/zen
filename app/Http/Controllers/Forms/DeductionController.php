@@ -183,6 +183,126 @@ class DeductionController extends Controller
 
 
 
+//    private function saveDeduction(Request $request, $taxId, $id = null)
+//    {
+//        $taxReturn = TaxReturn::where('user_id', auth()->id())
+//            ->where('id', $taxId)
+//            ->first();
+//
+//        if (!$taxReturn) {
+//            return response()->json([
+//                'success' => false,
+//                'message' => 'Tax Return not found'
+//            ], 404);
+//        }
+//
+//
+//        // Validation rules
+//        $rules = [
+//            'car_expenses'        => 'nullable|array',
+//            'travel_expenses'     => 'nullable|array',
+//            'mobile_phone'        => 'nullable|array',
+//            'internet_access'     => 'nullable|array',
+//            'computer'            => 'nullable|array',
+//            'gifts'               => 'nullable|array',
+//            'home_office'         => 'nullable|array',
+//            'books'               => 'nullable|array',
+//            'tax_affairs'         => 'nullable|array',
+//            'uniforms'            => 'nullable|array',
+//            'education'           => 'nullable|array',
+//            'tools'               => 'nullable|array',
+//            'superannuation'      => 'nullable|array',
+//            'office_occupancy'    => 'nullable|array',
+//            'union_fees'          => 'nullable|array',
+//            'sun_protection'      => 'nullable|array',
+//            'low_value_pool'      => 'nullable|array',
+//            'interest_deduction'  => 'nullable|array',
+//            'dividend_deduction'  => 'nullable|array',
+//            'upp'                 => 'nullable|array',
+//            'project_pool'        => 'nullable|array',
+//            'investment_scheme'   => 'nullable|array',
+//            'other'               => 'nullable|array',
+//
+//            // File uploads
+//            'travel_expenses.travel_file'   => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+//            'computer.computer_file'        => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+//            'home_office.home_receipt'      => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+//            'books.books_file'              => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+//            'uniforms.uniform_receipt'      => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+//            'education.edu_file'            => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+//            'union_fees.file'               => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+//            'sun_protection.sun_file'       => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+//            'low_value_pool.files.*'        => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+//        ];
+//
+//        $validator = Validator::make($request->all(), $rules);
+//
+//        if ($validator->fails()) {
+//            return response()->json([
+//                'success' => false,
+//                'message' => 'Validation errors',
+//                'errors'  => $validator->errors()
+//            ], 422);
+//        }
+//
+//        $validated = $validator->validated();
+//
+//        $existing = $id ? Deduction::findOrFail($id) : null;
+//
+//        // Get all top-level fields
+//        $fields = collect(array_keys($rules))
+//            ->reject(fn($key) => str_contains($key, '.'))
+//            ->toArray();
+//
+//        $data = [];
+//        foreach ($fields as $field) {
+//            $existingValue = $existing
+//                ? (is_array($existing->$field) ? $existing->$field : json_decode($existing->$field, true))
+//                : [];
+//
+//            $newValue = $validated[$field] ?? [];
+//
+//            $merged = array_replace_recursive($existingValue ?: [], $newValue ?: []);
+//
+//            $data[$field] = empty($merged) ? null : $merged;
+//        }
+//
+//        // Keep attach structure consistent
+//        $attach = $existing ? ($existing->attach ?? []) : [];
+//
+//        // Handle file uploads via service
+//        $this->fileService->handleSingleFile($request, $attach, $data, 'computer.computer_file', 'computer');
+//        $this->fileService->handleSingleFile($request, $attach, $data, 'travel_expenses.travel_file', 'travel_expenses');
+//        $this->fileService->handleSingleFile($request, $attach, $data, 'union_fees.file', 'union_fees');
+//        $this->fileService->handleSingleFile($request, $attach, $data, 'sun_protection.sun_file', 'sun_protection');
+//        $this->fileService->handleSingleFile($request, $attach, $data, 'education.edu_file', 'education');
+//        $this->fileService->handleSingleFile($request, $attach, $data, 'uniforms.uniform_receipt', 'uniforms');
+//        $this->fileService->handleSingleFile($request, $attach, $data, 'books.books_file', 'books');
+//        $this->fileService->handleSingleFile($request, $attach, $data, 'home_office.home_receipt', 'home_office');
+//        $this->fileService->handleMultipleFiles($request, $attach, $data, 'low_value_pool.files', 'low_value_pool');
+//
+//        $data['attach'] = empty($attach) ? null : $attach;
+//
+//        if ($existing) {
+//            $existing->update($data);
+//            $deductionId = $existing->id;
+//            $message = 'Deduction data updated successfully!';
+//        } else {
+//            $deduction = Deduction::create(array_merge($data, [
+//                'tax_return_id' => $taxReturn->id,
+//            ]));
+//            $deductionId = $deduction->id;
+//            $message = 'Deduction data saved successfully!';
+//        }
+//
+//        return response()->json([
+//            'success'     => true,
+//            'message'     => $message,
+//            'deductionId' => $deductionId,
+//        ]);
+//    }
+
+
     private function saveDeduction(Request $request, $taxId, $id = null)
     {
         $taxReturn = TaxReturn::where('user_id', auth()->id())
@@ -246,30 +366,32 @@ class DeductionController extends Controller
 
         $validated = $validator->validated();
 
-        $existing = $id ? Deduction::findOrFail($id) : null;
+        $existing = $id ? Deduction::findOrFail($id) : Deduction::firstOrCreate(['tax_return_id' => $taxReturn->id]);
 
-        // Get all top-level fields
+        // Get top-level fields (ignore dot notation)
         $fields = collect(array_keys($rules))
             ->reject(fn($key) => str_contains($key, '.'))
             ->toArray();
 
         $data = [];
         foreach ($fields as $field) {
-            $existingValue = $existing
-                ? (is_array($existing->$field) ? $existing->$field : json_decode($existing->$field, true))
-                : [];
+            $existingValue = is_array($existing->$field)
+                ? $existing->$field
+                : (json_decode($existing->$field, true) ?? []);
 
             $newValue = $validated[$field] ?? [];
-
             $merged = array_replace_recursive($existingValue ?: [], $newValue ?: []);
-
             $data[$field] = empty($merged) ? null : $merged;
         }
 
-        // Keep attach structure consistent
-        $attach = $existing ? ($existing->attach ?? []) : [];
+        // Handle attachments array
+        $attach = is_string($existing->attach)
+            ? json_decode($existing->attach, true) ?? []
+            : ($existing->attach ?? []);
 
-        // Handle file uploads via service
+        /**
+         * Handle file uploads using DeductionFileService
+         */
         $this->fileService->handleSingleFile($request, $attach, $data, 'computer.computer_file', 'computer');
         $this->fileService->handleSingleFile($request, $attach, $data, 'travel_expenses.travel_file', 'travel_expenses');
         $this->fileService->handleSingleFile($request, $attach, $data, 'union_fees.file', 'union_fees');
@@ -280,24 +402,20 @@ class DeductionController extends Controller
         $this->fileService->handleSingleFile($request, $attach, $data, 'home_office.home_receipt', 'home_office');
         $this->fileService->handleMultipleFiles($request, $attach, $data, 'low_value_pool.files', 'low_value_pool');
 
-        $data['attach'] = empty($attach) ? null : $attach;
-
-        if ($existing) {
-            $existing->update($data);
-            $deductionId = $existing->id;
-            $message = 'Deduction data updated successfully!';
-        } else {
-            $deduction = Deduction::create(array_merge($data, [
-                'tax_return_id' => $taxReturn->id,
-            ]));
-            $deductionId = $deduction->id;
-            $message = 'Deduction data saved successfully!';
+        // ✅ Replace full travel_expenses block when provided
+        if ($request->has('travel_expenses')) {
+            $data['travel_expenses'] = $request->input('travel_expenses');
         }
 
+        $data['attach'] = empty($attach) ? null : $attach;
+
+        // Save model
+        $existing->update($data);
+
         return response()->json([
-            'success'     => true,
-            'message'     => $message,
-            'deductionId' => $deductionId,
+            'success' => true,
+            'message' => 'Deduction data saved successfully!',
+            'deductionId' => $existing->id,
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\DeductionController;
 use App\Http\Controllers\Api\FormController;
 use App\Http\Controllers\Api\IncomeController;
 use App\Http\Controllers\Api\TaxReturnController;
@@ -41,7 +42,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::group(['prefix' => 'forms'], function () {
         Route::post('/basic-info', [FormController::class, 'basicInfo']);
 //        Route::post('/income', [FormController::class, 'income']);
-        Route::post('/deduction', [FormController::class, 'deduction']);
+//        Route::post('/deduction', [FormController::class, 'deduction']);
         Route::post('/other', [FormController::class, 'other']);
 
         Route::group(['prefix' => 'income'], function () {
@@ -51,8 +52,20 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('/termination-payments', [IncomeController::class, 'saveTerminationPayments']);
             Route::post('/rent', [IncomeController::class, 'saveRent']);
         });
+
+
+        Route::group(['prefix' => 'deduction'], function () {
+            Route::post('/', [DeductionController::class, 'deduction']);
+            Route::post('/travel-expenses', [DeductionController::class, 'saveTravelExpenses']);
+            Route::post('/computer', [DeductionController::class, 'saveComputer']);
+            Route::post('/home-office', [DeductionController::class, 'saveHomeOffice']);
+            Route::post('/books', [DeductionController::class, 'saveBooks']);
+            Route::post('/uniforms', [DeductionController::class, 'saveUniforms']);
+            Route::post('/education', [DeductionController::class, 'saveEducation']);
+            Route::post('/union-fees', [DeductionController::class, 'saveUnionFees']);
+            Route::post('/sun-protection', [DeductionController::class, 'saveSunProtection']);
+            Route::post('/low-value-pool', [DeductionController::class, 'saveLowValuePool']);
+        });
     });
-
-
 
 });

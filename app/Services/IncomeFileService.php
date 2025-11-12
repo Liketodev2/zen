@@ -83,36 +83,13 @@ class IncomeFileService
         }
     }
 
+
     /**
-     * Handle Rent Files
+     * @param Request $request
+     * @param array $attach
+     * @param array $data
+     * @return void
      */
-//    public function handleRentFiles(Request $request, array &$attach, array &$data): void
-//    {
-//        $rentFiles = $request->file('rent', []);
-//
-//        foreach ($rentFiles as $index => $files) {
-//            if ($request->hasFile("rent.$index.rent_files")) {
-//                // Delete old files
-//                if (!empty($attach['rent'][$index]['rent_files'])) {
-//                    foreach ($attach['rent'][$index]['rent_files'] as $oldFile) {
-//                        Storage::disk('s3')->delete($oldFile);
-//                    }
-//                }
-//
-//                // Store new files
-//                $paths = [];
-//                foreach ($files['rent_files'] as $file) {
-//                    $paths[] = $file->store('rent', 's3');
-//                }
-//
-//                // Update both attach & data
-//                $attach['rent'][$index]['rent_files'] = $paths;
-//                $data['rent'][$index]['rent_files'] = $paths;
-//            }
-//        }
-//    }
-
-
     public function handleRentFiles(Request $request, array &$attach, array &$data): void
     {
         $newRentData = $data['rent'] ?? [];
@@ -163,7 +140,6 @@ class IncomeFileService
         $attach['rent'] = array_values($attach['rent']);
         $data['rent'] = array_values($newRentData);
     }
-
 
 
 
