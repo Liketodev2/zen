@@ -77,10 +77,10 @@ class TaxReturnController extends Controller
             abort(404);
         }
 
-        $basicInfo = $taxReturn->basicInfo()->first();
-        $incomes = $taxReturn->income()->first();
-        $deductions = $taxReturn->deduction()->first();
-        $other = $taxReturn->other()->first();
+        $basicInfo = $taxReturn->basicInfo;
+        $incomes = $taxReturn->income;
+        $deductions = $taxReturn->deduction;
+        $other = $taxReturn->other;
         return view('pages.tax-returns.create', compact('taxReturn', 'basicInfo', 'incomes', 'deductions', 'other'));
     }
 

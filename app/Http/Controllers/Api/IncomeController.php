@@ -202,31 +202,41 @@ class IncomeController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
+            return response()->json([
+                'errors' => $validator->errors(),
+                'validation' => true,
+            ], 422);
         }
 
         $taxReturn = TaxReturn::where('id', $request->tax_id)
             ->where('user_id', $request->user()->id)
             ->first();
 
-        if(!$taxReturn) {
-            return response()->json(['error' => 'Tax return not found!', 'validation' => false], 404);
+        if (!$taxReturn) {
+            return response()->json([
+                'error' => 'Tax return not found!',
+                'validation' => false,
+            ], 404);
         }
 
-
         $income = Income::firstOrCreate(['tax_return_id' => $taxReturn->id]);
-        $attach = $income->attach ?? [];
-        $data = $income->toArray();
 
+        // Decode attachments safely
+        $attach = is_string($income->attach)
+            ? json_decode($income->attach, true) ?: []
+            : ($income->attach ?? []);
 
-        // Merge existing termination payments data with request data
-        $existingTerminationPayments= $data['termination_payments'] ?? [];
-        $requestTerminationPayments = $request->input('termination_payments', []);
-        $data['termination_payments'] = array_merge($existingTerminationPayments, $requestTerminationPayments);
+        // ✅ Replace all termination payments instead of merging
+        $data['termination_payments'] = $request->input('termination_payments', []);
 
-        $this->fileService->handleTerminationPaymentsFiles($request, $attach, $data);
+        // Handle file uploads like saveRent
+        $this->fileService->handleTerminationPaymentsFilesForApi($request, $attach, $data);
 
-        $income->update(['termination_payments' => $data['termination_payments'], 'attach' => $attach]);
+        // Update database
+        $income->update([
+            'termination_payments' => $data['termination_payments'],
+            'attach' => $attach,
+        ]);
 
         return response()->json([
             'success' => true,
@@ -234,6 +244,7 @@ class IncomeController extends Controller
             'data' => new IncomeResource($income->fresh()),
         ]);
     }
+
 
 
     /**
@@ -291,7 +302,6 @@ class IncomeController extends Controller
             'data' => new IncomeResource($income->fresh()),
         ]);
     }
-
 
 
 }
