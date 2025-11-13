@@ -84,6 +84,41 @@ class IncomeFileService
     }
 
 
+//    public function handleTerminationPaymentsFilesForApi(Request $request, array &$attach, array &$data): void
+//    {
+//        if (!isset($attach['termination_payments'])) {
+//            $attach['termination_payments'] = [];
+//        }
+//
+//        foreach ($data['termination_payments'] as $index => &$etpItem) {
+//
+//            if ($request->hasFile("termination_payments.$index.etp_files")) {
+//
+//                // Delete old files only for this item
+//                if (!empty($attach['termination_payments'][$index]['etp_files'])) {
+//                    foreach ($attach['termination_payments'][$index]['etp_files'] as $oldFile) {
+//                        Storage::disk('s3')->delete($oldFile);
+//                    }
+//                }
+//
+//                // Upload new files
+//                $paths = [];
+//                foreach ($request->file("termination_payments.$index.etp_files") as $file) {
+//                    $paths[] = $file->store('termination_payments', 's3');
+//                }
+//
+//                $attach['termination_payments'][$index]['etp_files'] = $paths;
+//                $etpItem['etp_files'] = $paths;
+//
+//            } else {
+//                // Keep existing files if no new files were uploaded
+//                if (!empty($attach['termination_payments'][$index]['etp_files'])) {
+//                    $etpItem['etp_files'] = $attach['termination_payments'][$index]['etp_files'];
+//                }
+//            }
+//        }
+//    }
+
     public function handleTerminationPaymentsFilesForApi(Request $request, array &$attach, array &$data): void
     {
         if (!isset($attach['termination_payments'])) {
@@ -91,34 +126,18 @@ class IncomeFileService
         }
 
         foreach ($data['termination_payments'] as $index => &$etpItem) {
+            $paths = [];
 
             if ($request->hasFile("termination_payments.$index.etp_files")) {
-
-                // Delete old files only for this item
-                if (!empty($attach['termination_payments'][$index]['etp_files'])) {
-                    foreach ($attach['termination_payments'][$index]['etp_files'] as $oldFile) {
-                        Storage::disk('s3')->delete($oldFile);
-                    }
-                }
-
-                // Upload new files
-                $paths = [];
                 foreach ($request->file("termination_payments.$index.etp_files") as $file) {
                     $paths[] = $file->store('termination_payments', 's3');
                 }
-
-                $attach['termination_payments'][$index]['etp_files'] = $paths;
-                $etpItem['etp_files'] = $paths;
-
-            } else {
-                // Keep existing files if no new files were uploaded
-                if (!empty($attach['termination_payments'][$index]['etp_files'])) {
-                    $etpItem['etp_files'] = $attach['termination_payments'][$index]['etp_files'];
-                }
             }
+
+            $attach['termination_payments'][$index]['etp_files'] = $paths;
+            $etpItem['etp_files'] = $paths;
         }
     }
-
 
 
     /**

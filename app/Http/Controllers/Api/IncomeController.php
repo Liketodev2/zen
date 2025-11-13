@@ -7,6 +7,7 @@ use App\Models\Forms\Income;
 use App\Models\TaxReturn;
 use App\Services\IncomeFileService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 
@@ -193,6 +194,59 @@ class IncomeController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+//    public function saveTerminationPayments(Request $request)
+//    {
+//        $validator = Validator::make($request->all(), [
+//            'tax_id' => 'required|exists:tax_returns,id',
+//            'termination_payments' => 'nullable|array',
+//            'termination_payments.*.etp_files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+//        ]);
+//
+//        if ($validator->fails()) {
+//            return response()->json([
+//                'errors' => $validator->errors(),
+//                'validation' => true,
+//            ], 422);
+//        }
+//
+//        $taxReturn = TaxReturn::where('id', $request->tax_id)
+//            ->where('user_id', $request->user()->id)
+//            ->first();
+//
+//        if (!$taxReturn) {
+//            return response()->json([
+//                'error' => 'Tax return not found!',
+//                'validation' => false,
+//            ], 404);
+//        }
+//
+//        $income = Income::firstOrCreate(['tax_return_id' => $taxReturn->id]);
+//
+//        // Decode attachments safely
+//        $attach = is_string($income->attach)
+//            ? json_decode($income->attach, true) ?: []
+//            : ($income->attach ?? []);
+//
+//        // ✅ Replace all termination payments instead of merging
+//        $data['termination_payments'] = $request->input('termination_payments', []);
+//
+//        // Handle file uploads like saveRent
+//        $this->fileService->handleTerminationPaymentsFilesForApi($request, $attach, $data);
+//
+//        // Update database
+//        $income->update([
+//            'termination_payments' => $data['termination_payments'],
+//            'attach' => $attach,
+//        ]);
+//
+//        return response()->json([
+//            'success' => true,
+//            'message' => 'Termination payments saved successfully!',
+//            'data' => new IncomeResource($income->fresh()),
+//        ]);
+//    }
+
+
     public function saveTerminationPayments(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -226,13 +280,28 @@ class IncomeController extends Controller
             ? json_decode($income->attach, true) ?: []
             : ($income->attach ?? []);
 
-        // ✅ Replace all termination payments instead of merging
-        $data['termination_payments'] = $request->input('termination_payments', []);
+        $newTerminationPayments = $request->input('termination_payments', []);
 
-        // Handle file uploads like saveRent
+        // Delete all old files from S3
+        if (!empty($attach['termination_payments'])) {
+            foreach ($attach['termination_payments'] as $oldItem) {
+                if (!empty($oldItem['etp_files'])) {
+                    foreach ($oldItem['etp_files'] as $oldFile) {
+                        Storage::disk('s3')->delete($oldFile);
+                    }
+                }
+            }
+        }
+
+        // Reset attach termination payments
+        $attach['termination_payments'] = [];
+
+        // Assign new data
+        $data['termination_payments'] = $newTerminationPayments;
+
+        // Handle new file uploads
         $this->fileService->handleTerminationPaymentsFilesForApi($request, $attach, $data);
 
-        // Update database
         $income->update([
             'termination_payments' => $data['termination_payments'],
             'attach' => $attach,
@@ -244,8 +313,6 @@ class IncomeController extends Controller
             'data' => new IncomeResource($income->fresh()),
         ]);
     }
-
-
 
     /**
      * @param Request $request
