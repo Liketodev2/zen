@@ -7,52 +7,63 @@ use Illuminate\Support\Facades\Storage;
 
 class DeductionFileService
 {
-    /**
-     * Handle single file uploads (e.g. computer.computer_file)
-     */
-    public function handleSingleFile(Request $request, array &$attach, array &$data, string $input, string $folder): void
-    {
-        [$field, $key] = explode('.', $input);
 
-        if ($request->hasFile($input)) {
+
+    /**
+     * @param Request $request
+     * @param array $attach
+     * @param array $data
+     * @param string $input
+     * @param string $section
+     * @param string $key
+     * @return void
+     */
+    public function handleSingleFileForWeb(Request $request, array &$attach, array &$data, string $input, string $section, string $key): void
+    {
+        $fullInput = "$section.$key";
+
+        if ($request->hasFile($fullInput)) {
             // Delete old file if exists
-            if (!empty($attach[$field][$key])) {
-                Storage::disk('s3')->delete($attach[$field][$key]);
+            if (!empty($attach[$section][$key])) {
+                Storage::disk('s3')->delete($attach[$section][$key]);
             }
 
-            // Upload new file
-            $path = $request->file($input)->store($folder, 's3');
+            // Store new file
+            $path = $request->file($fullInput)->store($section, 's3');
 
-            // Update both structures
-            $attach[$field][$key] = $path;
-            $data[$field][$key] = $path;
+            // Update attach & data
+            $attach[$section][$key] = $path;
+            $data[$section][$key] = $path;
         }
     }
 
     /**
-     * Handle multiple files (like low_value_pool.files.*)
+     * Handle multiple file uploads for Deduction sections
      */
-    public function handleMultipleFiles(Request $request, array &$attach, array &$data, string $input, string $folder): void
+    public function handleMultipleFilesForWeb(Request $request, array &$attach, array &$data, string $input, string $section, string $key): void
     {
-        if ($request->hasFile($input)) {
+        $fullInput = "$section.$key";
+
+        if ($request->hasFile($fullInput)) {
             // Delete old files
-            if (!empty($attach[$folder]['files'])) {
-                foreach ($attach[$folder]['files'] as $oldFile) {
+            if (!empty($attach[$section][$key])) {
+                foreach ($attach[$section][$key] as $oldFile) {
                     Storage::disk('s3')->delete($oldFile);
                 }
             }
 
-            // Upload new ones
+            // Store new files
             $paths = [];
-            foreach ($request->file($input) as $file) {
-                $paths[] = $file->store($folder, 's3');
+            foreach ($request->file($fullInput) as $file) {
+                $paths[] = $file->store($section, 's3');
             }
 
             // Update attach & data
-            $attach[$folder]['files'] = $paths;
-            $data[$folder]['files'] = $paths;
+            $attach[$section][$key] = $paths;
+            $data[$section][$key] = $paths;
         }
     }
+
 
 
     /**

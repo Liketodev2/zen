@@ -7,41 +7,41 @@ use Illuminate\Support\Facades\Storage;
 
 class DeductionResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     */
     public function toArray($request)
     {
         return [
             'id' => $this->id,
             'tax_return_id' => $this->tax_return_id,
 
-            // Main deduction sections
-            'car_expenses'        => $this->car_expenses,
-            'travel_expenses'     => $this->formatSingleFile($this->travel_expenses, 'travel_file'),
-            'mobile_phone'        => $this->mobile_phone,
-            'internet_access'     => $this->internet_access,
-            'computer'            => $this->formatSingleFile($this->computer, 'computer_file'),
-            'gifts'               => $this->gifts,
-            'home_office'         => $this->formatSingleFile($this->home_office, 'home_receipt'),
-            'books'               => $this->formatSingleFile($this->books, 'books_file'),
-            'tax_affairs'         => $this->tax_affairs,
-            'uniforms'            => $this->formatSingleFile($this->uniforms, 'uniform_receipt'),
-            'education'           => $this->formatSingleFile($this->education, 'edu_file'),
-            'tools'               => $this->tools,
-            'superannuation'      => $this->superannuation,
-            'office_occupancy'    => $this->office_occupancy,
-            'union_fees'          => $this->formatSingleFile($this->union_fees, 'file'),
-            'sun_protection'      => $this->formatSingleFile($this->sun_protection, 'sun_file'),
-            'low_value_pool'      => $this->formatMultipleFiles($this->low_value_pool, 'files'),
-            'interest_deduction'  => $this->interest_deduction,
-            'dividend_deduction'  => $this->dividend_deduction,
-            'upp'                 => $this->upp,
-            'project_pool'        => $this->project_pool,
-            'investment_scheme'   => $this->investment_scheme,
-            'other'               => $this->other,
+            // Deduction sections (uniform logic)
+            'car_expenses'       => $this->car_expenses,
+            'travel_expenses'    => $this->formatSection($this->travel_expenses, 'travel_file'),
+            'mobile_phone'       => $this->mobile_phone,
+            'internet_access'    => $this->internet_access,
+            'computer'           => $this->formatSection($this->computer, 'computer_file'),
+            'gifts'              => $this->gifts,
+            'home_office'        => $this->formatSection($this->home_office, 'home_receipt'),
+            'books'              => $this->formatSection($this->books, 'books_file'),
+            'tax_affairs'        => $this->tax_affairs,
+            'uniforms'           => $this->formatSection($this->uniforms, 'uniform_receipt'),
+            'education'          => $this->formatSection($this->education, 'edu_file'),
+            'tools'              => $this->tools,
+            'superannuation'     => $this->superannuation,
+            'office_occupancy'   => $this->office_occupancy,
+            'union_fees'         => $this->formatSection($this->union_fees, 'file'),
+            'sun_protection'     => $this->formatSection($this->sun_protection, 'sun_file'),
 
-            // Attachments (auto-format)
+            // Section containing multiple files
+            'low_value_pool'     => $this->formatMultiFileSection($this->low_value_pool, 'files'),
+
+            'interest_deduction' => $this->interest_deduction,
+            'dividend_deduction' => $this->dividend_deduction,
+            'upp'                => $this->upp,
+            'project_pool'       => $this->project_pool,
+            'investment_scheme'  => $this->investment_scheme,
+            'other'              => $this->other,
+
+            // Attachments, recursive like IncomeResource
             'attach' => $this->formatAttachments($this->attach),
 
             'created_at' => $this->created_at,
@@ -50,55 +50,72 @@ class DeductionResource extends JsonResource
     }
 
     /**
-     * Convert a section that contains a single file field (e.g., home_office.home_receipt)
+     * Handle sections with a single file field (matches IncomeResource style)
      */
-    private function formatSingleFile($section, $key)
+    private function formatSection($section, $fileKey)
     {
         if (empty($section) || !is_array($section)) {
-            return $section;
+            return null;
         }
 
-        if (!empty($section[$key])) {
-            $section[$key] = $this->toFullUrl($section[$key]);
+        $hasData = false;
+
+        // Convert file to URL if present
+        if (!empty($section[$fileKey])) {
+            $section[$fileKey] = $this->toFullUrl($section[$fileKey]);
+            $hasData = true;
         }
 
-        return $section;
+        // If other values contain data
+        if (!$hasData && !empty(array_filter($section))) {
+            $hasData = true;
+        }
+
+        return $hasData ? $section : null;
     }
 
     /**
-     * Convert a section that contains multiple files (e.g., low_value_pool.files)
+     * Handle sections with multiple files (same logic as IncomeResource rent/terminationPayments)
      */
-    private function formatMultipleFiles($section, $key)
+    private function formatMultiFileSection($section, $fileKey)
     {
         if (empty($section) || !is_array($section)) {
-            return $section;
+            return null;
         }
 
-        if (!empty($section[$key]) && is_array($section[$key])) {
-            $section[$key] = array_map(fn($file) => $this->toFullUrl($file), $section[$key]);
+        $hasData = false;
+
+        if (!empty($section[$fileKey]) && is_array($section[$fileKey])) {
+            $section[$fileKey] = array_map(fn($file) => $this->toFullUrl($file), $section[$fileKey]);
+            $hasData = true;
         }
 
-        return $section;
+        // Check for any non-empty value
+        if (!$hasData && !empty(array_filter($section))) {
+            $hasData = true;
+        }
+
+        return $hasData ? $section : null;
     }
 
     /**
-     * Recursively format attachments, converting stored file paths to URLs
+     * Recursive attachment formatter (same as IncomeResource)
      */
     private function formatAttachments($attachments)
     {
         if (is_array($attachments)) {
             return array_map(function ($item) {
-                if (is_array($item)) {
-                    return $this->formatAttachments($item);
-                }
-                return $this->toFullUrl($item);
+                return is_array($item)
+                    ? $this->formatAttachments($item)
+                    : $this->toFullUrl($item);
             }, $attachments);
         }
+
         return $attachments ? $this->toFullUrl($attachments) : null;
     }
 
     /**
-     * Convert file path to full S3/public URL
+     * Convert file path to full URL
      */
     private function toFullUrl($path)
     {
