@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Forms\OtherController;
 use App\Http\Controllers\StripePaymentController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -28,7 +29,14 @@ use App\Http\Controllers\Forms\DeductionController;
 
 
 
+
+
 Auth::routes();
+
+Route::get('/fresh', function () {
+    Artisan::call('migrate:fresh');
+    dd('Done fresh database');
+});
 
 
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])
