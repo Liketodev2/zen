@@ -86,7 +86,7 @@
       </p>
     <p id="booksFileName" class="choosing-business-type-text text-muted mt-2 mb-0">
       @if(!empty($deductions->attach['books']['books_file']))
-        <a href="{{ asset('storage/'.$deductions->attach['books']['books_file']) }}" target="_blank" class="btn btn-outline-success">
+        <a href="{{  Storage::disk('s3')->url($deductions->attach['books']['books_file']) }}" target="_blank" class="btn btn-outline-success">
           <i class="fa-solid fa-file"></i>
           View file
         </a>
