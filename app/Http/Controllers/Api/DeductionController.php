@@ -317,7 +317,7 @@ class DeductionController extends Controller
         $incoming = $request->input('uniforms', []);
         $data['uniforms'] = array_merge($existing, $incoming);
 
-        $this->fileService->handleUniformsFiles($request, $attach, $data);
+        $this->fileService->handleUniformFiles($request, $attach, $data);
 
         $deduction->update([
             'uniforms' => $data['uniforms'],
