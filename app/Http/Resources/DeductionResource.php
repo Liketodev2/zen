@@ -20,7 +20,13 @@ class DeductionResource extends JsonResource
             'internet_access'    => $this->internet_access,
             'computer'           => $this->formatSection($this->computer, 'computer_file'),
             'gifts'              => $this->gifts,
-            'home_office'        => $this->formatSection($this->home_office, 'home_receipt'),
+            'home_office' => $this->formatSectionWithFiles(
+                $this->home_office,
+                [
+                    'home_receipt_file',
+                    'hours_worked_record_file_yes',
+                ]
+            ),
             'books'              => $this->formatSection($this->books, 'books_file'),
             'tax_affairs'        => $this->tax_affairs,
             'uniforms'           => $this->formatSection($this->uniforms, 'uniform_receipt'),
@@ -129,4 +135,34 @@ class DeductionResource extends JsonResource
 
         return Storage::url($path);
     }
+
+
+    /**
+     * @param $section
+     * @param array $fileKeys
+     * @return array|null
+     */
+    private function formatSectionWithFiles($section, array $fileKeys)
+    {
+        if (empty($section) || !is_array($section)) {
+            return null;
+        }
+
+        $hasData = false;
+
+        foreach ($fileKeys as $fileKey) {
+            if (!empty($section[$fileKey])) {
+                $section[$fileKey] = $this->toFullUrl($section[$fileKey]);
+                $hasData = true;
+            }
+        }
+
+        // Check for any other filled data
+        if (!$hasData && !empty(array_filter($section))) {
+            $hasData = true;
+        }
+
+        return $hasData ? $section : null;
+    }
+
 }

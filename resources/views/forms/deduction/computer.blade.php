@@ -132,7 +132,8 @@
       </p>
       <p id="computerFileName" class="choosing-business-type-text text-muted mt-2 mb-0">
           @if(!empty($deductions->attach['computer']['computer_file']))
-              <a href="{{ asset('storage/'.$deductions->attach['computer']['computer_file']) }}" target="_blank" class="btn btn-outline-success">
+              <a href="{{ Storage::disk('s3')->url($deductions->attach['computer']['computer_file']) }}"
+                 target="_blank" class="btn btn-outline-success">
                   <i class="fa-solid fa-file"></i>
                   View file
               </a>

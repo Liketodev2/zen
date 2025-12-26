@@ -176,6 +176,7 @@ class DeductionController extends Controller
         $incoming = $request->input('computer', []);
         $data['computer'] = array_merge($existing, $incoming);
 
+
         $this->fileService->handleComputerFilesForApi($request, $attach, $data);
 
         $deduction->update([
@@ -200,7 +201,8 @@ class DeductionController extends Controller
         $validator = Validator::make($request->all(), [
             'tax_id' => 'required|exists:tax_returns,id',
             'home_office' => 'nullable|array',
-            'home_office.home_receipt' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'home_office.home_receipt_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'home_office.hours_worked_record_file_yes' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ]);
 
         if ($validator->fails()) {
@@ -220,9 +222,9 @@ class DeductionController extends Controller
         $data = $deduction->toArray();
 
         $existing = $data['home_office'] ?? [];
-        $incoming = $request->input('home_office', []);
-        $data['home_office'] = array_merge($existing, $incoming);
+        $incoming = $request->input('home_office', []) ?? [];
 
+        $data['home_office'] = array_merge($existing, $incoming);
         $this->fileService->handleHomeOfficeFilesForApi($request, $attach, $data);
 
         $deduction->update([

@@ -77,7 +77,7 @@ class DeductionController extends Controller
             // File uploads
             'travel_expenses.travel_file'   => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'computer.computer_file'        => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-            'home_office.home_receipt'      => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'home_office.home_receipt_file'      => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'books.books_file'              => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'uniforms.uniform_receipt'      => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'education.edu_file'            => 'nullable|file|mimes:pdf,jpg,png|max:5120',
@@ -118,7 +118,7 @@ class DeductionController extends Controller
         $this->fileService->handleSingleFileForWeb($request, $attach, $data, 'travel_file', 'travel_expenses', 'travel_file');
         $this->fileService->handleSingleFileForWeb($request, $attach, $data, 'computer_file', 'computer', 'computer_file');
         $this->fileService->handleMultipleFilesForWeb($request, $attach, $data, 'files', 'low_value_pool', 'files');
-        $this->fileService->handleSingleFileForWeb($request, $attach, $data, 'home_receipt', 'home_office', 'home_receipt');
+        $this->fileService->handleSingleFileForWeb($request, $attach, $data, 'home_receipt_file', 'home_office', 'home_receipt_file');
         $this->fileService->handleSingleFileForWeb($request, $attach, $data, 'books_file', 'books', 'books_file');
         $this->fileService->handleSingleFileForWeb($request, $attach, $data, 'uniform_receipt', 'uniforms', 'uniform_receipt');
         $this->fileService->handleSingleFileForWeb($request, $attach, $data, 'edu_file', 'education', 'edu_file');

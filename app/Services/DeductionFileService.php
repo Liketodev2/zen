@@ -37,6 +37,8 @@ class DeductionFileService
         }
     }
 
+
+
     /**
      * Handle multiple file uploads for Deduction sections
      */
@@ -110,15 +112,33 @@ class DeductionFileService
      */
     public function handleHomeOfficeFilesForApi(Request $request, array &$attach, array &$data): void
     {
-        if ($request->hasFile('home_office.home_receipt')) {
-            if (!empty($attach['home_office']['home_receipt'])) {
-                Storage::disk('s3')->delete($attach['home_office']['home_receipt']);
+
+
+        if ($request->hasFile('home_office.home_receipt_file')) {
+            if (!empty($attach['home_office']['home_receipt_file'])) {
+                Storage::disk('s3')->delete($attach['home_office']['home_receipt_file']);
             }
 
-            $path = $request->file('home_office.home_receipt')->store('home_office', 's3');
+            $path = $request->file('home_office.home_receipt_file')->store('home_office', 's3');
 
-            $attach['home_office']['home_receipt'] = $path;
-            $data['home_office']['home_receipt'] = $path;
+            $attach['home_office']['home_receipt_file'] = $path;
+            $data['home_office']['home_receipt_file'] = $path;
+        }
+
+        if ($request->hasFile('home_office.hours_worked_record_file_yes')) {
+
+            if (!empty($attach['home_office']['hours_worked_record_file_yes'])) {
+                Storage::disk('s3')->delete(
+                    $attach['home_office']['hours_worked_record_file_yes']
+                );
+            }
+
+            $path = $request
+                ->file('home_office.hours_worked_record_file_yes')
+                ->store('home_office', 's3');
+
+            $attach['home_office']['hours_worked_record_file_yes'] = $path;
+            $data['home_office']['hours_worked_record_file_yes'] = $path;
         }
     }
 

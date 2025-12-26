@@ -275,7 +275,7 @@
           <p class="choosing-business-type-text">
             Attach receipts or a log of your travel expenses (optional)
           </p>
-          <input type="file" name="home_office[home_receipt]" id="homeFileInput" class="d-none" />
+          <input type="file" name="home_office[home_receipt_file]" id="homeFileInput" class="d-none" />
           <button type="button" class="btn btn_add" id="triggerHomeFile">
             <img src="{{ asset('img/icons/plus.png') }}" alt="plus" /> Choose file
           </button>
@@ -283,8 +283,8 @@
                 Allowed file types: PDF, JPG, PNG. Maximum file size: 5 MB.
             </p>
           <p id="homeSelectedFile" class="choosing-business-type-text text-muted mb-0 mt-2">
-            @if(!empty($deductions->attach['home_office']['home_receipt']))
-              <a href="{{ Storage::disk('s3')->url($deductions->attach['home_office']['home_receipt']) }}" target="_blank" class="btn btn-outline-success">
+            @if(!empty($deductions->attach['home_office']['home_receipt_file']))
+              <a href="{{ Storage::disk('s3')->url($deductions->attach['home_office']['home_receipt_file']) }}" target="_blank" class="btn btn-outline-success">
                 <i class="fa-solid fa-file"></i> View file
               </a>
             @else
@@ -298,181 +298,129 @@
 </section>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const $ = (id) => document.getElementById(id);
+    document.addEventListener("DOMContentLoaded", () => {
+        const $ = id => document.getElementById(id);
 
-  // Initialize form state based on saved values
-  function initializeForm() {
-    // Set initial visibility based on saved values
-    toggleHoursRecordBlock();
-    toggleHoursDetailBlocks();
-    toggleTypicalHoursYesBlock();
-    // toggleOtherExpensesBlocks();
-    // toggleOtherExpensesBlocks_YES();
+        /* ===============================
+           WORK FROM HOME FLOW
+        =============================== */
 
-    // Show furniture date fields if needed
-    const expenseType = document.querySelector('.expense-type');
-    if (expenseType && expenseType.value === 'furniture_over_300') {
-      document.getElementById('furnitureDate_1').style.display = 'block';
-    }
+        function toggleWorkedFromHome() {
+            const worked = document.querySelector('input[name="home_office[worked_from_home]"]:checked');
+            const show = worked && worked.value === "1";
 
-    const expenseTypeYes = document.querySelector('.expense-type-select-yes');
-    if (expenseTypeYes && expenseTypeYes.value === 'furniture_over_300') {
-      document.querySelector('.purchase-date-yes').style.display = 'block';
-    }
-  }
+            $("hoursRecordBlock").style.display = show ? "block" : "none";
+            if (!show) {
+                $("blockIfHoursRecordYes").style.display = "none";
+                $("blockIfHoursRecordNo").style.display = "none";
+                $("typicalHoursYesBlock").style.display = "none";
+            }
+        }
 
-  const workedRadios = document.querySelectorAll('[name="home_office[worked_from_home]"]');
-  const hoursRecordRadios = document.querySelectorAll('[name="home_office[have_hours_record]"]');
-  const typicalHoursRadios = document.querySelectorAll('[name="home_office[typical_hours_record]"]');
+        function toggleHoursRecord() {
+            const record = document.querySelector('input[name="home_office[have_hours_record]"]:checked');
 
-  function toggleHoursRecordBlock() {
-    const worked = document.querySelector('input[name="home_office[worked_from_home]"]:checked');
-    if (worked && worked.value === "1") {
-      $("hoursRecordBlock").style.display = "block";
-    } else {
-      $("hoursRecordBlock").style.display = "none";
-      $("blockIfHoursRecordYes").style.display = "none";
-      $("blockIfHoursRecordNo").style.display = "none";
-      $("typicalHoursYesBlock").style.display = "none";
-    }
-  }
+            if (!record) return;
 
-  function toggleHoursDetailBlocks() {
-    const selected = document.querySelector('input[name="home_office[have_hours_record]"]:checked');
-    if (selected?.value === "0") {
-      $("blockIfHoursRecordYes").style.display = "block";
-      $("blockIfHoursRecordNo").style.display = "none";
-      $("typicalHoursYesBlock").style.display = "none";
-    } else if (selected?.value === "0") {
-      $("blockIfHoursRecordYes").style.display = "none";
-      $("blockIfHoursRecordNo").style.display = "block";
-    }
-  }
+            if (record.value === "1") {
+                $("blockIfHoursRecordYes").style.display = "block";
+                $("blockIfHoursRecordNo").style.display = "none";
+                $("typicalHoursYesBlock").style.display = "none";
+            } else {
+                $("blockIfHoursRecordYes").style.display = "none";
+                $("blockIfHoursRecordNo").style.display = "block";
+            }
+        }
 
-  function toggleTypicalHoursYesBlock() {
-    const selected = document.querySelector('input[name="home_office[typical_hours_record]"]:checked');
-    $("typicalHoursYesBlock").style.display = selected?.value === "1" ? "block" : "none";
-  }
+        function toggleTypicalHours() {
+            const typical = document.querySelector('input[name="home_office[typical_hours_record]"]:checked');
+            $("typicalHoursYesBlock").style.display = typical?.value === "1" ? "block" : "none";
+        }
 
-  const fileInput = $("homeFileInput");
-  const fileTrigger = $("triggerHomeFile");
-  const fileDisplay = $("homeSelectedFile");
+        /* ===============================
+           OTHER EXPENSES (YES FLOW)
+        =============================== */
 
-  fileTrigger?.addEventListener("click", () => fileInput.click());
-  fileInput?.addEventListener("change", () => {
-    fileDisplay.innerHTML = fileInput.files[0]?.name || "No file chosen";
-  });
+        function toggleOtherExpensesYES() {
+            const yes = $("otherExpensesYes_YES")?.checked;
+            $("expense_block_yes_1").style.display = yes ? "block" : "none";
+            $("otherExpensesNoBlock_YES").style.display = yes ? "none" : "block";
+        }
 
-  workedRadios.forEach(r => r.addEventListener("change", toggleHoursRecordBlock));
-  hoursRecordRadios.forEach(r => r.addEventListener("change", toggleHoursDetailBlocks));
-  typicalHoursRadios.forEach(r => r.addEventListener("change", toggleTypicalHoursYesBlock));
+        /* ===============================
+           EXPENSE TYPE → PURCHASE DATE
+        =============================== */
 
-  // Initialize the form on page load
-  initializeForm();
-});
+        function togglePurchaseDate(select, dateBlock) {
+            if (!select || !dateBlock) return;
+            dateBlock.style.display =
+                select.value === "Office furniture over $300" ? "block" : "none";
+        }
 
-// Additional scripts for expense type handling
-document.addEventListener("DOMContentLoaded", function () {
-  const expenseTypes = document.querySelectorAll('.expense-type');
+        /* ===============================
+           FILE INPUT HELPERS
+        =============================== */
 
-  expenseTypes.forEach(select => {
-    select.addEventListener('change', function () {
-      const dateBlock = document.getElementById('furnitureDate_1');
+        function bindFile(triggerId, inputId, labelId) {
+            const trigger = $(triggerId);
+            const input = $(inputId);
+            const label = $(labelId);
 
-      if (this.value === 'furniture_over_300') {
-        dateBlock.style.display = 'block';
-      } else {
-        dateBlock.style.display = 'none';
-      }
+            if (!trigger || !input) return;
+
+            trigger.addEventListener("click", () => input.click());
+            input.addEventListener("change", () => {
+                label.textContent = input.files[0]?.name || "No file chosen";
+            });
+        }
+
+        /* ===============================
+           EVENT BINDINGS
+        =============================== */
+
+        document.querySelectorAll('[name="home_office[worked_from_home]"]')
+            .forEach(r => r.addEventListener("change", toggleWorkedFromHome));
+
+        document.querySelectorAll('[name="home_office[have_hours_record]"]')
+            .forEach(r => r.addEventListener("change", toggleHoursRecord));
+
+        document.querySelectorAll('[name="home_office[typical_hours_record]"]')
+            .forEach(r => r.addEventListener("change", toggleTypicalHours));
+
+        $("otherExpensesYes_YES")?.addEventListener("change", toggleOtherExpensesYES);
+        $("otherExpensesNo_YES")?.addEventListener("change", toggleOtherExpensesYES);
+
+        document.querySelectorAll('.expense-type, .expense-type-select-yes')
+            .forEach(select => {
+                select.addEventListener("change", () => {
+                    togglePurchaseDate(
+                        select,
+                        select.closest(".expense-block")?.querySelector(".purchase-date-yes")
+                        || $("furnitureDate_1")
+                    );
+                });
+            });
+
+        bindFile("triggerHomeFile", "homeFileInput", "homeSelectedFile");
+        bindFile("triggerHoursWorkedFile_YES", "hoursWorkedRecordFile_YES", "hoursWorkedFileName_YES");
+
+        /* ===============================
+           INITIALIZE STATE
+        =============================== */
+
+        toggleWorkedFromHome();
+        toggleHoursRecord();
+        toggleTypicalHours();
+        toggleOtherExpensesYES();
+
+        document.querySelectorAll('.expense-type, .expense-type-select-yes')
+            .forEach(select =>
+                togglePurchaseDate(
+                    select,
+                    select.closest(".expense-block")?.querySelector(".purchase-date-yes")
+                    || $("furnitureDate_1")
+                )
+            );
     });
-  });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const yesRadio = document.getElementById("otherExpensesYes");
-  const noRadio = document.getElementById("otherExpensesNo");
-
-  const noBlock = document.getElementById("otherExpensesNoBlock");
-  const yesBlock = document.getElementById("otherExpensesDetailsBlock");
-
-  function toggleOtherExpensesBlocks() {
-    if (yesRadio && yesRadio.checked) {
-      if (yesBlock) yesBlock.style.display = "block";
-      if (noBlock) noBlock.style.display = "none";
-    } else if (noRadio && noRadio.checked) {
-      if (yesBlock) yesBlock.style.display = "none";
-      if (noBlock) noBlock.style.display = "block";
-    } else {
-      if (yesBlock) yesBlock.style.display = "none";
-      if (noBlock) noBlock.style.display = "none";
-    }
-  }
-
-  if (yesRadio) yesRadio.addEventListener("change", toggleOtherExpensesBlocks);
-  if (noRadio) noRadio.addEventListener("change", toggleOtherExpensesBlocks);
-
-  toggleOtherExpensesBlocks();
-
-  const fileInput = document.getElementById("hoursWorkedRecordFile");
-  const fileTrigger = document.getElementById("triggerHoursWorkedFile");
-  const fileNameDisplay = document.getElementById("hoursWorkedFileName");
-
-  if (fileTrigger && fileInput) {
-    fileTrigger.addEventListener("click", () => fileInput.click());
-    fileInput.addEventListener("change", () => {
-      if (fileNameDisplay) fileNameDisplay.textContent = fileInput.files[0]?.name || "No file chosen";
-    });
-  }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const yesRadio_YES = document.getElementById("otherExpensesYes_YES");
-  const noRadio_YES = document.getElementById("otherExpensesNo_YES");
-
-  const noBlock_YES = document.getElementById("otherExpensesNoBlock_YES");
-  const expenseBlock_YES = document.getElementById("expense_block_yes_1");
-
-  function toggleOtherExpensesBlocks_YES() {
-    if (yesRadio_YES && yesRadio_YES.checked) {
-      if (expenseBlock_YES) expenseBlock_YES.style.display = "block";
-      if (noBlock_YES) noBlock_YES.style.display = "none";
-    } else if (noRadio_YES && noRadio_YES.checked) {
-      if (expenseBlock_YES) expenseBlock_YES.style.display = "none";
-      if (noBlock_YES) noBlock_YES.style.display = "block";
-    } else {
-      if (expenseBlock_YES) expenseBlock_YES.style.display = "none";
-      if (noBlock_YES) noBlock_YES.style.display = "none";
-    }
-  }
-
-  if (yesRadio_YES) yesRadio_YES.addEventListener("change", toggleOtherExpensesBlocks_YES);
-  if (noRadio_YES) noRadio_YES.addEventListener("change", toggleOtherExpensesBlocks_YES);
-
-  toggleOtherExpensesBlocks_YES();
-
-  const fileInput_YES = document.getElementById("hoursWorkedRecordFile_YES");
-  const fileTrigger_YES = document.getElementById("triggerHoursWorkedFile_YES");
-  const fileNameDisplay_YES = document.getElementById("hoursWorkedFileName_YES");
-
-  if (fileTrigger_YES && fileInput_YES) {
-    fileTrigger_YES.addEventListener("click", () => fileInput_YES.click());
-    fileInput_YES.addEventListener("change", () => {
-      if (fileNameDisplay_YES) fileNameDisplay_YES.textContent = fileInput_YES.files[0]?.name || "No file chosen";
-    });
-  }
-
-  const expenseTypeSelect_YES = document.querySelector('.expense-type-select-yes');
-  const purchaseDateBlock_YES = document.querySelector('.purchase-date-yes');
-
-  if (expenseTypeSelect_YES) {
-    expenseTypeSelect_YES.addEventListener('change', () => {
-      if (expenseTypeSelect_YES.value === 'furniture_over_300') {
-        if (purchaseDateBlock_YES) purchaseDateBlock_YES.style.display = 'block';
-      } else {
-        if (purchaseDateBlock_YES) purchaseDateBlock_YES.style.display = 'none';
-      }
-    });
-  }
-});
 </script>
+

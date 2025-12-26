@@ -281,7 +281,7 @@ class FormController extends Controller
 
             'travel_expenses.travel_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'computer.computer_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-            'home_office.home_receipt' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'home_office.home_receipt_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'books.books_file'    => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'uniforms.uniform_receipt' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
             'education.edu_file'  => 'nullable|file|mimes:pdf,jpg,png|max:5120',
@@ -332,7 +332,7 @@ class FormController extends Controller
             'education.edu_file' => 'education',
             'uniforms.uniform_receipt' => 'uniforms',
             'books.books_file' => 'books',
-            'home_office.home_receipt' => 'home_office',
+            'home_office.home_receipt_file' => 'home_office',
         ];
 
         foreach ($fileFields as $input => $folder) {
