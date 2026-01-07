@@ -115,22 +115,31 @@
         const items = document.querySelectorAll(".other-details-item");
 
         items.forEach((item) => {
-            item.addEventListener("click", () => {
-                const index = item.getAttribute("data-index");
-                const formToShow = document.getElementById(`other-details-form-${index}`);
+            const index = item.getAttribute("data-index");
+            const formToShow = document.getElementById(`other-details-form-${index}`);
 
-                if (formToShow && formToShow.classList.contains("d-none")) {
+            // Show form if item is already active
+            if (item.classList.contains("active") && formToShow) {
+                formToShow.classList.remove("d-none");
+            }
+
+            item.addEventListener("click", () => {
+                if (formToShow) {
+                    // Show the form
                     formToShow.classList.remove("d-none");
+
+                    // Mark the clicked item as active
                     item.classList.add("active");
 
-                    const target = document.getElementById("other-details-forms_title");
-                    if (target) {
-                        target.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }
+                    // Scroll to the specific form smoothly
+                    formToShow.scrollIntoView({ behavior: "smooth", block: "start" });
                 }
             });
         });
     });
+
+
+
 
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('other-form');

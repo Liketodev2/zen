@@ -126,7 +126,6 @@ class DeductionFileService
         }
 
         if ($request->hasFile('home_office.hours_worked_record_file_yes')) {
-
             if (!empty($attach['home_office']['hours_worked_record_file_yes'])) {
                 Storage::disk('s3')->delete(
                     $attach['home_office']['hours_worked_record_file_yes']

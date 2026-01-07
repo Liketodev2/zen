@@ -24,7 +24,7 @@
                 <label class="choosing-business-type-text d-block mb-2">
                     Attach any other files or receipts
                 </label>
-                <input type="file" name="additional_file[]" id="additional_file" class="d-none" multiple />
+                <input type="file" name="documents_to_attach_files[]" id="additional_file" class="d-none" multiple />
                 <button type="button" class="btn btn_add" id="additional_file_trigger">
                     <img src="{{ asset('img/icons/plus.png') }}" alt="plus"> Choose file
                 </button>
@@ -33,14 +33,16 @@
                 </p>
 
                 <div id="additional_file_name" class="choosing-business-type-text text-muted mb-0 mt-2">
-                    @if(!empty($others->attach['additional_file']))
-                        @foreach($others->attach['additional_file'] as $path)
+                    @if(!empty($others->attach['documents_to_attach_files']))
+                        @foreach($others->attach['documents_to_attach_files'] as $path)
                             @php
                                 $url = Illuminate\Support\Facades\Storage::disk('s3')->url($path);
                             @endphp
-                            <a href="{{ $url }}" target="_blank">
-                                <i class="fa-solid fa-file"></i> View file
-                            </a><br>
+                            <a  href="{{ $url }}" target="_blank" class="btn btn-outline-success mb-2">
+                                <i class="fa-solid fa-file"></i>
+                                View file
+                            </a>
+                            <br>
                         @endforeach
                     @else
                         No file chosen

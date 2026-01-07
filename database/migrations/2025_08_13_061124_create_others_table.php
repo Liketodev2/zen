@@ -37,7 +37,7 @@ return new class extends Migration
             $table->json('dependent_invalid_and_carer')->nullable(); // Dependent (invalid and carer)
             $table->json('superannuation_co_contribution')->nullable(); // Superannuation Co-Contribution
             $table->json('other_tax_offsets_refundable')->nullable(); // Other Tax Offsets (Refundable)
-
+            $table->json('documents_to_attach_files')->nullable();
             $table->timestamps();
         });
     }

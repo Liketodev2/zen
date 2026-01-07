@@ -45,7 +45,7 @@
     <label class="choosing-business-type-text d-block mb-2">
         Attach your Medicare Levy Exemption Certificate (if you have one)
     </label>
-    <input type="file" name="medicare_certificate" id="medicare_certificate" class="d-none" />
+    <input type="file" name="medicare_reduction_exemption[medicare_certificate_file]" id="medicare_certificate" class="d-none" />
     <button type="button" class="btn btn_add" id="medicare_certificate_trigger">
         <img src="{{ asset('img/icons/plus.png') }}" alt="plus"> Choose file
     </button>
@@ -53,8 +53,8 @@
             Allowed file types: PDF, JPG, PNG. Maximum file size: 5 MB.
         </p>
         <p id="medicare_certificate_name" class="choosing-business-type-text text-muted mb-0 mt-2">
-            @if(!empty($others->attach['medicare_certificate']))
-                <a href="{{ Storage::disk('s3')->url($others->attach['medicare_certificate']) }}" target="_blank">
+            @if(!empty($others->attach['medicare_reduction_exemption']['medicare_certificate_file']))
+                <a href="{{ Storage::disk('s3')->url($others->attach['medicare_reduction_exemption']['medicare_certificate_file']) }}" target="_blank" class="btn btn-outline-success">
                     <i class="fa-solid fa-file"></i> View file
                 </a>
             @else

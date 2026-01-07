@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\DeductionController;
 use App\Http\Controllers\Api\FormController;
 use App\Http\Controllers\Api\IncomeController;
+use App\Http\Controllers\Api\OtherController;
 use App\Http\Controllers\Api\TaxReturnController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,7 +44,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/basic-info', [FormController::class, 'basicInfo']);
 //        Route::post('/income', [FormController::class, 'income']);
 //        Route::post('/deduction', [FormController::class, 'deduction']);
-        Route::post('/other', [FormController::class, 'other']);
+//        Route::post('/other', [FormController::class, 'other']);
 
         Route::group(['prefix' => 'income'], function () {
             Route::post('/', [IncomeController::class, 'income']);
@@ -66,6 +67,11 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('/sun-protection', [DeductionController::class, 'saveSunProtection']);
             Route::post('/low-value-pool', [DeductionController::class, 'saveLowValuePool']);
         });
+
+        Route::group(['prefix' => 'other'], function () {
+            Route::post('/', [OtherController::class, 'other']);
+        });
+
     });
 
 });

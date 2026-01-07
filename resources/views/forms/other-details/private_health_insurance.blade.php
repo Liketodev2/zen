@@ -94,12 +94,12 @@
                         @if(!empty($phi['statement_file']))
                             @if(is_array($phi['statement_file']))
                                 @foreach($phi['statement_file'] as $file)
-                                    <a href="{{ Storage::disk('s3')->url($file) }}" target="_blank">
+                                    <a href="{{ Storage::disk('s3')->url($file) }}" target="_blank" class="btn btn-outline-success">
                                         <i class="fa-solid fa-file"></i> View file
                                     </a><br>
                                 @endforeach
                             @else
-                                <a href="{{ Storage::disk('public')->url($phi['statement_file']) }}" target="_blank">
+                                <a href="{{ Storage::disk('s3')->url($phi['statement_file']) }}" target="_blank" class="btn btn-outline-success">
                                     <i class="fa-solid fa-file"></i> View file
                                 </a>
                             @endif
@@ -235,12 +235,12 @@
                         @if(!empty($phi['private_health_statement']))
                             @if(is_array($phi['private_health_statement']))
                                 @foreach($phi['private_health_statement'] as $file)
-                                    <a href="{{ Storage::disk('s3')->url($file) }}" target="_blank">
+                                    <a href="{{ Storage::disk('s3')->url($file) }}" target="_blank" class="btn btn-outline-success">
                                         <i class="fa-solid fa-file"></i> View file
                                     </a><br>
                                 @endforeach
                             @else
-                                <a href="{{ Storage::disk('s3')->url($phi['private_health_statement']) }}" target="_blank">
+                                <a href="{{ Storage::disk('s3')->url($phi['private_health_statement']) }}" target="_blank" class="btn btn-outline-success">
                                     <i class="fa-solid fa-file"></i> View file
                                 </a>
                             @endif

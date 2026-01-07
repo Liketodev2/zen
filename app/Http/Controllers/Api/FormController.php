@@ -396,7 +396,6 @@ class FormController extends Controller
             'income_tests'                         => 'nullable|array',
             'mls'                                  => 'nullable|array',
             'spouse_details'                       => 'nullable|array',
-            'private_health_insurance'             => 'nullable|array',
             'zone_overseas_forces_offset'          => 'nullable|array',
             'seniors_offset'                       => 'nullable|array',
             'medicare_reduction_exemption'         => 'nullable|array',
@@ -410,6 +409,8 @@ class FormController extends Controller
             'dependent_invalid_and_carer'          => 'nullable|array',
             'superannuation_co_contribution'       => 'nullable|array',
             'other_tax_offsets_refundable'         => 'nullable|array',
+
+            'private_health_insurance'             => 'nullable|array',
 
             // Files validation with max size 5MB
             'additional_file.*'                    => 'nullable|file|mimes:pdf,jpg,png|max:5120',

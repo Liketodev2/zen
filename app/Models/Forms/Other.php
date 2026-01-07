@@ -37,6 +37,7 @@ class Other extends Model
         'dependent_invalid_and_carer',
         'superannuation_co_contribution',
         'other_tax_offsets_refundable',
+        'documents_to_attach_files',
     ];
 
     /**
@@ -61,6 +62,7 @@ class Other extends Model
         'dependent_invalid_and_carer' => 'array',
         'superannuation_co_contribution' => 'array',
         'other_tax_offsets_refundable' => 'array',
+        'documents_to_attach_files' => 'array',
     ];
 
 
