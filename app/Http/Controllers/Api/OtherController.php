@@ -168,16 +168,18 @@ class OtherController extends Controller
 
 
 
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function saveTravelExpenses(Request $request)
+    public function savePrivateHealthInsurance(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'tax_id' => 'required|exists:tax_returns,id',
-            'travel_expenses' => 'nullable|array',
-            'travel_expenses.travel_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'private_health_insurance' => 'nullable|array',
+            'private_health_insurance.statement_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'private_health_insurance.private_health_statement' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ]);
 
         if ($validator->fails()) {
@@ -192,42 +194,39 @@ class OtherController extends Controller
             return response()->json(['error' => 'Tax return not found!', 'validation' => false], 404);
         }
 
-        $deduction = Deduction::firstOrCreate(['tax_return_id' => $taxReturn->id]);
+        $other = Other::firstOrCreate(['tax_return_id' => $taxReturn->id]);
+        $attach = is_string($other->attach) ? json_decode($other->attach, true) ?: [] : ($other->attach ?? []);
+        $data = $other->toArray();
 
-        $attach = is_string($deduction->attach) ? json_decode($deduction->attach, true) ?: [] : ($deduction->attach ?? []);
-        $data = $deduction->toArray();
+        $existing = is_array($data['private_health_insurance']) ? $data['private_health_insurance'] : [];
+        $incoming = $request->input('private_health_insurance') ?? [];
+        $incoming = is_array($incoming) ? $incoming : [];
+        $data['private_health_insurance'] = array_merge($existing, $incoming);
 
-        // Merge existing travel_expenses with incoming
-        $existing = $data['travel_expenses'] ?? [];
-        $incoming = $request->input('travel_expenses', []);
-        $data['travel_expenses'] = array_merge($existing, $incoming);
+        $this->fileService->handlePrivateHealthInsuranceFilesForApi($request, $attach, $data);
 
-        // Let the file service handle files for travel expenses
-        $this->fileService->handleTravelExpensesFilesForApi($request, $attach, $data);
-
-        $deduction->update([
-            'travel_expenses' => $data['travel_expenses'],
+        $other->update([
+            'private_health_insurance' => $data['private_health_insurance'],
             'attach' => $attach,
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Travel expenses saved successfully!',
-            'data' => new DeductionResource($deduction->fresh()),
+            'message' => 'Private health insurance saved successfully!',
+            'data' => new OtherResource($other->fresh()),
         ]);
     }
 
-
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function saveComputer(Request $request)
+    public function saveMedicareReductionExemption(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'tax_id' => 'required|exists:tax_returns,id',
-            'computer' => 'nullable|array',
-            'computer.computer_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'medicare_reduction_exemption' => 'nullable|array',
+            'medicare_reduction_exemption.medicare_certificate_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ]);
 
         if ($validator->fails()) {
@@ -242,41 +241,39 @@ class OtherController extends Controller
             return response()->json(['error' => 'Tax return not found!', 'validation' => false], 404);
         }
 
-        $deduction = Deduction::firstOrCreate(['tax_return_id' => $taxReturn->id]);
-        $attach = is_string($deduction->attach) ? json_decode($deduction->attach, true) ?: [] : ($deduction->attach ?? []);
-        $data = $deduction->toArray();
+        $other = Other::firstOrCreate(['tax_return_id' => $taxReturn->id]);
+        $attach = is_string($other->attach) ? json_decode($other->attach, true) ?: [] : ($other->attach ?? []);
+        $data = $other->toArray();
 
-        $existing = $data['computer'] ?? [];
-        $incoming = $request->input('computer', []);
-        $data['computer'] = array_merge($existing, $incoming);
+        $existing = is_array($data['medicare_reduction_exemption']) ? $data['medicare_reduction_exemption'] : [];
+        $incoming = $request->input('medicare_reduction_exemption') ?? [];
+        $incoming = is_array($incoming) ? $incoming : [];
+        $data['medicare_reduction_exemption'] = array_merge($existing, $incoming);
 
+        $this->fileService->handleMedicareReductionExemptionFilesForApi($request, $attach, $data);
 
-        $this->fileService->handleComputerFilesForApi($request, $attach, $data);
-
-        $deduction->update([
-            'computer' => $data['computer'],
+        $other->update([
+            'medicare_reduction_exemption' => $data['medicare_reduction_exemption'],
             'attach' => $attach,
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Computer data saved successfully!',
-            'data' => new DeductionResource($deduction->fresh()),
+            'message' => 'Medicare reduction exemption saved successfully!',
+            'data' => new OtherResource($other->fresh()),
         ]);
     }
 
-
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function saveHomeOffice(Request $request)
+    public function saveMedicalExpensesOffset(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'tax_id' => 'required|exists:tax_returns,id',
-            'home_office' => 'nullable|array',
-            'home_office.home_receipt_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-            'home_office.hours_worked_record_file_yes' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'medical_expenses_offset' => 'nullable|array',
+            'medical_expenses_offset.medical_expense_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ]);
 
         if ($validator->fails()) {
@@ -291,39 +288,38 @@ class OtherController extends Controller
             return response()->json(['error' => 'Tax return not found!', 'validation' => false], 404);
         }
 
-        $deduction = Deduction::firstOrCreate(['tax_return_id' => $taxReturn->id]);
-        $attach = is_string($deduction->attach) ? json_decode($deduction->attach, true) ?: [] : ($deduction->attach ?? []);
-        $data = $deduction->toArray();
+        $other = Other::firstOrCreate(['tax_return_id' => $taxReturn->id]);
+        $attach = is_string($other->attach) ? json_decode($other->attach, true) ?: [] : ($other->attach ?? []);
+        $data = $other->toArray();
 
-        $existing = $data['home_office'] ?? [];
-        $incoming = $request->input('home_office', []) ?? [];
+        $existing = is_array($data['medical_expenses_offset']) ? $data['medical_expenses_offset'] : [];
+        $incoming = $request->input('medical_expenses_offset') ?? [];
+        $incoming = is_array($incoming) ? $incoming : [];
+        $data['medical_expenses_offset'] = array_merge($existing, $incoming);
 
-        $data['home_office'] = array_merge($existing, $incoming);
-        $this->fileService->handleHomeOfficeFilesForApi($request, $attach, $data);
+        $this->fileService->handleMedicalExpensesOffsetFilesForApi($request, $attach, $data);
 
-        $deduction->update([
-            'home_office' => $data['home_office'],
+        $other->update([
+            'medical_expenses_offset' => $data['medical_expenses_offset'],
             'attach' => $attach,
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Home office data saved successfully!',
-            'data' => new DeductionResource($deduction->fresh()),
+            'message' => 'Medical expenses offset saved successfully!',
+            'data' => new OtherResource($other->fresh()),
         ]);
     }
 
-
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function saveBooks(Request $request)
+    public function saveDocumentsToAttach(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'tax_id' => 'required|exists:tax_returns,id',
-            'books' => 'nullable|array',
-            'books.books_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+            'documents_to_attach_files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ]);
 
         if ($validator->fails()) {
@@ -338,260 +334,25 @@ class OtherController extends Controller
             return response()->json(['error' => 'Tax return not found!', 'validation' => false], 404);
         }
 
-        $deduction = Deduction::firstOrCreate(['tax_return_id' => $taxReturn->id]);
-        $attach = is_string($deduction->attach) ? json_decode($deduction->attach, true) ?: [] : ($deduction->attach ?? []);
-        $data = $deduction->toArray();
+        $other = Other::firstOrCreate(['tax_return_id' => $taxReturn->id]);
+        $attach = is_string($other->attach) ? json_decode($other->attach, true) ?: [] : ($other->attach ?? []);
+        $data = $other->toArray();
 
-        $existing = $data['books'] ?? [];
-        $incoming = $request->input('books', []);
-        $data['books'] = array_merge($existing, $incoming);
+        // Ensure documents_to_attach_files exists in attach array
+        if (empty($attach['documents_to_attach_files'])) {
+            $attach['documents_to_attach_files'] = [];
+        }
 
-        $this->fileService->handleBooksFilesForApi($request, $attach, $data);
+        $this->fileService->handleDocumentsToAttachFilesForApi($request, $attach, $data);
 
-        $deduction->update([
-            'books' => $data['books'],
+        $other->update([
             'attach' => $attach,
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Books data saved successfully!',
-            'data' => new DeductionResource($deduction->fresh()),
-        ]);
-    }
-
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function saveUniforms(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'tax_id' => 'required|exists:tax_returns,id',
-            'uniforms' => 'nullable|array',
-            'uniforms.uniform_receipt' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
-        }
-
-        $taxReturn = TaxReturn::where('id', $request->tax_id)
-            ->where('user_id', $request->user()->id)
-            ->first();
-
-        if (!$taxReturn) {
-            return response()->json(['error' => 'Tax return not found!', 'validation' => false], 404);
-        }
-
-        $deduction = Deduction::firstOrCreate(['tax_return_id' => $taxReturn->id]);
-        $attach = is_string($deduction->attach) ? json_decode($deduction->attach, true) ?: [] : ($deduction->attach ?? []);
-        $data = $deduction->toArray();
-
-        $existing = $data['uniforms'] ?? [];
-        $incoming = $request->input('uniforms', []);
-        $data['uniforms'] = array_merge($existing, $incoming);
-
-        $this->fileService->handleUniformFiles($request, $attach, $data);
-
-        $deduction->update([
-            'uniforms' => $data['uniforms'],
-            'attach' => $attach,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Uniforms data saved successfully!',
-            'data' => new DeductionResource($deduction->fresh()),
-        ]);
-    }
-
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function saveEducation(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'tax_id' => 'required|exists:tax_returns,id',
-            'education' => 'nullable|array',
-            'education.edu_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
-        }
-
-        $taxReturn = TaxReturn::where('id', $request->tax_id)
-            ->where('user_id', $request->user()->id)
-            ->first();
-
-        if (!$taxReturn) {
-            return response()->json(['error' => 'Tax return not found!', 'validation' => false], 404);
-        }
-
-        $deduction = Deduction::firstOrCreate(['tax_return_id' => $taxReturn->id]);
-        $attach = is_string($deduction->attach) ? json_decode($deduction->attach, true) ?: [] : ($deduction->attach ?? []);
-        $data = $deduction->toArray();
-
-        $existing = $data['education'] ?? [];
-        $incoming = $request->input('education', []);
-        $data['education'] = array_merge($existing, $incoming);
-
-        $this->fileService->handleEducationFilesForApi($request, $attach, $data);
-
-        $deduction->update([
-            'education' => $data['education'],
-            'attach' => $attach,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Education data saved successfully!',
-            'data' => new DeductionResource($deduction->fresh()),
-        ]);
-    }
-
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function saveUnionFees(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'tax_id' => 'required|exists:tax_returns,id',
-            'union_fees' => 'nullable|array',
-            'union_fees.file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
-        }
-
-        $taxReturn = TaxReturn::where('id', $request->tax_id)
-            ->where('user_id', $request->user()->id)
-            ->first();
-
-        if (!$taxReturn) {
-            return response()->json(['error' => 'Tax return not found!', 'validation' => false], 404);
-        }
-
-        $deduction = Deduction::firstOrCreate(['tax_return_id' => $taxReturn->id]);
-        $attach = is_string($deduction->attach) ? json_decode($deduction->attach, true) ?: [] : ($deduction->attach ?? []);
-        $data = $deduction->toArray();
-
-        $existing = $data['union_fees'] ?? [];
-        $incoming = $request->input('union_fees', []);
-        $data['union_fees'] = array_merge($existing, $incoming);
-
-        $this->fileService->handleUnionFeesFilesForApi($request, $attach, $data);
-
-        $deduction->update([
-            'union_fees' => $data['union_fees'],
-            'attach' => $attach,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Union fees saved successfully!',
-            'data' => new DeductionResource($deduction->fresh()),
-        ]);
-    }
-
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function saveSunProtection(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'tax_id' => 'required|exists:tax_returns,id',
-            'sun_protection' => 'nullable|array',
-            'sun_protection.sun_file' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
-        }
-
-        $taxReturn = TaxReturn::where('id', $request->tax_id)
-            ->where('user_id', $request->user()->id)
-            ->first();
-
-        if (!$taxReturn) {
-            return response()->json(['error' => 'Tax return not found!', 'validation' => false], 404);
-        }
-
-        $deduction = Deduction::firstOrCreate(['tax_return_id' => $taxReturn->id]);
-        $attach = is_string($deduction->attach) ? json_decode($deduction->attach, true) ?: [] : ($deduction->attach ?? []);
-        $data = $deduction->toArray();
-
-        $existing = $data['sun_protection'] ?? [];
-        $incoming = $request->input('sun_protection', []);
-        $data['sun_protection'] = array_merge($existing, $incoming);
-
-        $this->fileService->handleSunProtectionFilesForApi($request, $attach, $data);
-
-        $deduction->update([
-            'sun_protection' => $data['sun_protection'],
-            'attach' => $attach,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Sun protection saved successfully!',
-            'data' => new DeductionResource($deduction->fresh()),
-        ]);
-    }
-
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function saveLowValuePool(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'tax_id' => 'required|exists:tax_returns,id',
-            'low_value_pool' => 'nullable|array',
-            'low_value_pool.files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
-        }
-
-        $taxReturn = TaxReturn::where('id', $request->tax_id)
-            ->where('user_id', $request->user()->id)
-            ->first();
-
-        if (!$taxReturn) {
-            return response()->json(['error' => 'Tax return not found!', 'validation' => false], 404);
-        }
-
-        $deduction = Deduction::firstOrCreate(['tax_return_id' => $taxReturn->id]);
-        $attach = is_string($deduction->attach) ? json_decode($deduction->attach, true) ?: [] : ($deduction->attach ?? []);
-        $data = $deduction->toArray();
-
-        $existing = $data['low_value_pool'] ?? [];
-        $incoming = $request->input('low_value_pool', []);
-        $data['low_value_pool'] = array_merge($existing, $incoming);
-
-        $this->fileService->handleLowValuePoolFilesForApi($request, $attach, $data);
-
-        $deduction->update([
-            'low_value_pool' => $data['low_value_pool'],
-            'attach' => $attach,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Low value pool saved successfully!',
-            'data' => new DeductionResource($deduction->fresh()),
+            'message' => 'Documents attached successfully!',
+            'data' => new OtherResource($other->fresh()),
         ]);
     }
 }

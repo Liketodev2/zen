@@ -70,6 +70,10 @@ Route::middleware(['auth:api'])->group(function () {
 
         Route::group(['prefix' => 'other'], function () {
             Route::post('/', [OtherController::class, 'other']);
+            Route::post('/private-health-insurance', [OtherController::class, 'savePrivateHealthInsurance']);
+            Route::post('/medicare-reduction-exemption', [OtherController::class, 'saveMedicareReductionExemption']);
+            Route::post('/medical-expenses-offset', [OtherController::class, 'saveMedicalExpensesOffset']);
+            Route::post('/documents-to-attach', [OtherController::class, 'saveDocumentsToAttach']);
         });
 
     });

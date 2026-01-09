@@ -102,26 +102,12 @@ class OtherFileService
         }
     }
 
+
     /**
-     * Handle Private Health Insurance files (dynamic keys)
+     * @param Request $request
+     * @param array $attach
+     * @return void
      */
-//    public function handlePrivateHealthInsuranceFiles(
-//        Request $request,
-//        array &$attach
-//    ): void {
-//        if ($request->hasFile('private_health_insurance')) {
-//            foreach ($request->file('private_health_insurance') as $key => $file) {
-//                if (!empty($attach['private_health_insurance'][$key])) {
-//                    $this->deleteFile($attach['private_health_insurance'][$key]);
-//                }
-//
-//                $attach['private_health_insurance'][$key] =
-//                    $file->store('private_health_insurance', 's3');
-//            }
-//        }
-//    }
-
-
     public function handlePrivateHealthInsuranceFiles(
         Request $request,
         array &$attach
@@ -155,7 +141,10 @@ class OtherFileService
 
 
     /**
-     * Handle Medicare certificate file
+     * @param Request $request
+     * @param array $attach
+     * @param array $data
+     * @return void
      */
     public function handleMedicareCertificate(
         Request $request,
@@ -176,8 +165,12 @@ class OtherFileService
         }
     }
 
+
     /**
-     * Handle Medical Expense file
+     * @param Request $request
+     * @param array $attach
+     * @param array $data
+     * @return void
      */
     public function handleMedicalExpenseFile(
         Request $request,
@@ -195,6 +188,106 @@ class OtherFileService
 
             $attach['medical_expenses_offset']['medical_expense_file'] = $path;
             $data['medical_expenses_offset']['medical_expense_file']   = $path;
+        }
+    }
+
+
+    /**
+     * @param Request $request
+     * @param array $attach
+     * @param array $data
+     * @return void
+     */
+    public function handlePrivateHealthInsuranceFilesForApi(Request $request, array &$attach, array &$data): void
+    {
+        $fileKeys = [
+            'statement_file',
+            'private_health_statement',
+        ];
+
+        foreach ($fileKeys as $key) {
+            if ($request->hasFile("private_health_insurance.$key")) {
+                // Delete old file if exists
+                if (!empty($attach['private_health_insurance'][$key])) {
+                    $this->deleteFile($attach['private_health_insurance'][$key]);
+                }
+
+                // Store new file
+                $path = $request->file("private_health_insurance.$key")->store('private_health_insurance', 's3');
+
+                $attach['private_health_insurance'][$key] = $path;
+                $data['private_health_insurance'][$key] = $path;
+            }
+        }
+    }
+
+
+    /**
+     * @param Request $request
+     * @param array $attach
+     * @param array $data
+     * @return void
+     */
+    public function handleMedicareReductionExemptionFilesForApi(Request $request, array &$attach, array &$data): void
+    {
+        if ($request->hasFile('medicare_reduction_exemption.medicare_certificate_file')) {
+            if (!empty($attach['medicare_reduction_exemption']['medicare_certificate_file'])) {
+                $this->deleteFile($attach['medicare_reduction_exemption']['medicare_certificate_file']);
+            }
+
+            $path = $request->file('medicare_reduction_exemption.medicare_certificate_file')->store('medicare_reduction_exemption', 's3');
+
+            $attach['medicare_reduction_exemption']['medicare_certificate_file'] = $path;
+            $data['medicare_reduction_exemption']['medicare_certificate_file'] = $path;
+        }
+    }
+
+
+    /**
+     * @param Request $request
+     * @param array $attach
+     * @param array $data
+     * @return void
+     */
+    public function handleMedicalExpensesOffsetFilesForApi(Request $request, array &$attach, array &$data): void
+    {
+        if ($request->hasFile('medical_expenses_offset.medical_expense_file')) {
+            if (!empty($attach['medical_expenses_offset']['medical_expense_file'])) {
+                $this->deleteFile($attach['medical_expenses_offset']['medical_expense_file']);
+            }
+
+            $path = $request->file('medical_expenses_offset.medical_expense_file')->store('medical_expenses_offset', 's3');
+
+            $attach['medical_expenses_offset']['medical_expense_file'] = $path;
+            $data['medical_expenses_offset']['medical_expense_file'] = $path;
+        }
+    }
+
+
+    /**
+     * @param Request $request
+     * @param array $attach
+     * @param array $data
+     * @return void
+     */
+    public function handleDocumentsToAttachFilesForApi(Request $request, array &$attach, array &$data): void
+    {
+        if ($request->hasFile('documents_to_attach_files')) {
+            // Initialize array if it doesn't exist
+            if (!isset($attach['documents_to_attach_files'])) {
+                $attach['documents_to_attach_files'] = [];
+            }
+
+            // Keep existing files
+            $paths = is_array($attach['documents_to_attach_files']) ? $attach['documents_to_attach_files'] : [];
+
+            // Add new files
+            foreach ($request->file('documents_to_attach_files') as $file) {
+                $paths[] = $file->store('documents_to_attach_files', 's3');
+            }
+
+            $attach['documents_to_attach_files'] = $paths;
+            $data['documents_to_attach_files'] = $paths;
         }
     }
 }
