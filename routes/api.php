@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\DeductionController;
 use App\Http\Controllers\Api\FormController;
 use App\Http\Controllers\Api\IncomeController;
 use App\Http\Controllers\Api\OtherController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\TaxReturnController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -76,6 +77,11 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('/documents-to-attach', [OtherController::class, 'saveDocumentsToAttach']);
         });
 
+    });
+
+    Route::group(['prefix' => 'payments'], function () {
+        Route::get('/{id}', [PaymentController::class, 'payment']);
+        Route::post('/make', [PaymentController::class, 'makePayment']);
     });
 
 });
