@@ -148,6 +148,11 @@ class IncomeFileService
      */
     public function handleRentFiles(Request $request, array &$attach, array &$data): void
     {
+        // Check if rent data exists in the data array
+        if (!isset($data['rent'])) {
+            return;
+        }
+
         $newRentData = $data['rent'] ?? [];
 
         // Delete old rent items that no longer exist in the request
@@ -193,7 +198,9 @@ class IncomeFileService
         }
 
         // Reindex attach array to match new rent data
-        $attach['rent'] = array_values($attach['rent']);
+        if (!empty($attach['rent'])) {
+            $attach['rent'] = array_values($attach['rent']);
+        }
         $data['rent'] = array_values($newRentData);
     }
 

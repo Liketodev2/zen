@@ -136,7 +136,7 @@ class IncomeController extends Controller
         $this->fileService->handleTerminationPaymentsFiles($request, $attach, $data);
 
         // Handle rent: replace all rent data and delete old files
-        if ($data['rent']) {
+        if ($request->has('rent')) {
             $data['rent'] = $request->input('rent', []);
         }
 

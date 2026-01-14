@@ -59,20 +59,27 @@ class SendTaxFormsToManagers implements ShouldQueue
             ? $attachData
             : json_decode($attachData ?? '[]', true);
 
-        foreach ($data ?? [] as $item) {
-            if (is_array($item)) {
-                $relativePath = $item['path'] ?? reset($item);
-            } else {
-                $relativePath = $item;
-            }
+        if (empty($data)) {
+            return $files;
+        }
 
-            if ($relativePath && is_string($relativePath)) {
-                // ✅ Just store the relative S3 path, don't check local storage
-                $files[] = $relativePath;
+        // Use recursive iterator to handle nested structure
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveArrayIterator($data),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $value) {
+            // Only collect string values that look like file paths
+            if (is_string($value) && !empty($value)) {
+                // Skip keys/values that are not file paths (e.g., 'input_option', 'family_status', etc.)
+                if (strpos($value, '/') !== false || strpos($value, '\\') !== false) {
+                    $files[] = $value;
+                }
             }
         }
 
-        return $files;
+        return array_unique($files);
     }
 
 
@@ -88,6 +95,10 @@ class SendTaxFormsToManagers implements ShouldQueue
             ? $attachData
             : json_decode($attachData ?? '[]', true);
 
+        if (empty($data)) {
+            return $files;
+        }
+
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveArrayIterator($data),
             \RecursiveIteratorIterator::SELF_FIRST
@@ -95,11 +106,14 @@ class SendTaxFormsToManagers implements ShouldQueue
 
         foreach ($iterator as $value) {
             if (is_string($value) && !empty($value)) {
-                $files[] = $value;
+                // Skip keys/values that are not file paths
+                if (strpos($value, '/') !== false || strpos($value, '\\') !== false) {
+                    $files[] = $value;
+                }
             }
         }
 
-        return $files;
+        return array_unique($files);
     }
 
 

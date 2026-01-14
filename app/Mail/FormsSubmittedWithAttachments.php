@@ -43,7 +43,7 @@ class FormsSubmittedWithAttachments extends Mailable implements ShouldQueue
     /**
      * @var array|string[]
      */
-    private array $hiddenKeys = ['id', 'created_at', 'updated_at', 'attach'];
+    private array $hiddenKeys = ['id', 'tax_return_id', 'created_at', 'updated_at', 'attach', 'deleted_at'];
 
     public function __construct(
         $tax,
@@ -157,14 +157,27 @@ class FormsSubmittedWithAttachments extends Mailable implements ShouldQueue
      */
     private function makeDownloadLinks(array $files, string $prefix): array
     {
-        return array_map(function ($path) use ($prefix) {
-            $signedUrl = Storage::disk('s3')->url($path);
-
-            return [
-                'label' => $prefix . ' - ' . basename($path),
-                'url'   => $signedUrl,
-            ];
-        }, $files);
+        $links = [];
+        
+        foreach ($files as $path) {
+            // Skip if path is empty or not a string
+            if (empty($path) || !is_string($path)) {
+                continue;
+            }
+            
+            try {
+                $signedUrl = Storage::disk('s3')->url($path);
+                
+                $links[] = [
+                    'label' => $prefix . ' - ' . basename($path),
+                    'url'   => $signedUrl,
+                ];
+            } catch (\Throwable $e) {
+                Log::warning("Failed to generate URL for file: {$path}. Error: " . $e->getMessage());
+            }
+        }
+        
+        return $links;
     }
 
     /**
@@ -175,16 +188,24 @@ class FormsSubmittedWithAttachments extends Mailable implements ShouldQueue
         if ($data instanceof Collection) {
             $raw = $data->toArray();
         } elseif ($data instanceof Model) {
-            $raw = [$data->toArray()];
+            // Single model - just convert to array, don't wrap in another array
+            $raw = $data->toArray();
         } elseif (is_array($data)) {
             $raw = $data;
         } else {
             $raw = [];
         }
 
+        // If it's a single model's data (has keys like 'id', 'created_at', etc.), wrap it
+        if (!empty($raw) && !isset($raw[0]) && isset($raw['id'])) {
+            $cleaned = $this->cleanAndHumanize($raw);
+            return empty($cleaned) ? [] : [$cleaned];
+        }
+
+        // Otherwise, process as array of items
         return array_values(array_filter(array_map(
             fn($item) => $this->cleanAndHumanize((array)$item),
-            $raw
+            is_array($raw) && isset($raw[0]) ? $raw : [$raw]
         )));
     }
 
