@@ -358,6 +358,11 @@
         const privateHealthTrigger = document.getElementById('privateHealthTrigger');
         const privateHealthInput = document.getElementById('privateHealthInput');
         const privateHealthFileName = document.getElementById('privateHealthFileName');
+        
+        // File trigger elements (must be declared before functions use them)
+        const statementFileTrigger = document.getElementById('statementFileTrigger');
+        const statementFileInput = document.getElementById('statementFileInput');
+        const statementFileName = document.getElementById('statementFileName');
 
         // Toggle dependent children (keeps your original "Single => show" behavior)
         function toggleChildren() {
@@ -365,6 +370,42 @@
                 dependentChildrenBlock.classList.remove('d-none');
             } else {
                 dependentChildrenBlock.classList.add('d-none');
+            }
+        }
+
+        // Clear attachment file input when switching away from "Attach my statement"
+        function clearAttachmentSection() {
+            if (statementFileInput) {
+                statementFileInput.value = '';
+                // Only reset the display if no file was previously uploaded
+                if (statementFileName && !statementFileName.querySelector('a')) {
+                    statementFileName.textContent = 'No file chosen';
+                }
+            }
+        }
+
+        // Clear manual input statements when switching away from "Enter my details myself"
+        function clearManualSection() {
+            // Remove all dynamically added statement blocks
+            const blocks = manualInputBlock.querySelectorAll('.health-statement-block');
+            blocks.forEach((block, index) => {
+                // Clear all inputs in each block
+                block.querySelectorAll('input, select').forEach(input => {
+                    if (input.type === 'text') {
+                        input.value = '';
+                    } else if (input.tagName === 'SELECT') {
+                        input.selectedIndex = 0;
+                    }
+                });
+            });
+
+            // Also clear the file input for private health statement
+            if (privateHealthInput) {
+                privateHealthInput.value = '';
+                // Only reset the display if no file was previously uploaded
+                if (privateHealthFileName && !privateHealthFileName.querySelector('a')) {
+                    privateHealthFileName.textContent = 'No file chosen';
+                }
             }
         }
 
@@ -376,10 +417,17 @@
 
             if (inputOption.value === 'Let Etax collect my details') {
                 etaxSuccessText.classList.remove('d-none');
+                // Clear other sections
+                clearAttachmentSection();
+                clearManualSection();
             } else if (inputOption.value === 'Attach my statement') {
                 uploadStatementBlock.classList.remove('d-none');
+                // Clear other sections
+                clearManualSection();
             } else if (inputOption.value === 'Enter my details myself') {
                 manualInputBlock.classList.remove('d-none');
+                // Clear attachment section
+                clearAttachmentSection();
             }
         }
 
@@ -389,11 +437,6 @@
 
         familyStatus.addEventListener('change', toggleChildren);
         inputOption.addEventListener('change', toggleOption);
-
-        // File triggers
-        const statementFileTrigger = document.getElementById('statementFileTrigger');
-        const statementFileInput = document.getElementById('statementFileInput');
-        const statementFileName = document.getElementById('statementFileName');
 
         if (statementFileTrigger && statementFileInput && statementFileName) {
             statementFileTrigger.addEventListener('click', () => statementFileInput.click());

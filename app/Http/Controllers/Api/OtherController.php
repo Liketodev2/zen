@@ -201,7 +201,72 @@ class OtherController extends Controller
         $existing = is_array($data['private_health_insurance']) ? $data['private_health_insurance'] : [];
         $incoming = $request->input('private_health_insurance') ?? [];
         $incoming = is_array($incoming) ? $incoming : [];
-        $data['private_health_insurance'] = array_merge($existing, $incoming);
+        
+        // Handle input_option logic
+        $inputOption = $incoming['input_option'] ?? null;
+        
+        if ($inputOption === 'Let Etax collect my details') {
+            // Only keep basic fields
+            $data['private_health_insurance'] = [
+                'family_status' => $incoming['family_status'] ?? null,
+                'dependent_children' => $incoming['dependent_children'] ?? null,
+                'input_option' => $inputOption
+            ];
+        } elseif ($inputOption === 'Attach my statement') {
+            // Keep basic fields, no statements
+            $data['private_health_insurance'] = [
+                'family_status' => $incoming['family_status'] ?? null,
+                'dependent_children' => $incoming['dependent_children'] ?? null,
+                'input_option' => $inputOption
+            ];
+        } elseif ($inputOption === 'Enter my details myself') {
+            // Keep basic fields and statements, replace statements array completely
+            $data['private_health_insurance'] = [
+                'family_status' => $incoming['family_status'] ?? null,
+                'dependent_children' => $incoming['dependent_children'] ?? null,
+                'input_option' => $inputOption,
+                'statements' => $incoming['statements'] ?? []
+            ];
+        } else {
+            // No option or default merge
+            $data['private_health_insurance'] = array_merge($existing, $incoming);
+        }
+
+        // Delete files based on input_option
+        if ($inputOption && !empty($attach['private_health_insurance'])) {
+            $filesToDelete = [];
+
+            if ($inputOption === 'Let Etax collect my details') {
+                // Delete ALL files
+                if (!empty($attach['private_health_insurance']['statement_file'])) {
+                    $filesToDelete[] = 'statement_file';
+                }
+                if (!empty($attach['private_health_insurance']['private_health_statement'])) {
+                    $filesToDelete[] = 'private_health_statement';
+                }
+            } elseif ($inputOption === 'Attach my statement') {
+                // Delete private_health_statement only
+                if (!empty($attach['private_health_insurance']['private_health_statement'])) {
+                    $filesToDelete[] = 'private_health_statement';
+                }
+            } elseif ($inputOption === 'Enter my details myself') {
+                // Delete statement_file only
+                if (!empty($attach['private_health_insurance']['statement_file'])) {
+                    $filesToDelete[] = 'statement_file';
+                }
+            }
+
+            foreach ($filesToDelete as $fileKey) {
+                if (is_array($attach['private_health_insurance'][$fileKey])) {
+                    foreach ($attach['private_health_insurance'][$fileKey] as $oldFile) {
+                        $this->fileService->deleteFile($oldFile);
+                    }
+                } else {
+                    $this->fileService->deleteFile($attach['private_health_insurance'][$fileKey]);
+                }
+                unset($attach['private_health_insurance'][$fileKey]);
+            }
+        }
 
         $this->fileService->handlePrivateHealthInsuranceFilesForApi($request, $attach, $data);
 

@@ -37,6 +37,8 @@ class OtherController extends Controller
      */
     private function saveOther(Request $request, $taxId, $id = null)
     {
+
+
         $taxReturn = TaxReturn::where('user_id', auth()->id())
             ->where('id', $taxId)
             ->first();
@@ -109,9 +111,59 @@ class OtherController extends Controller
             if ($request->has($field)) {
                 $incoming = $request->input($field);
 
-                if (is_array($existingValue) && is_array($incoming)) {
-                    // merge arrays safely
-                    $data[$field] = array_replace_recursive($existingValue, $incoming);
+                // Special handling for private_health_insurance based on input_option
+                if ($field === 'private_health_insurance' && is_array($incoming)) {
+                    $inputOption = $incoming['input_option'] ?? null;
+                    
+                    // If input_option changed, clear data from other options
+                    if ($inputOption === 'Let Etax collect my details') {
+                        // Clear statements and file-related fields
+                        $data[$field] = [
+                            'family_status' => $incoming['family_status'] ?? null,
+                            'dependent_children' => $incoming['dependent_children'] ?? null,
+                            'input_option' => $inputOption
+                        ];
+                    } elseif ($inputOption === 'Attach my statement') {
+                        // Clear statements, keep file-related fields
+                        $data[$field] = [
+                            'family_status' => $incoming['family_status'] ?? null,
+                            'dependent_children' => $incoming['dependent_children'] ?? null,
+                            'input_option' => $inputOption
+                        ];
+                    } elseif ($inputOption === 'Enter my details myself') {
+                        // Keep statements, clear unnecessary fields
+                        $data[$field] = [
+                            'family_status' => $incoming['family_status'] ?? null,
+                            'dependent_children' => $incoming['dependent_children'] ?? null,
+                            'input_option' => $inputOption,
+                            'statements' => $incoming['statements'] ?? []
+                        ];
+                    } else {
+                        // No option selected or other case - use default merge
+                        $data[$field] = $incoming;
+                    }
+                } elseif (is_array($existingValue) && is_array($incoming)) {
+                    // Check if incoming array has numeric keys (like statements array)
+                    // If so, replace completely instead of merging
+                    $hasNumericKeys = !empty($incoming) && array_keys($incoming) === range(0, count($incoming) - 1);
+                    
+                    if ($hasNumericKeys) {
+                        // Replace completely for sequential arrays
+                        $data[$field] = $incoming;
+                    } else {
+                        // Merge associative arrays, but check for nested numeric arrays
+                        $merged = $existingValue;
+                        foreach ($incoming as $key => $value) {
+                            if (is_array($value) && !empty($value) && array_keys($value) === range(0, count($value) - 1)) {
+                                // Replace numeric arrays completely
+                                $merged[$key] = $value;
+                            } else {
+                                // Merge other values
+                                $merged[$key] = $value;
+                            }
+                        }
+                        $data[$field] = $merged;
+                    }
                 } else {
                     // scalar, null, or first-time value
                     $data[$field] = $incoming;
@@ -128,6 +180,51 @@ class OtherController extends Controller
         $attach = is_array($other->attach)
             ? $other->attach
             : (json_decode($other->attach, true) ?? []);
+
+        /**
+         * Handle private_health_insurance file cleanup based on input_option
+         */
+        if ($request->has('private_health_insurance.input_option')) {
+            $inputOption = $request->input('private_health_insurance.input_option');
+            
+            // Delete files based on the selected option
+            if (!empty($attach['private_health_insurance'])) {
+                $filesToDelete = [];
+
+                // Determine which files to delete based on current option
+                if ($inputOption === 'Let Etax collect my details') {
+                    // Delete ALL files - this option doesn't use any files
+                    if (!empty($attach['private_health_insurance']['statement_file'])) {
+                        $filesToDelete[] = 'statement_file';
+                    }
+                    if (!empty($attach['private_health_insurance']['private_health_statement'])) {
+                        $filesToDelete[] = 'private_health_statement';
+                    }
+                } elseif ($inputOption === 'Attach my statement') {
+                    // Delete private_health_statement only, keep statement_file
+                    if (!empty($attach['private_health_insurance']['private_health_statement'])) {
+                        $filesToDelete[] = 'private_health_statement';
+                    }
+                } elseif ($inputOption === 'Enter my details myself') {
+                    // Delete statement_file only, keep private_health_statement
+                    if (!empty($attach['private_health_insurance']['statement_file'])) {
+                        $filesToDelete[] = 'statement_file';
+                    }
+                }
+
+                // Delete the files
+                foreach ($filesToDelete as $fileKey) {
+                    if (is_array($attach['private_health_insurance'][$fileKey])) {
+                        foreach ($attach['private_health_insurance'][$fileKey] as $oldFile) {
+                            $this->fileService->deleteFile($oldFile);
+                        }
+                    } else {
+                        $this->fileService->deleteFile($attach['private_health_insurance'][$fileKey]);
+                    }
+                    unset($attach['private_health_insurance'][$fileKey]);
+                }
+            }
+        }
 
         /**
          * File handling via OtherFileService
