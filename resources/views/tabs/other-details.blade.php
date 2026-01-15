@@ -203,7 +203,7 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showToast('error', 'Network error. Please try again.');
+                showToast('error', 'Network error. Please try again. ' + error);
             } finally {
                 // Re-enable previously disabled hidden inputs
                 hiddenInputs.forEach(el => el.disabled = false);
