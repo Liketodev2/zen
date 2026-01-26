@@ -86,6 +86,8 @@ class IncomeController extends Controller
             'rent.*.rent_files.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ];
 
+        $rules['active_sections'] = 'nullable|string';
+
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
@@ -96,6 +98,13 @@ class IncomeController extends Controller
         }
 
         $validated = $validator->validated();
+
+        // Process active_sections
+        $activeSectionsRaw = $request->input('active_sections', '[]');
+        $activeSections = json_decode($activeSectionsRaw, true);
+        if (!is_array($activeSections)) {
+            $activeSections = [];
+        }
 
 
         // Normalize super lump sums
@@ -124,8 +133,14 @@ class IncomeController extends Controller
             $existingValue = $existing->$field;
             $existingValue = is_array($existingValue) ? $existingValue : json_decode($existingValue, true) ?? [];
             $newValue = $validated[$field] ?? [];
-            $merged = array_replace_recursive($existingValue ?: [], $newValue ?: []);
-            $data[$field] = empty($merged) ? null : $merged;
+
+            if (!is_array($newValue)) {
+                // Preserve scalar values directly
+                $data[$field] = $newValue === [] ? (empty($existingValue) ? null : $existingValue) : $newValue;
+            } else {
+                $merged = array_replace_recursive(is_array($existingValue) ? $existingValue : [], $newValue);
+                $data[$field] = empty($merged) ? null : $merged;
+            }
         }
 
         // Handle attachments
@@ -141,6 +156,25 @@ class IncomeController extends Controller
         }
 
         $this->fileService->handleRentFiles($request, $attach, $data);
+
+        $data['attach'] = empty($attach) ? null : $attach;
+
+        // Cleanup inactive sections: null data and delete files
+        $toggleable = [
+            'salary','interests','dividends','government_allowances','government_pensions','capital_gains',
+            'managed_funds','termination_payments','rent','partnerships','annuities','superannuation',
+            'super_lump_sums','ess','personal_services','business_income','business_losses','foreign_income','other_income'
+        ];
+
+        foreach ($toggleable as $section) {
+            if (!in_array($section, $activeSections, true)) {
+                $data[$section] = null;
+                if (!empty($attach[$section])) {
+                    $this->deleteAttachSectionFiles($attach[$section]);
+                    unset($attach[$section]);
+                }
+            }
+        }
 
         $data['attach'] = empty($attach) ? null : $attach;
 
@@ -176,5 +210,26 @@ class IncomeController extends Controller
     public function update(Request $request, string $taxId, string $id)
     {
         return $this->saveIncome($request, $taxId, $id);
+    }
+
+    /**
+     * Helper to recursively delete files in attach sections for IncomeController
+     */
+    private function deleteAttachSectionFiles($sectionAttach): void
+    {
+        if (is_array($sectionAttach)) {
+            foreach ($sectionAttach as $value) {
+                if (is_array($value)) {
+                    $this->deleteAttachSectionFiles($value);
+                } elseif (is_string($value) && $value !== '') {
+                    Storage::disk('s3')->delete($value);
+                }
+            }
+            return;
+        }
+
+        if (is_string($sectionAttach) && $sectionAttach !== '') {
+            Storage::disk('s3')->delete($sectionAttach);
+        }
     }
 }

@@ -86,6 +86,7 @@ class DeductionController extends Controller
             'low_value_pool.files.*'        => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ];
 
+        $rules['active_sections'] = 'nullable|string';
         $validated = $request->validate($rules);
 
         $existing = $id
@@ -103,8 +104,12 @@ class DeductionController extends Controller
 
             if ($request->has($field)) {
                 $newValue = $request->input($field);
-                // ✅ Merge instead of replace
-                $data[$field] = array_replace_recursive($existingValue, $newValue);
+                if (is_array($newValue) && is_array($existingValue)) {
+                    $data[$field] = array_replace_recursive($existingValue, $newValue);
+                } else {
+                    // If incoming is scalar or not an array, preserve it directly
+                    $data[$field] = $newValue;
+                }
             } else {
                 $data[$field] = empty($existingValue) ? null : $existingValue;
             }
@@ -145,6 +150,101 @@ class DeductionController extends Controller
             $data['travel_expenses'] = $existingValue;
         }
 
+        // Ensure any uploaded files for travel_expenses (or other sections) are present in $data
+        if (!empty($attach) && is_array($attach)) {
+            foreach ($attach as $section => $vals) {
+                if (!is_array($vals)) continue;
+                if (isset($data[$section]) && is_array($data[$section])) {
+                    $data[$section] = array_replace_recursive($data[$section], $vals);
+                } else {
+                    $data[$section] = $vals;
+                }
+            }
+        }
+
+
+        // Cleanup inactive sections
+        $toggleable = [
+            'car_expenses','travel_expenses','mobile_phone','internet_access','computer','gifts','home_office',
+            'books','tax_affairs','uniforms','education','tools','superannuation','office_occupancy','union_fees',
+            'sun_protection','low_value_pool','interest_deduction','dividend_deduction','upp','project_pool','investment_scheme','other'
+        ];
+
+        $activeSectionsRaw = $request->input('active_sections', '[]');
+        $activeSections = json_decode($activeSectionsRaw, true);
+        if (!is_array($activeSections)) {
+            $activeSections = [];
+        }
+
+        // If user didn't explicitly submit `active_sections`, try to detect sections from inputs/files.
+        $detected = [];
+        if (!$request->has('active_sections')) {
+            $allInputKeys = array_keys($request->all());
+            foreach ($toggleable as $section) {
+                if ($request->has($section) || $request->hasFile($section) || array_key_exists($section, $request->all())) {
+                    $detected[] = $section;
+                    continue;
+                }
+                // Keys like 'car_expenses[vehicles][0][work_kilometers]' appear in request->all() as full keys,
+                // so check raw input keys as fallback
+                foreach ($allInputKeys as $k) {
+                    if (strpos($k, $section . '[') === 0) {
+                        $detected[] = $section;
+                        break;
+                    }
+                }
+                // Only treat existing attachments as active when no explicit active_sections provided
+                if (!empty($attach[$section])) {
+                    $detected[] = $section;
+                }
+            }
+
+            $activeSections = array_values(array_unique($detected));
+        }
+
+        // NOTE: Respect explicit `active_sections` sent by client. Auto-detection only runs when
+        // the client did not send `active_sections` at all.
+
+        // Finalize active status per section: section is active if it's listed in activeSections
+        // OR if the request contains keys/files for that section or there are existing attachments.
+        $allInputKeys = array_keys($request->all());
+        foreach ($toggleable as $section) {
+            $hasInput = false;
+            if (in_array($section, $activeSections, true)) {
+                $hasInput = true;
+            }
+            // Check direct presence
+            if (!$hasInput && ($request->has($section) || array_key_exists($section, $request->all()))) {
+                $hasInput = true;
+            }
+            // Check nested keys like 'car_expenses[vehicles][0][work_kilometers]'
+            if (!$hasInput) {
+                foreach ($allInputKeys as $k) {
+                    if (strpos($k, $section . '[') === 0) {
+                        $hasInput = true;
+                        break;
+                    }
+                }
+            }
+            // Check files. Treat existing stored attachments as active ONLY when the client did NOT
+            // explicitly send `active_sections`. If client did send `active_sections`, we must
+            // respect it (so deselecting removes stored files).
+            if (!$hasInput && $request->hasFile($section)) {
+                $hasInput = true;
+            }
+            if (!$hasInput && !$request->has('active_sections') && !empty($attach[$section])) {
+                $hasInput = true;
+            }
+
+            if (!$hasInput) {
+                $data[$section] = null;
+                if (!empty($attach[$section])) {
+                    $this->deleteAttachSectionFiles($attach[$section]);
+                    unset($attach[$section]);
+                }
+            }
+        }
+
         $data['attach'] = empty($attach) ? null : $attach;
 
         // Save model
@@ -179,5 +279,28 @@ class DeductionController extends Controller
     public function update(Request $request, string $taxId, string $id)
     {
         return $this->saveDeduction($request, $taxId, $id);
+    }
+
+    /**
+     * Recursively delete files referenced in an attachment section
+     * @param mixed $sectionAttach
+     * @return void
+     */
+    private function deleteAttachSectionFiles($sectionAttach): void
+    {
+        if (is_array($sectionAttach)) {
+            foreach ($sectionAttach as $value) {
+                if (is_array($value)) {
+                    $this->deleteAttachSectionFiles($value);
+                } elseif (is_string($value) && $value !== '') {
+                    Storage::disk('s3')->delete($value);
+                }
+            }
+            return;
+        }
+
+        if (is_string($sectionAttach) && $sectionAttach !== '') {
+            Storage::disk('s3')->delete($sectionAttach);
+        }
     }
 }

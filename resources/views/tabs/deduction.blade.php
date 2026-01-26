@@ -35,7 +35,7 @@
 
         @foreach(array_slice($deductionsItems, 0, 9, true) as $key => $label)
             <div class="deduction-item @if(isset($deductions) && !empty($deductions->$key)) active @endif"
-     data-index="{{ $loop->index }}">
+     data-index="{{ $loop->index }}" data-key="{{ $key }}">
                 <div class="deduction-label">
                     <p>{{ $label }}</p>
                     <img src="{{ asset('img/icons/hr.png') }}" class="img-fluid" alt="hr">
@@ -52,7 +52,7 @@
         <div class="select_deduction_container select_deduction_container1 mt-0">
             @foreach(array_slice($deductionsItems, 9, null, true) as $key => $label)
                 <div class="deduction-item @if(isset($deductions) && !empty($deductions->$key)) active @endif"
-     data-index="{{ $loop->index + 9 }}">
+     data-index="{{ $loop->index + 9 }}" data-key="{{ $key }}">
                     <div class="deduction-label">
                         <p>{{ $label }}</p>
                         <img src="{{ asset('img/icons/hr.png') }}" class="img-fluid" alt="hr">
@@ -78,6 +78,7 @@
         @if(isset($deductions))
             @method('PUT')
         @endif
+        <input type="hidden" name="active_sections" id="activeSections" value="[]">
         <div class="deduction-form-container">
             @foreach(array_keys($deductionsItems) as $i => $key)
                 <div class="d-none" id="form-deduction-{{ $i }}">
@@ -95,8 +96,27 @@
 </section>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
     const items = document.querySelectorAll(".deduction-item");
+    const activeSectionsInput = document.getElementById('activeSections');
+
+    function updateActiveSections() {
+        const activeKeys = Array.from(document.querySelectorAll('.deduction-item.active'))
+            .map(el => el.getAttribute('data-key'))
+            .filter(Boolean);
+        activeSectionsInput.value = JSON.stringify(activeKeys);
+    }
+
+    function setInputsEnabled(sectionEl, enabled) {
+        if (!sectionEl) return;
+        const inputs = sectionEl.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.disabled = !enabled;
+            if (!enabled && input.type === 'file') {
+                try { input.value = ''; } catch (e) {}
+            }
+        });
+    }
 
     items.forEach((item) => {
         const index = item.getAttribute("data-index");
@@ -104,21 +124,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (item.classList.contains("active") && formToShow) {
             formToShow.classList.remove("d-none");
+            setInputsEnabled(formToShow, true);
+        } else if (formToShow) {
+            formToShow.classList.add("d-none");
+            setInputsEnabled(formToShow, false);
         }
 
         item.addEventListener("click", () => {
-            if (formToShow) {
-                // Show the form
-                formToShow.classList.remove("d-none");
+            if (!formToShow) return;
 
-                // Mark the clicked item as active
-                item.classList.add("active");
+            const willActivate = !item.classList.contains('active');
+            item.classList.toggle('active', willActivate);
 
-                // Scroll to the specific form smoothly
+            if (willActivate) {
+                formToShow.classList.remove('d-none');
+                setInputsEnabled(formToShow, true);
                 formToShow.scrollIntoView({ behavior: "smooth", block: "start" });
+            } else {
+                formToShow.classList.add('d-none');
+                setInputsEnabled(formToShow, false);
             }
+
+            updateActiveSections();
         });
     });
+
+    updateActiveSections();
 
     const moreSection = document.getElementById('more-deductions-section');
     const toggleBtn = document.getElementById('toggleDeductionBtn');

@@ -26,7 +26,7 @@
     @endphp
 
     @foreach($items as $key => $label)
-        <div class="other-details-item  @if(isset($others) && $others->$key !== null) active @endif" data-index="{{ $loop->index }}">
+        <div class="other-details-item  @if(isset($others) && $others->$key !== null) active @endif" data-index="{{ $loop->index }}" data-key="{{ $key }}">
             <div class="other-details-label">
                 <p>{{ $label }}</p>
                 <img src="{{ asset('img/icons/hr.png') }}" class="img-fluid" alt="hr">
@@ -51,6 +51,7 @@
         @if(isset($others))
             @method('PUT')
         @endif
+        <input type="hidden" name="active_sections" id="activeSections" value="[]">
         <div class="form-container">
             @include('forms.other-details.form.dependent_children', ['others' => $others ?? null])
             <div class="@if(!isset($others) ||  (isset($others) && $others->private_health_insurance == null)) d-none @endif" id="other-details-form-1">
@@ -113,31 +114,61 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const items = document.querySelectorAll(".other-details-item");
+        const activeSectionsInput = document.getElementById('activeSections');
+
+        function updateActiveSections() {
+            const activeKeys = Array.from(document.querySelectorAll('.other-details-item.active'))
+                .map(el => el.getAttribute('data-key'))
+                .filter(Boolean);
+            activeSectionsInput.value = JSON.stringify(activeKeys);
+        }
+
+        function setInputsEnabled(sectionEl, enabled) {
+            if (!sectionEl) return;
+            const inputs = sectionEl.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.disabled = !enabled;
+                if (!enabled && input.type === 'file') {
+                    try { input.value = ''; } catch (e) {}
+                }
+            });
+        }
 
         items.forEach((item) => {
             const index = item.getAttribute("data-index");
-            const formToShow = document.getElementById(`other-details-form-${index}`);
+            const formEl = document.getElementById(`other-details-form-${index}`);
 
-            // Show form if item is already active
-            if (item.classList.contains("active") && formToShow) {
-                formToShow.classList.remove("d-none");
+            // Ensure initial visibility matches active state
+            if (item.classList.contains("active") && formEl) {
+                formEl.classList.remove("d-none");
+                setInputsEnabled(formEl, true);
+            } else if (formEl) {
+                formEl.classList.add("d-none");
+                setInputsEnabled(formEl, false);
             }
 
             item.addEventListener("click", () => {
-                if (formToShow) {
-                    // Show the form
-                    formToShow.classList.remove("d-none");
+                if (!formEl) return;
 
-                    // Mark the clicked item as active
-                    item.classList.add("active");
+                const willActivate = !item.classList.contains('active');
+                item.classList.toggle('active', willActivate);
 
-                    // Scroll to the specific form smoothly
-                    formToShow.scrollIntoView({ behavior: "smooth", block: "start" });
+                if (willActivate) {
+                    formEl.classList.remove('d-none');
+                    setInputsEnabled(formEl, true);
+                    formEl.scrollIntoView({ behavior: "smooth", block: "start" });
+                } else {
+                    formEl.classList.add('d-none');
+                    setInputsEnabled(formEl, false);
                 }
+
+                updateActiveSections();
             });
         });
-    });
 
+        // Initialize hidden input with current active sections
+        updateActiveSections();
+    });
 
 
 
@@ -183,8 +214,8 @@
                     showToast('success', data.message);
 
                     // Update form action after creating a new record
-                    if (data.incomeId && !form.action.includes('update')) {
-                        form.action = form.action.replace('other.store', `other.update/${data.incomeId}`);
+                    if (data.otherId && !form.action.includes('update')) {
+                        form.action = form.action.replace('other.store', `other.update/${data.otherId}`);
                         form.querySelector('button[type="submit"]').textContent = 'Update Other';
                     }
                 } else {

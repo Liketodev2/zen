@@ -85,6 +85,7 @@ class OtherController extends Controller
             'medical_expenses_offset.medical_expense_file'  => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ];
 
+        $rules['active_sections'] = 'nullable|string';
         $validated = $request->validate($rules);
 
         /**
@@ -234,6 +235,108 @@ class OtherController extends Controller
         $this->fileService->handleMedicareCertificate($request, $attach, $data);
         $this->fileService->handleMedicalExpenseFile($request, $attach, $data);
 
+        /**
+         * Cleanup: null out inactive sections and delete their files
+         */
+        $toggleableSections = [
+            'spouse_details',
+            'private_health_insurance',
+            'zone_overseas_forces_offset',
+            'seniors_offset',
+            'medicare_reduction_exemption',
+            'part_year_tax_free_threshold',
+            'medical_expenses_offset',
+            'under_18',
+            'working_holiday_maker_net_income',
+            'superannuation_income_stream_offset',
+            'superannuation_contributions_spouse',
+            'tax_losses_earlier_income_years',
+            'dependent_invalid_and_carer',
+            'superannuation_co_contribution',
+            'other_tax_offsets_refundable',
+        ];
+
+        $activeSectionsRaw = $request->input('active_sections', '[]');
+        $activeSections     = json_decode($activeSectionsRaw, true);
+        if (!is_array($activeSections)) {
+            $activeSections = [];
+        }
+
+        // If `active_sections` not explicitly provided, detect incoming data/files and treat those sections as active.
+        $detected = [];
+        if (!$request->has('active_sections')) {
+            $allInputKeys = array_keys($request->all());
+            foreach ($toggleableSections as $section) {
+                if ($request->has($section) || $request->hasFile($section) || array_key_exists($section, $request->all())) {
+                    $detected[] = $section;
+                    continue;
+                }
+                foreach ($allInputKeys as $k) {
+                    if (strpos($k, $section . '[') === 0) {
+                        $detected[] = $section;
+                        break;
+                    }
+                }
+                if (!empty($attach[$section])) {
+                    $detected[] = $section;
+                }
+            }
+
+            $activeSections = array_values(array_unique($detected));
+        }
+
+        // NOTE: Respect explicit `active_sections` sent by client. Auto-detection only runs when
+        // the client did not send `active_sections` at all.
+
+        // Finalize active status per section: section is active if it's listed in activeSections
+        // OR if the request contains keys/files for that section or there are existing attachments.
+        $allInputKeys = array_keys($request->all());
+        foreach ($toggleableSections as $section) {
+            $hasInput = false;
+            if (in_array($section, $activeSections, true)) {
+                $hasInput = true;
+            }
+            if (!$hasInput && ($request->has($section) || array_key_exists($section, $request->all()))) {
+                $hasInput = true;
+            }
+            if (!$hasInput) {
+                foreach ($allInputKeys as $k) {
+                    if (strpos($k, $section . '[') === 0) {
+                        $hasInput = true;
+                        break;
+                    }
+                }
+            }
+            if (!$hasInput && $request->hasFile($section)) {
+                $hasInput = true;
+            }
+            if (!$hasInput && !$request->has('active_sections') && !empty($attach[$section])) {
+                $hasInput = true;
+            }
+
+            if (!$hasInput) {
+                $data[$section] = null;
+
+                // Delete and remove any attached files for this section
+                if (!empty($attach[$section])) {
+                    $this->deleteAttachSectionFiles($attach[$section]);
+                    unset($attach[$section]);
+                }
+            }
+        }
+
+        // Ensure any uploaded files are merged into the corresponding section data
+        if (!empty($attach) && is_array($attach)) {
+            foreach ($attach as $section => $vals) {
+                if (!is_array($vals)) continue;
+                if (isset($data[$section]) && is_array($data[$section])) {
+                    $data[$section] = array_replace_recursive($data[$section], $vals);
+                } else {
+                    $data[$section] = $vals;
+                }
+            }
+        }
+
         $data['attach'] = empty($attach) ? null : $attach;
 
         /**
@@ -271,5 +374,24 @@ class OtherController extends Controller
     public function update(Request $request, string $taxId, string $id)
     {
         return $this->saveOther($request, $taxId, $id);
+    }
+
+    /**
+     * Recursively delete files referenced in an attachment section
+     * @param mixed $sectionAttach
+     * @return void
+     */
+    private function deleteAttachSectionFiles($sectionAttach): void
+    {
+        if (is_array($sectionAttach)) {
+            foreach ($sectionAttach as $value) {
+                $this->deleteAttachSectionFiles($value);
+            }
+            return;
+        }
+
+        if (is_string($sectionAttach) && $sectionAttach !== '') {
+            $this->fileService->deleteFile($sectionAttach);
+        }
     }
 }

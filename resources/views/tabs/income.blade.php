@@ -32,7 +32,7 @@ $incomeItems = [
         @foreach($incomeItems as $key => $label)
             <div class="income-item
     @if(isset($incomes) && data_get($incomes, $key)) active @endif"
-    data-index="{{ $loop->index }}">
+    data-index="{{ $loop->index }}" data-key="{{ $key }}">
                 <div class="other-details-label">
                     <p>{{ $label }}</p>
                     <img src="{{ asset('img/icons/hr.png') }}" class="img-fluid" alt="hr">
@@ -54,6 +54,7 @@ $incomeItems = [
     <form id="income-form" action="{{ isset($incomes) ? route('income.update', [$taxReturn->id, $incomes->id]) : route('income.store', $taxReturn->id) }}" method="POST"
           enctype="multipart/form-data">
         @csrf
+        <input type="hidden" name="active_sections" id="activeSections" value="[]">
         <div class="form-container">
             @foreach(array_keys($incomeItems) as $i => $key)
                 <div class="d-none" id="income-form-{{ $i }}">
@@ -73,29 +74,58 @@ $incomeItems = [
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const items = document.querySelectorAll(".income-item");
+    const activeSectionsInput = document.getElementById('activeSections');
+
+    function updateActiveSections() {
+        const activeKeys = Array.from(document.querySelectorAll('.income-item.active'))
+            .map(el => el.getAttribute('data-key'))
+            .filter(Boolean);
+        activeSectionsInput.value = JSON.stringify(activeKeys);
+    }
+
+    function setInputsEnabled(sectionEl, enabled) {
+        if (!sectionEl) return;
+        const inputs = sectionEl.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.disabled = !enabled;
+            if (!enabled && input.type === 'file') {
+                try { input.value = ''; } catch (e) {}
+            }
+        });
+    }
 
     items.forEach((item) => {
         const index = item.getAttribute("data-index");
-        const formToShow = document.getElementById(`income-form-${index}`);
+        const formEl = document.getElementById(`income-form-${index}`);
 
-        // Show form if item is already active
-        if (item.classList.contains("active") && formToShow) {
-            formToShow.classList.remove("d-none");
+        if (item.classList.contains("active") && formEl) {
+            formEl.classList.remove("d-none");
+            setInputsEnabled(formEl, true);
+        } else if (formEl) {
+            formEl.classList.add("d-none");
+            setInputsEnabled(formEl, false);
         }
 
         item.addEventListener("click", () => {
-            if (formToShow) {
-                // Show the form
-                formToShow.classList.remove("d-none");
+            if (!formEl) return;
 
-                // Mark the clicked item as active
-                item.classList.add("active");
+            const willActivate = !item.classList.contains('active');
+            item.classList.toggle('active', willActivate);
 
-                // Scroll to the specific form smoothly
-                formToShow.scrollIntoView({ behavior: "smooth", block: "start" });
+            if (willActivate) {
+                formEl.classList.remove('d-none');
+                setInputsEnabled(formEl, true);
+                formEl.scrollIntoView({ behavior: "smooth", block: "start" });
+            } else {
+                formEl.classList.add('d-none');
+                setInputsEnabled(formEl, false);
             }
+
+            updateActiveSections();
         });
     });
+
+    updateActiveSections();
 });
 
 document.addEventListener('DOMContentLoaded', function () {
