@@ -92,7 +92,7 @@
             <p>
                 Need your Trust/Company Tax completed? Complete this form and we will contact you within 24 hours.
             </p>
-            <a href="3" class="navbar_btn">Complete the Form</a>
+            <a href="{{ route('tax-returns.index') }}" class="navbar_btn">Complete the Form</a>
         </span>
         <img src="{{ asset('img/support.png') }}" class="img-fluid" alt="support">
     </div>
@@ -101,53 +101,16 @@
     <div class="title">
         Choose the Plan That Fits Your Needs
     </div>
-    <div class="container plans">
-        <div class="plan">
-            <h2>
-                Standard Plan
-            </h2>
-            <img src="{{ asset('img/icons/hr.png') }}"  class="hr">
-            <p>
-                Standard Individual Tax Return incl. GST
-            </p>
-            <p class="price">$ 149</p>
-            <ul>
-                <li>
-                    <img src="{{ asset('img/icons/check-green.png') }}" alt="">
-                    <p>
-                        PAYG Employees
-                    </p>
-                </li>
-                <li>
-                    <img src="{{ asset('img/icons/check-green.png') }}" alt="">
-                    <p>
-                        Deductions & Offsets
-                    </p>
-                </li>
-                <li>
-                    <img src="{{ asset('img/icons/check-green.png') }}" alt="">
-                    <p>
-                        Secure Online Form
-                    </p>
-                </li>
-                <li>
-                    <img src="{{ asset('img/icons/check-green.png') }}" alt="">
-                    <p>
-                        Agent Review & Lodgement
-                    </p>
-                </li>
-            </ul>
-            <a href="" class="navbar_btn">Get Started</a>
-        </div>
+    <div class="container plans" style="display: flex; justify-content: center">
         <div class="plan white">
             <h2>
-                Premium Plan
+                Standard Plan
             </h2>
             <img src="{{ asset('img/icons/hr-white.png') }}"  class="hr">
             <p>
                 Sole Trader / ABN Holder incl. GST
             </p>
-            <p class="price">$ 199</p>
+            <p class="price">$ 100</p>
             <ul>
                 <li>
                     <img src="{{ asset('img/icons/check-white.png') }}" alt="">
@@ -174,44 +137,7 @@
                     </p>
                 </li>
             </ul>
-            <a href="" class="navbar_btn white">Get Started</a>
-        </div>
-        <div class="plan">
-            <h2>
-                Investor Plan
-            </h2>
-            <img src="{{ asset('img/icons/hr.png') }}"  class="hr">
-            <p>
-                Rental Property / Investor Returns incl. GST
-            </p>
-            <p class="price">$ 249</p>
-            <ul>
-                <li>
-                    <img src="{{ asset('img/icons/check-green.png') }}" alt="">
-                    <p>
-                        Investment Income
-                    </p>
-                </li>
-                <li>
-                    <img src="{{ asset('img/icons/check-green.png') }}" alt="">
-                    <p>
-                        CGT/Dividends
-                    </p>
-                </li>
-                <li>
-                    <img src="{{ asset('img/icons/check-green.png') }}" alt="">
-                    <p>
-                        Rental Property Reporting
-                    </p>
-                </li>
-                <li>
-                    <img src="{{ asset('img/icons/check-green.png') }}" alt="">
-                    <p>
-                        Asset Depreciation Support
-                    </p>
-                </li>
-            </ul>
-            <a href="" class="navbar_btn">Get Started</a>
+            <a href="{{ route('tax-returns.index') }}" class="navbar_btn white">Get Started</a>
         </div>
     </div>
 </section>
@@ -260,13 +186,13 @@
         <div class="title">
             Ready to Start Your Tax Return?
         </div>
-        <a href="" class="navbar_btn">Start My Tax Return</a>
+        <a href="{{ route('tax-returns.index') }}" class="navbar_btn">Start My Tax Return</a>
     </div>
-</section>  
+</section>
 <section id="faq" class="section_mb py-5">
     <h2 class="title">Frequently Asked Questions</h2>
     <div class="container">
-      <div class="row g-4"> 
+      <div class="row g-4">
         <div class="col-md-6">
           <div class="accordion" id="faqLeft">
             @for ($i = 1; $i <= 4; $i++)
@@ -287,7 +213,7 @@
             @endfor
           </div>
         </div>
-  
+
         <div class="col-md-6">
           <div class="accordion" id="faqRight">
             @for ($i = 5; $i <= 8; $i++)
@@ -311,6 +237,6 @@
       </div>
     </div>
   </section>
-  
-  
+
+
 @endsection

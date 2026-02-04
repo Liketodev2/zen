@@ -81,31 +81,31 @@
         </div>
     </div>
 </section>
-<section id="testimonials" class="section_mb">
-    <h2 class="title">What Our Clients Are Saying</h2>
-    <div class="container-fluid">
-        <div class="owl-carousel owl-theme">
-            @for ($i = 0; $i < 10; $i++)
-                <div class="testimonials_box">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <p class="testimonials_author">Sarah M.</p>
-                        <div class="d-flex gap-1">
-                            @for ($j = 0; $j < 5; $j++)
-                                <img src="{{ asset('img/icons/star.png') }}" alt="star">
-                            @endfor
-                        </div>
-                    </div>
-                    <p class="testimonials_text">
-                        Lorem ipsum dolor sit amet consectetur. At odio vitae congue at in gravida pretium. Elit dolor viverra eget commodo velit. Feugiat faucibus felis tellus sit.
-                    </p>
-                    <p class="testimonials_loc">
-                        Freelancer, Brisbane
-                    </p>
-                </div>
-            @endfor
-        </div>        
-    </div>
-</section>
+{{--<section id="testimonials" class="section_mb">--}}
+{{--    <h2 class="title">What Our Clients Are Saying</h2>--}}
+{{--    <div class="container-fluid">--}}
+{{--        <div class="owl-carousel owl-theme">--}}
+{{--            @for ($i = 0; $i < 10; $i++)--}}
+{{--                <div class="testimonials_box">--}}
+{{--                    <div class="d-flex align-items-center justify-content-between mb-3">--}}
+{{--                        <p class="testimonials_author">Sarah M.</p>--}}
+{{--                        <div class="d-flex gap-1">--}}
+{{--                            @for ($j = 0; $j < 5; $j++)--}}
+{{--                                <img src="{{ asset('img/icons/star.png') }}" alt="star">--}}
+{{--                            @endfor--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <p class="testimonials_text">--}}
+{{--                        Lorem ipsum dolor sit amet consectetur. At odio vitae congue at in gravida pretium. Elit dolor viverra eget commodo velit. Feugiat faucibus felis tellus sit.--}}
+{{--                    </p>--}}
+{{--                    <p class="testimonials_loc">--}}
+{{--                        Freelancer, Brisbane--}}
+{{--                    </p>--}}
+{{--                </div>--}}
+{{--            @endfor--}}
+{{--        </div>        --}}
+{{--    </div>--}}
+{{--</section>--}}
 <section id="home_info" class="section_mb">
     <div class="container">
         <div class="row">
@@ -151,7 +151,7 @@
 <section id="faq" class="section_mb py-5">
     <h2 class="title">Frequently Asked Questions</h2>
     <div class="container">
-      <div class="row g-4"> 
+      <div class="row g-4">
         <div class="col-md-6">
           <div class="accordion" id="faqLeft">
             @for ($i = 1; $i <= 4; $i++)
@@ -172,7 +172,7 @@
             @endfor
           </div>
         </div>
-  
+
         <div class="col-md-6">
           <div class="accordion" id="faqRight">
             @for ($i = 5; $i <= 8; $i++)
@@ -196,6 +196,6 @@
       </div>
     </div>
   </section>
-  
-  
+
+
 @endsection
