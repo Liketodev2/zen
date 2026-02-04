@@ -148,7 +148,7 @@
         </div>
     </div>
 </section>
-<section id="faq" class="section_mb py-5">
+<section id="faq" class="section_mb">
     <h2 class="title">Frequently Asked Questions</h2>
     <div class="container">
       <div class="row g-4">
