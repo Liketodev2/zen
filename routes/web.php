@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\AdminController;
 use \App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\SiteInfoController;
@@ -59,6 +60,7 @@ Route::get('/next', [HomeController::class, function () {
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/services', [HomeController::class, 'services'])->name('services');
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact');
+Route::post('/contact-us', [ContactController::class, 'send'])->name('contact.send');
 Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');
 Route::get('/terms-service', [HomeController::class, 'termsService'])->name('terms-service');
 Route::get('/choosing-business-type', [HomeController::class, 'choosingBusinessType'])->name('choosing-business-type');

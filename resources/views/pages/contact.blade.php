@@ -100,25 +100,32 @@
 <section id="contact_form" class="section_mb">
     <div class="container contact_form_box">
         <img src="{{ asset('img/contact_form.png') }}" class="img-fluid" alt="contact form">
-        <form class="w-100">
+        <form method="POST" action="{{ route('contact.send') }}" class="w-100">
+          @csrf
+          @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+          @endif
+          @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+          @endif
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <input type="text" name="f_name" class="form-control border-dark" placeholder="First Name">
+                    <input type="text" name="f_name" value="{{ old('f_name') }}" class="form-control border-dark" placeholder="First Name">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <input type="text" name="l_name" class="form-control border-dark" placeholder="Last Name">
+                    <input type="text" name="l_name" value="{{ old('l_name') }}" class="form-control border-dark" placeholder="Last Name">
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <input type="email" name="email" class="form-control border-dark" placeholder="Email Address">
+                    <input type="email" name="email" value="{{ old('email') }}" class="form-control border-dark" placeholder="Email Address">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <input type="text" name="subject" class="form-control border-dark" placeholder="Subject">
+                    <input type="text" name="subject" value="{{ old('subject') }}" class="form-control border-dark" placeholder="Subject">
                 </div>
             </div>
             <div class="mb-3">
-                <textarea name="message" class="form-control border-dark" rows="8" placeholder="Message"></textarea>
+                <textarea name="message" class="form-control border-dark" rows="8" placeholder="Message">{{ old('message') }}</textarea>
             </div>
             <div class="col text-center mt-4">
                 <button type="submit" class="btn navbar_btn">Submit</button>
