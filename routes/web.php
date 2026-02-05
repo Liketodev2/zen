@@ -97,7 +97,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('users.index');
     Route::get('/transactions', [AdminController::class, 'transactions'])->name('transactions.index');
-    Route::resource('plans', PlanController::class);
+    Route::resource('plans', PlanController::class)->only(['index', 'show', 'edit', 'update']);
     Route::resource('site-info', SiteInfoController::class);
 });
 
