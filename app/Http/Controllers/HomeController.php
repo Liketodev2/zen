@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SiteInfo;
+use App\Models\TaxReturn;
 
 class HomeController extends Controller
 {
@@ -31,7 +32,32 @@ class HomeController extends Controller
 
     public function services()
     {
-        return view('pages.services');
+        $plan = \App\Models\Plan::with('options')->first();
+        return view('pages.services', compact('plan'));
+    }
+
+    /**
+     * Handle "Get Started" from services page.
+     * If user is authenticated, redirect to existing incomplete form or to create a new one.
+     * If not authenticated, redirect to login page.
+     */
+    public function startPlan(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+        $incompleteForm = TaxReturn::where('user_id', $user->id)
+            ->where('form_status', 'incomplete')
+            ->latest()
+            ->first();
+
+        if ($incompleteForm) {
+            return redirect()->route('tax-returns.edit', $incompleteForm->id);
+        }
+
+        return redirect()->route('tax-returns.create');
     }
 
     public function contact()

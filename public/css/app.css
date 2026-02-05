@@ -50,6 +50,25 @@ ul > li {
     color: #148192 !important;
 }
 
+/* Active navbar link */
+.navbar_link.active {
+    color: #0f7078;
+    font-weight: 700;
+    position: relative;
+}
+
+.navbar_link.active::after {
+    content: '';
+    display: block;
+    height: 3px;
+    width: 100%;
+    background: #15a1b7;
+    border-radius: 2px;
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+}
+
 .navbar_btn {
     background-color: #15a1b7;
     border-radius: 8px;

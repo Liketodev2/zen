@@ -47,7 +47,7 @@ class PaymentController extends Controller
             ], 400);
         }
 
-        $amount = env('AMOUNT', 100);
+        $amount = \App\Models\Plan::first()->price ?? env('AMOUNT', 100);
 
         return response()->json([
             'success' => true,
@@ -114,7 +114,7 @@ class PaymentController extends Controller
 
         try {
             $charge = \Stripe\Charge::create([
-                'amount' => intval(env('AMOUNT', 100) * 100),
+                'amount' => intval((\App\Models\Plan::first()->price ?? env('AMOUNT', 100)) * 100),
                 'currency' => 'aud',
                 'source' => $validated['stripeToken'],
                 'description' => 'Tax Payment for Tax ID #' . $tax->id,

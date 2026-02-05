@@ -49,7 +49,7 @@ class StripePaymentController extends Controller
             return redirect()->route('home')->with('error', 'You form already completed!');
         }
 
-        $amount = env('AMOUNT', 100);
+        $amount = \App\Models\Plan::first()->price ?? env('AMOUNT', 100);
         return view('pages.payment', compact('tax', 'amount'));
     }
 
@@ -89,7 +89,7 @@ class StripePaymentController extends Controller
 
         try {
             $charge = \Stripe\Charge::create([
-                'amount' => intval(env('AMOUNT', 100) * 100),
+                'amount' => intval((\App\Models\Plan::first()->price ?? env('AMOUNT', 100)) * 100),
                 'currency' => 'aud', // ✅ use your account’s currency
                 'source' => $validated['stripeToken'],
                 'description' => 'Tax Payment for Tax ID #' . $tax->id,

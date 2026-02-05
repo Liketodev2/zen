@@ -102,43 +102,45 @@
         Choose the Plan That Fits Your Needs
     </div>
     <div class="container plans" style="display: flex; justify-content: center">
-        <div class="plan white">
-            <h2>
-                Standard Plan
-            </h2>
-            <img src="{{ asset('img/icons/hr-white.png') }}"  class="hr">
-            <p>
-                Sole Trader / ABN Holder incl. GST
-            </p>
-            <p class="price">$ 100</p>
-            <ul>
-                <li>
-                    <img src="{{ asset('img/icons/check-white.png') }}" alt="">
-                    <p>
-                        Includes Business Income
-                    </p>
-                </li>
-                <li>
-                    <img src="{{ asset('img/icons/check-white.png') }}" alt="">
-                    <p>
-                        Car/Tools/Expenses
-                    </p>
-                </li>
-                <li>
-                    <img src="{{ asset('img/icons/check-white.png') }}" alt="">
-                    <p>
-                        Document Uploads
-                    </p>
-                </li>
-                <li>
-                    <img src="{{ asset('img/icons/check-white.png') }}" alt="">
-                    <p>
-                        Professional Review
-                    </p>
-                </li>
-            </ul>
-            <a href="{{ route('tax-returns.index') }}" class="navbar_btn white">Get Started</a>
-        </div>
+        @if(isset($plan))
+            <div class="plan white">
+                <p>{{ $plan->name }}</p>
+                <p class="price">$ {{ number_format($plan->price, 2) }}</p>
+                <ul>
+                    @foreach($plan->options as $option)
+                        <li>
+                            <img src="{{ asset('img/icons/check-white.png') }}" alt="">
+                            <p>{{ $option->name }}</p>
+                        </li>
+                    @endforeach
+                </ul>
+                <a href="{{ route('plans.start') }}" class="navbar_btn white">Get Started</a>
+            </div>
+        @else
+            <div class="plan white">
+                <p>Sole Trader / ABN Holder incl. GST</p>
+                <p class="price">$ 100</p>
+                <ul>
+                    <li>
+                        <img src="{{ asset('img/icons/check-white.png') }}" alt="">
+                        <p>Includes Business Income</p>
+                    </li>
+                    <li>
+                        <img src="{{ asset('img/icons/check-white.png') }}" alt="">
+                        <p>Car/Tools/Expenses</p>
+                    </li>
+                    <li>
+                        <img src="{{ asset('img/icons/check-white.png') }}" alt="">
+                        <p>Document Uploads</p>
+                    </li>
+                    <li>
+                        <img src="{{ asset('img/icons/check-white.png') }}" alt="">
+                        <p>Professional Review</p>
+                    </li>
+                </ul>
+                <a href="{{ route('tax-returns.index') }}" class="navbar_btn white">Get Started</a>
+            </div>
+        @endif
     </div>
 </section>
 <section id="what_included" class="section_mb">
@@ -186,7 +188,7 @@
         <div class="title">
             Ready to Start Your Tax Return?
         </div>
-        <a href="{{ route('tax-returns.index') }}" class="navbar_btn">Start My Tax Return</a>
+        <a href="{{ route('plans.start') }}" class="navbar_btn">Start My Tax Return</a>
     </div>
 </section>
 <section id="faq" class="section_mb py-5">

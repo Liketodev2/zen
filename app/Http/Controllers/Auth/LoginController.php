@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use App\Models\TaxReturn;
 
 class LoginController extends Controller
 {
@@ -36,5 +38,31 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
+    }
+
+    /**
+     * Handle post-authentication redirect.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->role == 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+
+        $incompleteForm = TaxReturn::where('user_id', $user->id)
+            ->where('form_status', 'incomplete')
+            ->latest()
+            ->first();
+
+        if ($incompleteForm) {
+            return redirect()->route('tax-returns.edit', $incompleteForm->id);
+        }
+
+        return redirect()->route('tax-returns.create');
     }
 }

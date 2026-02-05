@@ -59,6 +59,7 @@ Route::get('/next', [HomeController::class, function () {
 }]);
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/services', [HomeController::class, 'services'])->name('services');
+Route::get('/start-plan', [HomeController::class, 'startPlan'])->name('plans.start');
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact');
 Route::post('/contact-us', [ContactController::class, 'send'])->name('contact.send');
 Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');
