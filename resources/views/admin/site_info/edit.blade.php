@@ -8,7 +8,7 @@
     </a>
     <h2>Site Information</h2>
 
-    <form action="{{ route('site-info.update', 1) }}" method="POST">
+    <form action="{{ route('admin.site-info.update', 1) }}" method="POST">
         @csrf
         @method('PUT')
 

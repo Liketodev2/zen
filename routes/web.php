@@ -12,6 +12,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\AdminController;
 use \App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\SiteInfoController;
+use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\TaxReturnController;
 use App\Http\Controllers\Forms\BasicInfoFormController;
 use App\Http\Controllers\Forms\IncomeController;
@@ -93,12 +94,13 @@ Route::prefix('deduction')->name('deduction.')->group(function () {
 });
 
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('users.index');
     Route::get('/transactions', [AdminController::class, 'transactions'])->name('transactions.index');
     Route::resource('plans', PlanController::class)->only(['index', 'show', 'edit', 'update']);
     Route::resource('site-info', SiteInfoController::class);
+    Route::resource('faqs', FaqController::class);
 });
 
 

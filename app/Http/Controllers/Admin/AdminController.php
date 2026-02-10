@@ -7,6 +7,7 @@ use App\Models\Plan;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\SiteInfo;
+use App\Models\Faq;
 
 class AdminController extends Controller
 {
@@ -19,7 +20,8 @@ class AdminController extends Controller
         $usersCount = User::count();
         $info = SiteInfo::first() ?? new SiteInfo();
         $transactionsCount = Transaction::count();
-        return view('admin.dashboard', compact('plansCount', 'usersCount', 'info', 'transactionsCount'));
+        $faqsCount = Faq::count();
+        return view('admin.dashboard', compact('plansCount', 'usersCount', 'info', 'transactionsCount', 'faqsCount'));
     }
 
     /**

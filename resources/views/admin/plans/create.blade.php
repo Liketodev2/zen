@@ -8,7 +8,7 @@
     </a>
     <h2>{{ isset($plan) ? 'Edit Plan' : 'Create Plan' }}</h2>
 
-    <form action="{{ isset($plan) ? route('plans.update', $plan) : route('plans.store') }}" method="POST">
+    <form action="{{ isset($plan) ? route('admin.plans.update', $plan) : route('admin.plans.store') }}" method="POST">
         @csrf
         @if(isset($plan)) @method('PUT') @endif
 

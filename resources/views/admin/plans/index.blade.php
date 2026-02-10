@@ -31,10 +31,10 @@
                             <td>{{ $plan->price }} $</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2 flex-wrap">
-                                    <a href="{{ route('plans.show', $plan) }}" class="btn btn-outline-success btn-sm" title="View">
+                                    <a href="{{ route('admin.plans.show', $plan) }}" class="btn btn-outline-success btn-sm" title="View">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('plans.edit', $plan) }}" class="btn btn-outline-warning btn-sm" title="Edit">
+                                    <a href="{{ route('admin.plans.edit', $plan) }}" class="btn btn-outline-warning btn-sm" title="Edit">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                 </div>

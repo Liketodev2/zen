@@ -148,54 +148,62 @@
         </div>
     </div>
 </section>
-<section id="faq" class="section_mb">
-    <h2 class="title">Frequently Asked Questions</h2>
-    <div class="container">
-      <div class="row g-4">
-        <div class="col-md-6">
-          <div class="accordion" id="faqLeft">
-            @for ($i = 1; $i <= 4; $i++)
-              <div class="accordion-item border rounded">
-                <h2 class="accordion-header" id="heading{{ $i }}">
-                  <button class="accordion-button collapsed bg-white" type="button"
-                          data-bs-toggle="collapse" data-bs-target="#collapse{{ $i }}">
-                    Question {{ $i }}
-                  </button>
-                </h2>
-                <div id="collapse{{ $i }}" class="accordion-collapse collapse"
-                     data-bs-parent="#faqLeft">
-                  <div class="accordion-body">
-                    Answer {{ $i }}
-                  </div>
-                </div>
-              </div>
-            @endfor
-          </div>
-        </div>
+@php
+        $faqs = \App\Models\Faq::orderBy('order')->get();
+        $left = $faqs->slice(0, ceil($faqs->count() / 2));
+        $right = $faqs->slice(ceil($faqs->count() / 2));
+@endphp
 
-        <div class="col-md-6">
-          <div class="accordion" id="faqRight">
-            @for ($i = 5; $i <= 8; $i++)
-              <div class="accordion-item border rounded shadow-sm">
-                <h2 class="accordion-header" id="heading{{ $i }}">
-                  <button class="accordion-button collapsed bg-white" type="button"
-                          data-bs-toggle="collapse" data-bs-target="#collapse{{ $i }}">
-                    Question {{ $i }}
-                  </button>
-                </h2>
-                <div id="collapse{{ $i }}" class="accordion-collapse collapse"
-                     data-bs-parent="#faqRight">
-                  <div class="accordion-body">
-                    Answer {{ $i }}
-                  </div>
+@if($faqs->isNotEmpty())
+    <section id="faq" class="section_mb">
+        <h2 class="title">Frequently Asked Questions</h2>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="accordion" id="faqLeft">
+                        @foreach($left as $i => $faq)
+                            <div class="accordion-item border rounded">
+                                <h2 class="accordion-header" id="heading_left_{{ $faq->id }}">
+                                    <button class="accordion-button collapsed bg-white" type="button"
+                                                    data-bs-toggle="collapse" data-bs-target="#collapse_left_{{ $faq->id }}">
+                                        {{ $faq->question }}
+                                    </button>
+                                </h2>
+                                <div id="collapse_left_{{ $faq->id }}" class="accordion-collapse collapse"
+                                         data-bs-parent="#faqLeft">
+                                    <div class="accordion-body">
+                                        {!! nl2br(e($faq->answer)) !!}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
-              </div>
-            @endfor
-          </div>
+
+                <div class="col-md-6">
+                    <div class="accordion" id="faqRight">
+                        @foreach($right as $i => $faq)
+                            <div class="accordion-item border rounded shadow-sm">
+                                <h2 class="accordion-header" id="heading_right_{{ $faq->id }}">
+                                    <button class="accordion-button collapsed bg-white" type="button"
+                                                    data-bs-toggle="collapse" data-bs-target="#collapse_right_{{ $faq->id }}">
+                                        {{ $faq->question }}
+                                    </button>
+                                </h2>
+                                <div id="collapse_right_{{ $faq->id }}" class="accordion-collapse collapse"
+                                         data-bs-parent="#faqRight">
+                                    <div class="accordion-body">
+                                        {!! nl2br(e($faq->answer)) !!}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
+@endif
 
 
 @endsection
