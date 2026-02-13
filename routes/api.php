@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\DeductionController;
+use App\Http\Controllers\Api\FaqController;
 use App\Http\Controllers\Api\FormController;
 use App\Http\Controllers\Api\IncomeController;
 use App\Http\Controllers\Api\OtherController;
@@ -30,11 +31,12 @@ Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetCode
 Route::post('/verify-reset-code', [ForgotPasswordController::class, 'verifyResetCode']);
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
 
+Route::post('/faq', [FaqController::class, 'index']);
+
 Route::middleware(['auth:api'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'getUser']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);
-
 
     Route::group(['prefix' => 'tax-returns'], function () {
         Route::get('/', [TaxReturnController::class, 'index']);
@@ -43,10 +45,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::group(['prefix' => 'forms'], function () {
         Route::post('/basic-info', [FormController::class, 'basicInfo']);
-//        Route::post('/income', [FormController::class, 'income']);
-//        Route::post('/deduction', [FormController::class, 'deduction']);
-//        Route::post('/other', [FormController::class, 'other']);
-
         Route::group(['prefix' => 'income'], function () {
             Route::post('/', [IncomeController::class, 'income']);
             Route::post('/capital-gains', [IncomeController::class, 'saveCapitalGains']);
