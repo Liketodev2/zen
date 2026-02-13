@@ -29,9 +29,9 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetCode']);
 Route::post('/verify-reset-code', [ForgotPasswordController::class, 'verifyResetCode']);
-Route::get('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
+Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
 
-Route::post('/faq', [FaqController::class, 'index']);
+Route::get('/faq', [FaqController::class, 'index']);
 
 Route::middleware(['auth:api'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
