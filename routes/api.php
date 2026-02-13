@@ -29,7 +29,7 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetCode']);
 Route::post('/verify-reset-code', [ForgotPasswordController::class, 'verifyResetCode']);
-Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
+Route::get('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
 
 Route::post('/faq', [FaqController::class, 'index']);
 
