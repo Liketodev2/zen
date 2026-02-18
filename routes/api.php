@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\DeductionController;
 use App\Http\Controllers\Api\FaqController;
 use App\Http\Controllers\Api\FormController;
@@ -32,6 +33,7 @@ Route::post('/verify-reset-code', [ForgotPasswordController::class, 'verifyReset
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
 
 Route::get('/faq', [FaqController::class, 'index']);
+Route::post('/contact-us', [ContactController::class, 'send']);
 
 Route::middleware(['auth:api'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
