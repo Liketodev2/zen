@@ -64,3 +64,26 @@
     </div>
 </div>
 @endsection
+
+        @push('js')
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            $(function () {
+                $(document).on('click', '#confirmBtn', function (e) {
+                    e.preventDefault();
+                    var href = $(this).attr('href');
+                    Swal.fire({
+                        icon: 'warning',
+                        text: "''Please save your information first, and then proceed to finalize your tax return''",
+                        showCancelButton: true,
+                        confirmButtonText: 'Proceed',
+                        cancelButtonText: 'Cancel',
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            window.location.href = href;
+                        }
+                    });
+                });
+            });
+        </script>
+        @endpush

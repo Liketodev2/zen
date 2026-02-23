@@ -44,21 +44,22 @@
                         <strong>{{ $message }}</strong>
                     </span>
                     @enderror
-                    
+
                     <div class="position-relative">
                         <input placeholder="Confirm Password" id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                         <button type="button" class="btn position-absolute end-0 top-0 h-100 mt-0 d-flex align-items-center justify-content-center toggle-password" style="background: none; border: none;">
                             <i class="fa-solid fa-eye"></i>
                         </button>
-                    </div>                    <div class="form-check">
+                    </div>
+                    <div class="form-check">
                         <input class="form-check-input @error('terms') is-invalid @enderror" type="checkbox" name="terms" id="terms" {{ old('terms') ? 'checked' : '' }} required>
                         <label class="form-check-label" for="terms">
                             <p>
-                                I agree to the  
-                                <a href="#" class="btn" target="_blank">Terms of Service</a>
-                                and 
-                                <a href="#" class="btn" target="_blank">Privacy Policy</a>    
-                            </p>                        
+                                I agree to the
+                                <a href="{{ route('terms-service') }}" class="btn" target="_blank">Terms of Service</a>
+                                and
+                                <a href="{{ route('privacy-policy') }}" class="btn" target="_blank">Privacy Policy</a>
+                            </p>
                         </label>
                         @error('terms')
                             <span class="invalid-feedback d-block" role="alert"><strong>{{ $message }}</strong></span>
@@ -69,7 +70,7 @@
                     </button>
                 </form>
             </div>
-            
+
             <div class="sign_account">
                 @if (Route::has('login'))
                     <p>Already have an account? <a class="btn" href="{{ route('login') }}">{{ __('Log In') }}</a></p>

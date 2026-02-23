@@ -4,7 +4,6 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Forms\OtherController;
 use App\Http\Controllers\StripePaymentController;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -30,16 +29,7 @@ use App\Http\Controllers\Forms\DeductionController;
 */
 
 
-
-
-
 Auth::routes();
-
-Route::get('/fresh', function () {
-    Artisan::call('migrate:fresh');
-    dd('Done fresh database');
-});
-
 
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])
     ->name('password.request');
@@ -53,11 +43,6 @@ Route::get('password/reset/{token}', [ResetPasswordController::class, 'showReset
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])
     ->name('password.update');
 
-
-Route::get('/next', [HomeController::class, function () {
-    print_r(curl_version());
-    die;
-}]);
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/services', [HomeController::class, 'services'])->name('services');
 Route::get('/start-plan', [HomeController::class, 'startPlan'])->name('plans.start');
@@ -68,29 +53,33 @@ Route::get('/terms-service', [HomeController::class, 'termsService'])->name('ter
 Route::get('/choosing-business-type', [HomeController::class, 'choosingBusinessType'])->name('choosing-business-type');
 Route::get('/success', [HomeController::class, 'success'])->name('success');
 
-Route::resource('tax-returns', TaxReturnController::class);
+Route::middleware(['auth'])->group(function () {
+    Route::resource('tax-returns', TaxReturnController::class);
 
-// FORMS
+    Route::prefix('basic-info')->name('basic-info.')->group(function () {
+        Route::post('/{taxId}', [BasicInfoFormController::class, 'store'])->name('store');
+        Route::put('/{taxId}/{id}', [BasicInfoFormController::class, 'update'])->name('update');
+    });
 
-Route::prefix('basic-info')->name('basic-info.')->group(function () {
-    Route::post('/{taxId}', [BasicInfoFormController::class, 'store'])->name('store');
-    Route::put('/{taxId}/{id}', [BasicInfoFormController::class, 'update'])->name('update');
-});
+    Route::prefix('income')->name('income.')->group(function () {
+        Route::post('/{taxId}', [IncomeController::class, 'store'])->name('store');
+        Route::post('/{taxId}/{id}', [IncomeController::class, 'update'])->name('update');
+    });
 
-Route::prefix('income')->name('income.')->group(function () {
-    Route::post('/{taxId}', [IncomeController::class, 'store'])->name('store');
-    Route::post('/{taxId}/{id}', [IncomeController::class, 'update'])->name('update');
-});
+    Route::prefix('other')->name('other.')->group(function () {
+        Route::post('/{taxId}', [OtherController::class, 'store'])->name('store');
+        Route::put('/{taxId}/{id}', [OtherController::class, 'update'])->name('update');
+    });
 
+    Route::prefix('deduction')->name('deduction.')->group(function () {
+        Route::post('/{taxId}', [DeductionController::class, 'store'])->name('store');
+        Route::put('/{taxId}/{id}', [DeductionController::class, 'update'])->name('update');
+    });
 
-Route::prefix('other')->name('other.')->group(function () {
-    Route::post('/{taxId}', [OtherController::class, 'store'])->name('store');
-    Route::put('/{taxId}/{id}', [OtherController::class, 'update'])->name('update');
-});
-
-Route::prefix('deduction')->name('deduction.')->group(function () {
-    Route::post('/{taxId}', [DeductionController::class, 'store'])->name('store');
-    Route::put('/{taxId}/{id}', [DeductionController::class, 'update'])->name('update');
+    Route::prefix('payments')->group(function () {
+        Route::get('/{id}', [StripePaymentController::class, 'payment'])->name('payment');
+        Route::post('/make', [StripePaymentController::class, 'makePayment'])->name('payment.make');
+    });
 });
 
 
@@ -104,7 +93,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 });
 
 
-Route::middleware(['auth'])->prefix('payments')->group(function () {
-    Route::get('/{id}', [StripePaymentController::class, 'payment'])->name('payment');
-    Route::post('/make', [StripePaymentController::class, 'makePayment'])->name('payment.make');
-});
+
