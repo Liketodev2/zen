@@ -170,4 +170,33 @@ class AuthController extends Controller
             'success' => 'Password successfully updated.',
         ], 200);
     }
+
+
+    /**
+     * Delete authenticated user account (API).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteAccount()
+    {
+        try {
+            $user = Auth::guard('api')->user();
+            if (!$user) {
+                return response()->json(['error' => 'Unauthenticated'], 401);
+            }
+
+            // Invalidate token / logout
+            try {
+                Auth::guard('api')->logout();
+            } catch (\Exception $e) {
+                // ignore
+            }
+
+            $user->delete();
+
+            return response()->json(['success' => 'Account deleted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Unable to delete account', 'details' => $e->getMessage()], 500);
+        }
+    }
 }

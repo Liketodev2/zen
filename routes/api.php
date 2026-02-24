@@ -40,6 +40,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/user', [AuthController::class, 'getUser']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);
 
+    Route::delete('/account', [AuthController::class, 'deleteAccount']);
+
     Route::group(['prefix' => 'tax-returns'], function () {
         Route::get('/', [TaxReturnController::class, 'index']);
         Route::get('/show', [TaxReturnController::class, 'show']);

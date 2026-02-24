@@ -94,3 +94,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 
 
+Route::delete('/account', function () {
+    $user = Auth::user();
+    if ($user) {
+        Auth::logout();
+        $user->delete();
+    }
+    return redirect('/')->with('status', 'Your account has been removed.');
+})->middleware('auth')->name('account.delete');
+
+
+

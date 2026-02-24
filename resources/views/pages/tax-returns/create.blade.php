@@ -74,13 +74,29 @@
                     var href = $(this).attr('href');
                     Swal.fire({
                         icon: 'warning',
-                        text: "''Please save your information first, and then proceed to finalize your tax return''",
+                        text: 'Please save your information first, and then proceed to finalize your tax return',
                         showCancelButton: true,
                         confirmButtonText: 'Proceed',
                         cancelButtonText: 'Cancel',
                     }).then(function (result) {
                         if (result.isConfirmed) {
                             window.location.href = href;
+                        }
+                    });
+                });
+
+                $(document).on('click', '#deleteAccountBtn', function (e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'This will permanently delete your account and related data. This action cannot be undone.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Delete account',
+                        cancelButtonText: 'Cancel',
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            $('#deleteAccountForm').submit();
                         }
                     });
                 });

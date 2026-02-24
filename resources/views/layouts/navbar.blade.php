@@ -44,11 +44,22 @@
                                 </a>
                             @endif
                         @endauth
+                         <a class="dropdown-item navbar_link" href="#" id="deleteAccountNav" style="color: red; display: block !important;">
+                            Remove account
+                        </a>
+
+                        <form id="delete-account-form" action="{{ route('account.delete') }}" method="POST" class="d-none">
+                            @csrf
+                            @method('DELETE')
+                        </form>
+
                         <a class="dropdown-item navbar_link" href="{{ route('logout') }}"
                             onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
                             {{ __('Logout') }}
                         </a>
+
+                       
 
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
@@ -60,3 +71,26 @@
         </div>
     </div>
 </nav>
+
+@push('js')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(function () {
+        $(document).on('click', '#deleteAccountNav', function (e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This will permanently delete your account and related data. This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete my account',
+                cancelButtonText: 'Cancel'
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    $('#delete-account-form').submit();
+                }
+            });
+        });
+    });
+</script>
+@endpush
