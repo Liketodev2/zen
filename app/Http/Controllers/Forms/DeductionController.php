@@ -87,7 +87,8 @@ class DeductionController extends Controller
         ];
 
         $rules['active_sections'] = 'nullable|string';
-        $validated = $request->validate($rules);
+        $request->validate($rules);
+
 
         $existing = $id
             ? Deduction::findOrFail($id)
@@ -130,6 +131,34 @@ class DeductionController extends Controller
         $this->fileService->handleSingleFileForWeb($request, $attach, $data, 'edu_file', 'education', 'edu_file');
         $this->fileService->handleSingleFileForWeb($request, $attach, $data, 'file', 'union_fees', 'file');
         $this->fileService->handleSingleFileForWeb($request, $attach, $data, 'sun_file', 'sun_protection', 'sun_file');
+
+        // Education-specific cleanup based on toggle fields
+        if (isset($data['education']) && is_array($data['education'])) {
+            $education = $data['education'];
+
+            // If car_travel is not "1", drop car related fields
+            $carTravel = $request->input('education.car_travel');
+            if ((string)($carTravel ?? '') !== '1') {
+                unset($education['car_education_reason'], $education['car_kilometres'], $education['vehicle_owned']);
+            }
+
+            // If edu_expense is not "1", drop self-education expense fields and related file
+            $eduExpense = $request->input('education.edu_expense');
+            if ((string)($eduExpense ?? '') !== '1') {
+                unset($education['edu_reason'], $education['expenses'], $education['edu_file']);
+
+                // Remove stored education file when user turns this section off
+                if (!empty($attach['education']['edu_file'])) {
+                    $this->deleteAttachSectionFiles($attach['education']['edu_file']);
+                    unset($attach['education']['edu_file']);
+                    if (empty($attach['education'])) {
+                        unset($attach['education']);
+                    }
+                }
+            }
+
+            $data['education'] = $education;
+        }
 
         // Special handling for travel_expenses nested array
         if ($request->has('travel_expenses') || $request->hasFile('travel_expenses.travel_file')) {
