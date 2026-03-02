@@ -47,6 +47,19 @@ class PaymentController extends Controller
             ], 400);
         }
 
+        $tax->load(['basicInfo', 'income', 'deduction', 'other']);
+        $hasAnyRelation = $tax->basicInfo !== null
+            || $tax->income !== null
+            || $tax->deduction !== null
+            || $tax->other !== null;
+
+        if (!$hasAnyRelation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please add at least one section (Basic Info, Income, Deduction or Other) before proceeding to payment.'
+            ], 400);
+        }
+
         $amount = \App\Models\Plan::first()->price ?? env('AMOUNT', 100);
 
         return response()->json([

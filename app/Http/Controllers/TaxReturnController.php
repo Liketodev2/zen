@@ -99,4 +99,37 @@ class TaxReturnController extends Controller
     {
         //
     }
+
+
+    /**
+     * Check if the given tax return has any related data
+     * (basic info, income, deduction or other).
+     *
+     * @param TaxReturn $taxReturn
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkRelations(TaxReturn $taxReturn)
+    {
+        if ($taxReturn->user_id !== auth()->id()) {
+            abort(404);
+        }
+
+        $taxReturn->load(['basicInfo', 'income', 'deduction', 'other']);
+
+        $hasBasicInfo = $taxReturn->basicInfo !== null;
+        $hasIncome = $taxReturn->income !== null;
+        $hasDeduction = $taxReturn->deduction !== null;
+        $hasOther = $taxReturn->other !== null;
+
+        $hasAny = $hasBasicInfo || $hasIncome || $hasDeduction || $hasOther;
+
+        return response()->json([
+            'success' => true,
+            'has_basic_info' => $hasBasicInfo,
+            'has_income' => $hasIncome,
+            'has_deduction' => $hasDeduction,
+            'has_other' => $hasOther,
+            'has_any' => $hasAny,
+        ]);
+    }
 }

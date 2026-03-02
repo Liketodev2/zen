@@ -72,15 +72,26 @@
                 $(document).on('click', '#confirmBtn', function (e) {
                     e.preventDefault();
                     var href = $(this).attr('href');
-                    Swal.fire({
-                        icon: 'warning',
-                        text: 'Please save your information first, and then proceed to finalize your tax return',
-                        showCancelButton: true,
-                        confirmButtonText: 'Proceed',
-                        cancelButtonText: 'Cancel',
-                    }).then(function (result) {
-                        if (result.isConfirmed) {
-                            window.location.href = href;
+
+                    $.ajax({
+                        url: '{{ route('tax-returns.relations', ['taxReturn' => $taxReturn->id]) }}',
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response && response.has_any) {
+                                window.location.href = href;
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: 'Please add at least one section (Basic Info, Income, Deduction or Other) before finalising your tax return.',
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                text: 'Unable to verify your tax return data. Please try again.',
+                            });
                         }
                     });
                 });

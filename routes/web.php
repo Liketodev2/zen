@@ -55,6 +55,8 @@ Route::get('/success', [HomeController::class, 'success'])->name('success');
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('tax-returns', TaxReturnController::class);
+    Route::get('tax-returns/{taxReturn}/relations', [TaxReturnController::class, 'checkRelations'])
+        ->name('tax-returns.relations');
 
     Route::prefix('basic-info')->name('basic-info.')->group(function () {
         Route::post('/{taxId}', [BasicInfoFormController::class, 'store'])->name('store');

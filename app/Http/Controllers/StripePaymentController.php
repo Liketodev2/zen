@@ -34,8 +34,6 @@ class StripePaymentController extends Controller
             ->where('user_id', '=', Auth::id())
             ->first();
 
-
-
         if(!$tax) {
            return redirect()->route('home')->with('error', 'Tax not found!');
         }
@@ -47,6 +45,19 @@ class StripePaymentController extends Controller
 
         if($tax->form_status == 'complete') {
             return redirect()->route('home')->with('error', 'You form already completed!');
+        }
+
+        // Ensure the tax return has at least one related section
+        $tax->load(['basicInfo', 'income', 'deduction', 'other']);
+        $hasAnyRelation = $tax->basicInfo !== null
+            || $tax->income !== null
+            || $tax->deduction !== null
+            || $tax->other !== null;
+
+        if (!$hasAnyRelation) {
+            return redirect()
+                ->route('tax-returns.edit', $tax->id)
+                ->with('error', 'Please add at least one section (Basic Info, Income, Deduction or Other) before proceeding to payment.');
         }
 
         $amount = \App\Models\Plan::first()->price ?? env('AMOUNT', 100);
