@@ -68,7 +68,7 @@
                                         name="salary[info][{{ $i }}][income_items]"
                                         id="incomeYes_{{ $i }}"
                                         value="1"
-                                        {{ $incomeItemValue == '1' ? 'checked' : '' }}
+                                        {{ $incomeItemValue == 1 ? 'checked' : '' }}
                                     >
                                     <label class="form-check-label custom-label" for="incomeYes_{{ $i }}">Yes</label>
                                 </div>
@@ -79,7 +79,7 @@
                                         name="salary[info][{{ $i }}][income_items]"
                                         id="incomeNo_{{ $i }}"
                                         value="0"
-                                        {{ $incomeItemValue == '0' ? 'checked' : '' }}
+                                        {{ $incomeItemValue == 0 ? 'checked' : '' }}
                                     >
                                     <label class="form-check-label custom-label" for="incomeNo_{{ $i }}">No</label>
                                 </div>
@@ -88,9 +88,9 @@
                             <div class="row mb-3 income-details" style="display: {{ $incomeItemValue === '1' ? 'block' : 'none' }};">
                                 <div class="col-md-6 mb-3">
                                     @php
-                                        $allowanceChecked = old("salary.info.$i.allowances", $salaryInfo[$i]['allowances'] ?? '0') == '1';
-                                        $fringeChecked = old("salary.info.$i.fringe_benefits", $salaryInfo[$i]['fringe_benefits'] ?? '0') == '1';
-                                        $superChecked = old("salary.info.$i.reportable_super", $salaryInfo[$i]['reportable_super'] ?? '0') == '1';
+                                        $allowanceChecked = old("salary.info.$i.allowances", $salaryInfo[$i]['allowances'] ?? 0) == 1;
+                                        $fringeChecked = old("salary.info.$i.fringe_benefits", $salaryInfo[$i]['fringe_benefits'] ?? 0) == 1;
+                                        $superChecked = old("salary.info.$i.reportable_super", $salaryInfo[$i]['reportable_super'] ?? 0) == 1;
                                     @endphp
 
                                     <div class="form-check form-switch d-flex align-items-center gap-3 mb-3">
