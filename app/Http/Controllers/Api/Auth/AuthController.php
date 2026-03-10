@@ -28,27 +28,39 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
+            return response()->json([
+                'errors' => $validator->errors(),
+                'validation' => true
+            ], 422);
         }
-
-        $user = User::query()->where('email','=', $request->email)->first();
 
         $credentials = $request->only('email', 'password');
 
         try {
+
             if (!$token = Auth::guard('api')->attempt($credentials)) {
-                return response()->json(['error' => 'Unauthorized', 'validation' => false], 401);
+                return response()->json([
+                    'error' => 'Unauthorized',
+                    'validation' => false
+                ], 401);
             }
 
-            $expiration = Carbon::createFromTimestamp(JWTAuth::setToken($token)->getPayload()->get('exp'));
+            $user = Auth::guard('api')->user();
+
+            $expiration = Carbon::createFromTimestamp(
+                JWTAuth::setToken($token)->getPayload()->get('exp')
+            )->utc();
 
             return response()->json([
                 'user' => new UserResource($user),
                 'token' => $token,
-                'expires_at' => $expiration->toDateTimeString(),
+                'expires_at' => $expiration->toIso8601String(),
             ], 201);
+
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+            return response()->json([
+                'error' => 'Could not create token'
+            ], 500);
         }
     }
 
@@ -58,25 +70,26 @@ class AuthController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function refreshToken(Request $request)
+    public function refreshToken()
     {
-        $validator = Validator::make($request->all(), [
-            'refresh_token' => ['required', 'string'],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
-        }
-
         try {
-            $newAccessToken = JWTAuth::setToken($request->refresh_token)->refresh();
-            $expiration = Carbon::createFromTimestamp(JWTAuth::setToken($newAccessToken)->getPayload()->get('exp'));
+
+            $newToken = Auth::guard('api')->refresh();
+
+            $expiration = Carbon::createFromTimestamp(
+                JWTAuth::setToken($newToken)->getPayload()->get('exp')
+            )->utc();
+
             return response()->json([
-                'token' => $newAccessToken,
-                'expires_at' => $expiration->toDateTimeString(),
+                'token' => $newToken,
+                'expires_at' => $expiration->toIso8601String(),
             ], 200);
+
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not refresh token', 'validation' => false], 500);
+            return response()->json([
+                'error' => 'Could not refresh token',
+                'validation' => false
+            ], 401);
         }
     }
 
@@ -90,18 +103,20 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:60'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'validation' => true], 422);
+            return response()->json([
+                'errors' => $validator->errors(),
+                'validation' => true
+            ], 422);
         }
 
         try {
 
-
-            $user = User::query()->create([
+            $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -109,13 +124,29 @@ class AuthController extends Controller
 
             $token = JWTAuth::fromUser($user);
 
+            $expiration = Carbon::createFromTimestamp(
+                JWTAuth::setToken($token)->getPayload()->get('exp')
+            )->utc();
+
             return response()->json([
                 'user' => new UserResource($user),
                 'token' => $token,
+                'expires_at' => $expiration->toIso8601String(),
             ], 201);
 
-        }catch (\Exception $exception){
-            return response()->json(['error' => $exception->getMessage(), 'validation' => false], 422);
+        } catch (JWTException $e) {
+
+            return response()->json([
+                'error' => 'Could not create token',
+                'validation' => false
+            ], 500);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'error' => 'User registration failed',
+                'validation' => false
+            ], 500);
         }
     }
 
